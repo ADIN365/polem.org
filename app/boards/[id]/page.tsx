@@ -17,8 +17,9 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props) {
+  const id = decodeURIComponent(params.id);
   const board = await prisma.board.findUnique({
-    where: { id: params.id },
+    where: { id },
     select: { title: true },
   });
   return { title: board?.title ?? "게시판" };
@@ -29,8 +30,10 @@ export default async function BoardPage({ params }: Props) {
   const currentUserId = session?.user?.id ?? null;
   const hasNickname = !!session?.user?.nickname;
 
+  // Next.js 14.2 가 한글 dynamic param 을 자동 decode 안 해서 명시적 처리.
+  const id = decodeURIComponent(params.id);
   const board = await prisma.board.findUnique({
-    where: { id: params.id },
+    where: { id },
     select: {
       id: true,
       title: true,
@@ -54,10 +57,9 @@ export default async function BoardPage({ params }: Props) {
   ]);
 
   // 조회수 +1 — 단순. Phase 13 에서 봇·자기조회 필터링.
-  await prisma.board.update({
-    where: { id: board.id },
-    data: { viewCount: { increment: 1 } },
-  });
+  prisma.board
+    .update({ where: { id: board.id }, data: { viewCount: { increment: 1 } } })
+    .catch(() => {});
 
   return (
     <div className="max-w-site mx-auto px-6 pt-8 pb-20">
