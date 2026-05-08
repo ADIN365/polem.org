@@ -1,27 +1,41 @@
 import type { NextAuthOptions } from "next-auth";
+import type { Provider } from "next-auth/providers/index";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import KakaoProvider from "next-auth/providers/kakao";
+import NaverProvider from "next-auth/providers/naver";
 
 import { prisma } from "@/lib/prisma";
 
 /**
- * Phase 0 골격 — KAKAO_CLIENT_ID/SECRET 미설정 시 Provider 비활성.
- * Phase 1 에서 카카오 디벨로퍼스 앱 등록 + 닉네임 온보딩 흐름 추가.
+ * 한국 OAuth 표준 — 카카오 + 네이버. 환경변수 미설정 시 자동 비활성.
  */
 const kakaoEnabled =
   !!process.env.KAKAO_CLIENT_ID && !!process.env.KAKAO_CLIENT_SECRET;
+const naverEnabled =
+  !!process.env.NAVER_CLIENT_ID && !!process.env.NAVER_CLIENT_SECRET;
+
+const providers: Provider[] = [];
+if (kakaoEnabled) {
+  providers.push(
+    KakaoProvider({
+      clientId: process.env.KAKAO_CLIENT_ID!,
+      clientSecret: process.env.KAKAO_CLIENT_SECRET!,
+    }),
+  );
+}
+if (naverEnabled) {
+  providers.push(
+    NaverProvider({
+      clientId: process.env.NAVER_CLIENT_ID!,
+      clientSecret: process.env.NAVER_CLIENT_SECRET!,
+    }),
+  );
+}
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: { strategy: "database" },
-  providers: kakaoEnabled
-    ? [
-        KakaoProvider({
-          clientId: process.env.KAKAO_CLIENT_ID!,
-          clientSecret: process.env.KAKAO_CLIENT_SECRET!,
-        }),
-      ]
-    : [],
+  providers,
   pages: {
     signIn: "/login",
   },

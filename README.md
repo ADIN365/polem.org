@@ -44,18 +44,33 @@ echo "NEXTAUTH_SECRET=\"$(openssl rand -base64 32)\"" >> .env
 echo 'NEXTAUTH_URL="http://localhost:3000"' >> .env
 ```
 
-### 4) 카카오 OAuth
+### 4) OAuth — 카카오 + 네이버
 
-1. <https://developers.kakao.com> 로그인
-2. *내 애플리케이션* → 새 앱 (앱명: **끝장토론**, 회사명: 본인 또는 팀명)
-3. *플랫폼 → Web* → 사이트 도메인 `http://localhost:3000` 등록
-4. *카카오 로그인* → 활성화 → *Redirect URI* `http://localhost:3000/api/auth/callback/kakao`
-5. *동의항목* → 닉네임(필수), 이메일(선택)
-6. *보안* → Client Secret 활성화 → 코드 발급
-7. `.env` 에:
+OAuth 둘 중 하나만 등록해도 작동. 둘 다 등록하면 `/login` 에 두 버튼 노출. 미등록 provider 는 NextAuth 가 자동 비활성.
+
+#### 카카오 (developers.kakao.com)
+
+1. <https://developers.kakao.com> 로그인 → *내 애플리케이션* → 새 앱 (앱명: **끝장토론**)
+2. *플랫폼 → Web* → 사이트 도메인 `http://localhost:3000` 등록
+3. *카카오 로그인* → 활성화 → *Redirect URI* `http://localhost:3000/api/auth/callback/kakao`
+4. *동의항목* → 닉네임(필수), 이메일(선택)
+5. *보안* → Client Secret 활성화 → 코드 발급
+6. `.env` 에:
    ```
-   KAKAO_CLIENT_ID="..." # REST API 키
+   KAKAO_CLIENT_ID="..."     # REST API 키
    KAKAO_CLIENT_SECRET="..."
+   ```
+
+#### 네이버 (developers.naver.com)
+
+1. <https://developers.naver.com> 로그인 → *Application → 애플리케이션 등록*
+2. 애플리케이션 이름: **끝장토론**, 사용 API: *네이버 로그인*
+3. 제공 정보: 회원이름·이메일·별명 정도 (최소화)
+4. 환경 추가 → *PC 웹* → 서비스 URL `http://localhost:3000`, *Callback URL* `http://localhost:3000/api/auth/callback/naver`
+5. 발급된 *Client ID*, *Client Secret* 을 `.env` 에:
+   ```
+   NAVER_CLIENT_ID="..."
+   NAVER_CLIENT_SECRET="..."
    ```
 
 ### 5) 개발 서버
@@ -100,14 +115,15 @@ git push origin main
    - 두 레코드 모두 *Proxy status: DNS only* (회색 구름)
 3. DNS 전파 후 Vercel 이 자동으로 SSL 발급
 
-### 4) 카카오 OAuth — 프로덕션 redirect
+### 4) OAuth — 프로덕션 redirect
 
-카카오 디벨로퍼스 *카카오 로그인 → Redirect URI* 에 추가:
+**카카오:** 디벨로퍼스 *카카오 로그인 → Redirect URI* 에 추가:
 ```
 https://polem.org/api/auth/callback/kakao
 ```
-
 플랫폼 *Web 사이트 도메인* 에도 `https://polem.org` 추가.
+
+**네이버:** 디벨로퍼스 *애플리케이션 → 환경 → PC 웹* 의 *서비스 URL* `https://polem.org`, *Callback URL* `https://polem.org/api/auth/callback/naver` 추가.
 
 ### 5) 프로덕션 마이그레이션
 

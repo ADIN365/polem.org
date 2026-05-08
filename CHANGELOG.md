@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-05-09 — 네이버 OAuth 추가 + dynamic param decode 패치
+- `lib/auth.ts` — 카카오 + 네이버 두 provider 동시 지원. 환경변수 미설정 시 자동 비활성
+- `/login` — 두 버튼 노출 (카카오 #FEE500, 네이버 #03C75A)
+- `.env.example` / README — 네이버 디벨로퍼스 셋업 단계 추가
+- `app/boards/[id]/page.tsx` — Next.js 14.2 가 한글 dynamic param 자동 decode 안 해서 `decodeURIComponent` 명시. viewCount 증분도 fire-and-forget 처리
+
 ## 2026-05-09 — Phase 3 박제 + 동조 + 댓글 + 인용/도전
 - API: `POST /api/pins` (박제 작성), `POST/DELETE /api/pins/[id]/endorse`, `GET/POST /api/pins/[id]/comments`, `POST /api/pins/[id]/challenge`
 - `components/board/PinFormModal.tsx` — PRO/CON 박제 작성 + 인용 박제 (인용된 박제 본문/작성자 함께 표시). 8~1500자, 5분 이내 동일 본문 중복 방지(409)
