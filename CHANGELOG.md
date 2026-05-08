@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-05-09 — Phase 3 박제 + 동조 + 댓글 + 인용/도전
+- API: `POST /api/pins` (박제 작성), `POST/DELETE /api/pins/[id]/endorse`, `GET/POST /api/pins/[id]/comments`, `POST /api/pins/[id]/challenge`
+- `components/board/PinFormModal.tsx` — PRO/CON 박제 작성 + 인용 박제 (인용된 박제 본문/작성자 함께 표시). 8~1500자, 5분 이내 동일 본문 중복 방지(409)
+- `components/board/CommentTree.tsx` — 무한 깊이 트리, 답글 인라인 폼, 자동 접힘 없음
+- `components/board/ChallengeModal.tsx` — 출처 도전 (도전자도 sourceUrl 필수, 헌법 2.2)
+- `components/board/Pin.tsx` → 클라이언트 컴포넌트로 전환. 동조 토글(낙관적 업데이트, 자기 박제 차단, 비추천 없음), 댓글 펼침, 인용/도전 트리거
+- `app/boards/[id]/BoardClient.tsx` — 박제 작성 모달 상태 관리, 인용 흐름, 비로그인/닉네임 미설정 시 toast
+- 박제 작성 시 board 의 proCount/conCount 증분 + participantCount 휴리스틱(첫 박제일 때만 +1)
+
 ## 2026-05-09 — Phase 2 의제 색인 + 게시판 (읽기 전용)
 - `/` (홈) — 의제 색인 표. polem.html `view-index` 디자인 따름. 검색·카테고리·정렬(활동순/최신순/팽팽한 순/참여많은순)·페이지네이션
 - `/boards/[id]` — 게시판 상세. polem.html `view-board` 디자인 따름. 좌우 분할(찬/반), 비율 막대, AI 50:50 요약 placeholder

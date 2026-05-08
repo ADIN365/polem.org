@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth";
 
-import { Pin, type PinData } from "@/components/board/Pin";
+import BoardClient from "./BoardClient";
+import type { PinData } from "@/components/board/Pin";
 import { BoardBigGauge } from "@/components/ui/Gauge";
+import { authOptions } from "@/lib/auth";
 import { CATEGORY_LABEL } from "@/lib/constants";
 import { formatCount } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
@@ -22,6 +25,10 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function BoardPage({ params }: Props) {
+  const session = await getServerSession(authOptions);
+  const currentUserId = session?.user?.id ?? null;
+  const hasNickname = !!session?.user?.nickname;
+
   const board = await prisma.board.findUnique({
     where: { id: params.id },
     select: {
@@ -41,14 +48,12 @@ export default async function BoardPage({ params }: Props) {
   });
   if (!board || board.status === "HIDDEN") notFound();
 
-  // 박제 fetch — 양쪽 각각 정렬·갯수.
-  // Phase 3 에서 정렬·페이지네이션 옵션 추가. 여기선 최신 30 씩.
   const [proPins, conPins] = await Promise.all([
-    fetchPins(board.id, "PRO"),
-    fetchPins(board.id, "CON"),
+    fetchPins(board.id, "PRO", currentUserId),
+    fetchPins(board.id, "CON", currentUserId),
   ]);
 
-  // 조회수 +1 (Phase 2 단순 — Phase 13 에서 redis/edge 캐시로 분리)
+  // 조회수 +1 — 단순. Phase 13 에서 봇·자기조회 필터링.
   await prisma.board.update({
     where: { id: board.id },
     data: { viewCount: { increment: 1 } },
@@ -62,7 +67,8 @@ export default async function BoardPage({ params }: Props) {
         </Link>
         <span>/</span>
         <span className="text-ink">
-          {CATEGORY_LABEL[board.category] ?? board.category} · {board.title.slice(0, 20)}
+          {CATEGORY_LABEL[board.category] ?? board.category} ·{" "}
+          {board.title.slice(0, 20)}
           {board.title.length > 20 ? "…" : ""}
         </span>
       </nav>
@@ -73,7 +79,8 @@ export default async function BoardPage({ params }: Props) {
             {CATEGORY_LABEL[board.category] ?? board.category}
           </span>
           <span className="text-tiny text-ink-3">
-            참여 {formatCount(board.participantCount)} · 관람 {formatCount(board.viewCount)}
+            참여 {formatCount(board.participantCount)} · 관람{" "}
+            {formatCount(board.viewCount)}
           </span>
         </div>
 
@@ -87,36 +94,23 @@ export default async function BoardPage({ params }: Props) {
           <BoardBigGauge proCount={board.proCount} conCount={board.conCount} />
         </header>
 
-        <BoardSummary pro={board.aiSummaryPro} con={board.aiSummaryCon} at={board.aiSummaryAt} />
+        <BoardSummary
+          pro={board.aiSummaryPro}
+          con={board.aiSummaryCon}
+          at={board.aiSummaryAt}
+        />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-[18px] p-[18px] bg-page">
-          <Column side="PRO" pins={proPins} />
-          <Column side="CON" pins={conPins} />
-        </div>
-
-        <div className="px-[18px] py-[14px] border-t border-border bg-card flex gap-2">
-          <button
-            type="button"
-            disabled
-            className="flex-1 px-[14px] py-[11px] text-pin bg-card text-ink border-[0.5px] border-border rounded-md opacity-60 cursor-not-allowed"
-            title="Phase 3 에서 활성"
-          >
-            ＋ 찬성으로 박제
-          </button>
-          <button
-            type="button"
-            disabled
-            className="flex-1 px-[14px] py-[11px] text-pin bg-dark text-paper-cream rounded-md opacity-60 cursor-not-allowed"
-            title="Phase 3 에서 활성"
-          >
-            ＋ 반대로 박제
-          </button>
-        </div>
+        <BoardClient
+          boardId={board.id}
+          proPins={proPins}
+          conPins={conPins}
+          currentUserId={currentUserId}
+          hasNickname={hasNickname}
+        />
       </article>
 
       <p className="text-tiny text-ink-3 mt-4 text-center tracking-wide leading-relaxed">
-        박제 클릭 → 댓글 펼침 (Phase 3) · 회색 띠는 인용 박제 · ⚠는 출처 도전 · 황토색 % = 진영 가린
-        답변 동의율
+        박제 본문 클릭 → 댓글 펼침 (깊이 무한) · 회색 띠는 인용 박제 · ⚠는 출처 도전 · 황토색 % = 진영 가린 답변 동의율
       </p>
     </div>
   );
@@ -149,36 +143,11 @@ function BoardSummary({
   );
 }
 
-function Column({ side, pins }: { side: "PRO" | "CON"; pins: PinData[] }) {
-  const isPro = side === "PRO";
-  return (
-    <div className="min-h-[380px]">
-      <div className="flex justify-between items-baseline mb-[14px] px-1">
-        <div className="flex items-center gap-[9px]">
-          <span
-            className={[
-              "inline-block w-[9px] h-[9px] rounded-full",
-              isPro ? "bg-card border-[1.5px] border-ink" : "bg-ink",
-            ].join(" ")}
-          />
-          <span className="text-meta font-semibold tracking-wide text-ink">
-            {isPro ? "PRO · 찬성" : "CON · 반대"}
-          </span>
-        </div>
-        <div className="text-tiny text-ink-3 font-medium">{pins.length}개</div>
-      </div>
-      {pins.length > 0 ? (
-        pins.map((p) => <Pin key={p.id} pin={p} />)
-      ) : (
-        <div className="text-tiny text-ink-3 px-1 py-8 text-center">
-          아직 박제가 없어요. 첫 박제를 남겨보세요. (Phase 3)
-        </div>
-      )}
-    </div>
-  );
-}
-
-async function fetchPins(boardId: string, side: "PRO" | "CON"): Promise<PinData[]> {
+async function fetchPins(
+  boardId: string,
+  side: "PRO" | "CON",
+  currentUserId: string | null,
+): Promise<PinData[]> {
   const rows = await prisma.pin.findMany({
     where: { boardId, side, hidden: false, deleted: false },
     orderBy: [{ createdAt: "desc" }],
@@ -188,6 +157,7 @@ async function fetchPins(boardId: string, side: "PRO" | "CON"): Promise<PinData[
       side: true,
       body: true,
       createdAt: true,
+      authorId: true,
       blindAgreeCount: true,
       blindDisagreeCount: true,
       author: { select: { nickname: true, name: true } },
@@ -200,6 +170,9 @@ async function fetchPins(boardId: string, side: "PRO" | "CON"): Promise<PinData[
       _count: {
         select: { endorsements: true, comments: true, challenges: true },
       },
+      endorsements: currentUserId
+        ? { where: { userId: currentUserId }, select: { id: true } }
+        : false,
     },
   });
   return rows.map((r) => {
@@ -209,18 +182,25 @@ async function fetchPins(boardId: string, side: "PRO" | "CON"): Promise<PinData[
       side: r.side,
       body: r.body,
       createdAt: r.createdAt,
+      authorId: r.authorId,
       authorNickname: r.author.nickname ?? r.author.name,
       endorseCount: r._count.endorsements,
       commentCount: r._count.comments,
       challengeCount: r._count.challenges,
       blindAgreeRatio:
-        blindTotal >= 5 ? Math.round((r.blindAgreeCount / blindTotal) * 100) : null,
+        blindTotal >= 5
+          ? Math.round((r.blindAgreeCount / blindTotal) * 100)
+          : null,
       quoted: r.quotedPin
         ? {
             body: r.quotedPin.body,
-            authorNickname: r.quotedPin.author.nickname ?? r.quotedPin.author.name,
+            authorNickname:
+              r.quotedPin.author.nickname ?? r.quotedPin.author.name,
           }
         : null,
+      isEndorsedByMe:
+        Array.isArray((r as { endorsements?: unknown }).endorsements) &&
+        (r as { endorsements: unknown[] }).endorsements.length > 0,
     };
   });
 }
