@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>끝장토론 · polem.org</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+:root{
+  --bg-page:#F5F5F4;
+  --bg-card:#fff;
+  --bg-soft:#FAFAF9;
+  --bg-dark:#2B2620;
+  --bg-deep:#3E342B;
+  --ink:#2B2620;
+  --ink-2:#4A4239;
+  --ink-3:#6F665C;
+  --ink-4:#A8A09A;
+  --ink-soft:#C8C2BC;
+  --paper-cream:#F5F1E8;
+  --paper-cream-dim:#A8A4A0;
+  --border:#2B2620;
+  --border-soft:#D4CFC8;
+  --accent-warm:#9B7B2C;
+  --accent-warm-light:#C9A453;
+  --accent-warn:#8B3D2E;
+  --sans:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --serif:'Noto Serif KR',Georgia,serif;
+  --mono:'SF Mono',ui-monospace,Consolas,monospace;
+  --tr:0.18s cubic-bezier(0.2,0.6,0.2,1);
+  /* font sizes — toggleable via body class */
+  --fs-base:15px;
+  --fs-small:13px;
+  --fs-tiny:11px;
+  --fs-meta:12px;
+  --fs-pin:14px;
+  --fs-button:13px;
+  --fs-button-large:15px;
+  --fs-eyebrow:11px;
+  --fs-eyebrow-tight:10px;
+  --fs-input:14px;
+  --fs-question:23px;
+  --fs-title-h1:26px;
+  --fs-title-h2:24px;
+  --fs-title-h3:22px;
+  --fs-title-h4:17px;
+  --fs-title-modal:30px;
+  --fs-stat-num:24px;
+  --fs-brand:23px;
+}
+body.fs-large{
+  --fs-base:17px;
+  --fs-small:15px;
+  --fs-tiny:12px;
+  --fs-meta:13px;
+  --fs-pin:16px;
+  --fs-button:14px;
+  --fs-button-large:16px;
+  --fs-eyebrow:12px;
+  --fs-eyebrow-tight:11px;
+  --fs-input:15px;
+  --fs-question:25px;
+  --fs-title-h1:28px;
+  --fs-title-h2:26px;
+  --fs-title-h3:24px;
+  --fs-title-h4:18px;
+  --fs-title-modal:32px;
+  --fs-stat-num:26px;
+  --fs-brand:24px;
+}
+body.fs-xlarge{
+  --fs-base:19px;
+  --fs-small:16px;
+  --fs-tiny:13px;
+  --fs-meta:14px;
+  --fs-pin:18px;
+  --fs-button:15px;
+  --fs-button-large:17px;
+  --fs-eyebrow:13px;
+  --fs-eyebrow-tight:12px;
+  --fs-input:16px;
+  --fs-question:28px;
+  --fs-title-h1:32px;
+  --fs-title-h2:30px;
+  --fs-title-h3:27px;
+  --fs-title-h4:20px;
+  --fs-title-modal:36px;
+  --fs-stat-num:30px;
+  --fs-brand:26px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg-page);color:var(--ink);font-family:var(--sans);font-size:var(--fs-base);line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;transition:font-size 0.18s ease}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+.hidden{display:none!important}
+.serif{font-family:var(--serif)}
+.mono{font-family:var(--mono)}
+
+/* ===== FONT SIZE TOGGLE ===== */
+.fs-toggle{display:flex;align-items:center;gap:0;border:0.5px solid var(--border-soft);border-radius:3px;overflow:hidden;background:var(--bg-card);margin-right:8px}
+.fs-toggle-btn{padding:5px 9px;background:transparent;border:none;cursor:pointer;color:var(--ink-3);font-family:var(--sans);font-size:11px;font-weight:500;transition:all var(--tr);min-width:26px}
+.fs-toggle-btn:hover{background:var(--bg-soft);color:var(--ink)}
+.fs-toggle-btn.active{background:var(--ink);color:var(--paper-cream)}
+.fs-toggle-btn:not(:last-child){border-right:0.5px solid var(--border-soft)}
+@media (max-width:640px){
+  .fs-toggle{display:none}
+  .mobile-menu .fs-toggle{display:flex;margin:8px 18px;width:calc(100% - 36px)}
+}
+
+/* ===== TOP NAV ===== */
+.topnav{position:sticky;top:0;z-index:50;background:rgba(245,245,244,0.92);backdrop-filter:saturate(140%) blur(10px);border-bottom:0.5px solid var(--border)}
+.topnav-inner{max-width:1180px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:relative;gap:14px}
+.brand{font-family:var(--serif);font-size:var(--fs-brand);font-weight:600;letter-spacing:-0.02em;color:var(--ink);cursor:pointer;display:flex;align-items:baseline;gap:10px;flex-shrink:0}
+.brand-tag{font-family:var(--sans);font-size:var(--fs-tiny);color:var(--ink-3);letter-spacing:0.06em;font-weight:400}
+.nav-right{display:flex;align-items:center;gap:14px}
+.nav-links{display:flex;gap:4px;align-items:center}
+.nav-link{padding:8px 14px;font-size:var(--fs-small);color:var(--ink-2);cursor:pointer;letter-spacing:-0.005em;transition:color var(--tr);border-radius:2px}
+.nav-link:hover{color:var(--ink)}
+.nav-link.active{color:var(--ink);font-weight:500;border-bottom:1.5px solid var(--ink);padding-bottom:6px;margin-bottom:1px}
+.nav-user{width:32px;height:32px;border-radius:50%;background:var(--bg-dark);color:var(--paper-cream);display:flex;align-items:center;justify-content:center;font-size:var(--fs-tiny);font-weight:500;cursor:pointer;font-family:var(--serif);flex-shrink:0}
+.nav-burger{display:none;background:transparent;border:none;cursor:pointer;padding:8px 12px;color:var(--ink-2);font-family:var(--sans);font-size:var(--fs-small)}
+.mobile-menu{display:none;position:absolute;top:100%;right:18px;background:var(--bg-card);border:0.5px solid var(--border);border-radius:2px;padding:6px 0;z-index:100;min-width:200px;box-shadow:0 4px 16px rgba(0,0,0,0.08)}
+.mobile-menu.open{display:block}
+.mobile-menu .nav-link{display:block;padding:11px 18px;font-size:var(--fs-base);border-bottom:0.5px solid var(--border-soft)}
+.mobile-menu .nav-link:last-child{border-bottom:none}
+
+/* ===== MAIN ===== */
+.main{max-width:1180px;margin:0 auto;padding:32px 24px 80px}
+.main-narrow{max-width:780px;margin:0 auto;padding:32px 24px 80px}
+
+/* ===== TOAST ===== */
+.toast-container{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;width:auto;max-width:90vw}
+.toast{background:rgba(43,38,32,0.94);color:var(--paper-cream);padding:11px 20px;border-radius:2px;font-size:var(--fs-small);letter-spacing:-0.005em;font-family:var(--sans);max-width:420px;animation:toastIn 0.22s cubic-bezier(0.2,0.6,0.2,1);box-shadow:0 2px 14px rgba(0,0,0,0.14);text-align:center;line-height:1.5}
+@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.toast.fading{animation:toastOut 0.28s ease forwards}
+@keyframes toastOut{to{opacity:0;transform:translateY(-6px)}}
+
+/* ===== SHARED COMPONENTS ===== */
+.card{background:var(--bg-card);border:0.5px solid var(--border);border-radius:6px;overflow:hidden}
+.card-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.eyebrow{font-size:var(--fs-eyebrow);letter-spacing:0.16em;color:var(--ink-3);text-transform:uppercase}
+.eyebrow-tight{font-size:var(--fs-eyebrow-tight);letter-spacing:0.14em;color:var(--ink-3);text-transform:uppercase;font-weight:500}
+.btn{padding:9px 16px;border:none;font-size:var(--fs-button);font-family:inherit;letter-spacing:0.02em;border-radius:3px;cursor:pointer;transition:all var(--tr)}
+.btn-primary{background:var(--bg-dark);color:var(--paper-cream)}
+.btn-primary:hover{background:var(--bg-deep)}
+.btn-secondary{background:var(--bg-card);color:var(--ink);border:0.5px solid var(--border)}
+.btn-secondary:hover{background:var(--bg-soft)}
+.btn-ghost{background:transparent;color:var(--ink-3);border:0.5px solid var(--border-soft)}
+.btn-ghost:hover{color:var(--ink);border-color:var(--border)}
+.btn-large{padding:14px 22px;font-size:var(--fs-button-large);font-weight:500}
+
+/* ===== INDEX (의제 색인) ===== */
+.index-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:14px}
+.index-title{font-family:var(--serif);font-size:var(--fs-title-h1);font-weight:600;letter-spacing:-0.015em;margin:0;color:var(--ink)}
+.index-subtitle{font-size:var(--fs-meta);color:var(--ink-3);margin-top:6px;letter-spacing:0.02em}
+.index-controls{padding:14px 24px;border-bottom:0.5px solid var(--border-soft);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.search-wrap{flex:1;min-width:220px;position:relative}
+.search-input{width:100%;padding:9px 12px 9px 56px;border:0.5px solid var(--border);font-size:var(--fs-small);font-family:inherit;outline:none;color:var(--ink);border-radius:3px;background:var(--bg-card);box-sizing:border-box}
+.search-label{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:var(--fs-eyebrow-tight);letter-spacing:0.14em;color:var(--ink-3);font-weight:500;text-transform:uppercase}
+.select{padding:9px 14px;border:0.5px solid var(--border);font-size:var(--fs-meta);font-family:inherit;outline:none;color:var(--ink);background:var(--bg-card);border-radius:3px;cursor:pointer}
+.index-table{font-size:var(--fs-base)}
+.index-row-head{display:grid;grid-template-columns:60px 1fr 200px 130px 80px;padding:10px 24px;border-bottom:0.5px solid var(--border-soft);font-size:var(--fs-eyebrow-tight);letter-spacing:0.14em;color:var(--ink-3);text-transform:uppercase;background:var(--bg-soft)}
+.index-row{display:grid;grid-template-columns:60px 1fr 200px 130px 80px;padding:14px 24px;border-bottom:0.5px solid var(--border-soft);align-items:center;cursor:pointer;transition:background var(--tr)}
+.index-row:hover{background:var(--bg-soft)}
+.index-row-num{font-family:var(--mono);font-size:var(--fs-tiny);color:var(--ink-3)}
+.index-row-meta{display:flex;gap:8px;align-items:baseline;margin-bottom:2px;font-size:var(--fs-eyebrow-tight);letter-spacing:0.1em;color:var(--ink-3);text-transform:uppercase}
+.index-row-cat{}
+.index-row-tag{color:var(--ink);text-transform:uppercase;border:0.5px solid var(--ink);padding:0 4px;font-weight:500}
+.index-row-tag-new{color:var(--paper-cream);background:var(--ink);padding:1px 5px}
+.index-row-tag-down{color:var(--ink-3)}
+.index-row-title{font-size:var(--fs-base);color:var(--ink);font-weight:500;letter-spacing:-0.005em}
+.gauge{height:5px;border:0.5px solid var(--border);background:var(--bg-card);display:flex}
+.gauge-fill{background:var(--ink)}
+.gauge-row{font-size:var(--fs-eyebrow-tight);color:var(--ink-2);margin-top:3px;display:flex;justify-content:space-between}
+.index-pagi{padding:18px 24px;border-top:0.5px solid var(--border-soft);display:flex;justify-content:space-between;align-items:center;background:var(--bg-soft)}
+.pagi-btns{display:flex;gap:3px;align-items:center}
+.pagi-btn{padding:5px 11px;border:0.5px solid transparent;background:transparent;color:var(--ink);font-size:var(--fs-meta);cursor:pointer;font-family:inherit;border-radius:2px}
+.pagi-btn:hover{background:var(--bg-card)}
+.pagi-btn.active{border-color:var(--border);background:var(--bg-dark);color:var(--paper-cream)}
+.pagi-btn.disabled{color:var(--ink-3)}
+
+/* ===== BOARD (게시판) — card-based: 찬성=흰색, 반대=잉크 ===== */
+.board-head{padding:24px 26px 20px;border-bottom:1px solid var(--border)}
+.board-eyebrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.board-title{font-family:var(--serif);font-size:var(--fs-title-h2);font-weight:600;letter-spacing:-0.015em;margin:0 0 14px;color:var(--ink)}
+.board-bigGauge{display:flex;gap:0;height:6px;border:0.5px solid var(--border);background:var(--bg-card);margin-bottom:8px}
+.board-bigGauge>div:first-child{background:var(--bg-card);border-right:0.5px solid var(--border)}
+.board-bigGauge>div:last-child{background:var(--ink)}
+.board-counts{display:flex;justify-content:space-between;font-size:var(--fs-meta);color:var(--ink-2);font-weight:500}
+.board-summary{padding:14px 22px;border-bottom:0.5px solid var(--border-soft);font-size:var(--fs-meta);color:var(--ink-2);line-height:1.7;background:var(--bg-soft)}
+.board-summary a{color:var(--ink);border-bottom:1px solid var(--ink);cursor:pointer}
+.board-grid{display:grid;grid-template-columns:1fr 1fr;background:var(--bg-page);padding:18px;gap:18px}
+.board-col{min-height:380px}
+.board-col-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;padding:0 4px}
+.board-col-head-left{display:flex;align-items:center;gap:9px}
+.dot-pro{display:inline-block;width:9px;height:9px;background:var(--bg-card);border:1.5px solid var(--ink);border-radius:50%}
+.dot-con{display:inline-block;width:9px;height:9px;background:var(--ink);border-radius:50%}
+.board-col-label{font-size:var(--fs-meta);font-weight:600;letter-spacing:0.06em;color:var(--ink)}
+.board-col-count{font-size:var(--fs-tiny);color:var(--ink-3);font-weight:500}
+.pin{padding:14px 16px;margin-bottom:8px;border-radius:3px}
+.pin:last-child{margin-bottom:0}
+.pin-pro{background:var(--bg-card);color:var(--ink);border:0.5px solid var(--ink)}
+.pin-con{background:var(--bg-dark);color:var(--paper-cream)}
+.pin-quote{padding:8px 11px;border-left:2px solid var(--accent-warm);font-size:var(--fs-tiny);margin-bottom:8px;line-height:1.55}
+.pin-pro .pin-quote{background:var(--bg-soft);color:var(--ink-2)}
+.pin-con .pin-quote{background:#3E342B;color:var(--ink-soft);border-left-color:var(--accent-warm-light)}
+.pin-quote-eyebrow{font-size:var(--fs-eyebrow-tight);letter-spacing:0.14em;text-transform:uppercase;margin-right:4px}
+.pin-pro .pin-quote-eyebrow{color:var(--ink-3)}
+.pin-con .pin-quote-eyebrow{color:var(--paper-cream-dim)}
+.pin-body{font-size:var(--fs-pin);line-height:1.65;margin-bottom:8px}
+.pin-meta{display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-eyebrow-tight)}
+.pin-pro .pin-meta{color:var(--ink-3)}
+.pin-con .pin-meta{color:var(--paper-cream-dim)}
+.pin-meta-left{display:flex;gap:9px;align-items:center}
+.pin-meta-right{display:flex;gap:9px;align-items:center}
+.pin-pro .pin-blind{color:var(--accent-warm);font-weight:500}
+.pin-con .pin-blind{color:var(--accent-warm-light);font-weight:500}
+.pin-pro .pin-challenge{border:0.5px solid var(--ink-3);padding:0 4px;color:var(--ink);font-weight:500}
+.pin-con .pin-challenge{background:var(--paper-cream);color:var(--ink);padding:0 4px;font-weight:500}
+.board-actions{padding:14px 18px;border-top:1px solid var(--border);background:var(--bg-card);display:flex;gap:8px}
+.board-actions .btn{flex:1;padding:11px 14px;font-size:var(--fs-pin)}
+
+/* ===== PROPOSAL (의제 제안) ===== */
+.prop-grid{display:grid;grid-template-columns:1fr 1fr;border-top:0.5px solid var(--border-soft);min-height:380px}
+.prop-col{padding:20px 24px}
+.prop-col-input{border-right:0.5px solid var(--border-soft)}
+.prop-col-ai{background:var(--bg-soft)}
+.prop-field{margin-bottom:18px}
+.prop-label{font-size:var(--fs-meta);color:var(--ink-2);display:block;margin-bottom:6px}
+.prop-label .opt{color:var(--ink-3);font-size:var(--fs-tiny);margin-left:3px}
+.prop-input{width:100%;border:0.5px solid var(--border);padding:10px 12px;font-size:var(--fs-input);font-family:inherit;resize:none;outline:none;line-height:1.6;color:var(--ink);box-sizing:border-box;border-radius:3px;background:var(--bg-card)}
+.prop-textarea-small{height:60px}
+.prop-textarea-large{height:100px}
+.prop-ai-status{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.prop-ai-status-dot{color:var(--ink);font-size:var(--fs-meta);margin-left:4px}
+.prop-ai-row{margin-bottom:18px}
+.prop-ai-key{font-size:var(--fs-tiny);color:var(--ink-3);margin-bottom:5px;letter-spacing:0.02em}
+.prop-ai-val{font-size:var(--fs-input);color:var(--ink)}
+.prop-ai-val-title{font-size:var(--fs-title-h4);color:var(--ink);font-weight:500;line-height:1.5;letter-spacing:-0.01em}
+.prop-check{display:flex;align-items:flex-start;gap:8px;padding:9px 12px;background:var(--bg-card);border:0.5px solid var(--border-soft);border-radius:3px}
+.prop-check-icon{font-size:var(--fs-input);color:var(--ink);line-height:1}
+.prop-check-text{font-size:var(--fs-meta);color:var(--ink-2);line-height:1.55}
+.prop-note{padding:10px 12px;background:var(--bg-card);border:0.5px dashed var(--ink-3);border-radius:3px;font-size:var(--fs-tiny);color:var(--ink-2);line-height:1.6;margin-top:14px}
+.prop-foot{padding:14px 24px;border-top:1px solid var(--border);background:var(--bg-card);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.prop-foot-meta{font-size:var(--fs-tiny);color:var(--ink-3)}
+.prop-foot-meta strong{color:var(--ink);font-weight:500}
+
+/* ===== MEDIA QUERIES ===== */
+@media (max-width:840px){
+  .index-row-head,.index-row{grid-template-columns:50px 1fr 130px 80px;padding-left:18px;padding-right:18px}
+  .index-row .index-row-views{display:none}
+  .index-row-head>div:nth-child(4){display:none}
+  .board-grid{grid-template-columns:1fr}
+  .board-col-con{border-left:none;border-top:1px solid var(--border)}
+  .prop-grid{grid-template-columns:1fr}
+  .prop-col-input{border-right:none;border-bottom:0.5px solid var(--border-soft)}
+}
+/* ===== SURVEY (사상검증, Likert, 3문항, reveal 공용) ===== */
+.survey-card{background:var(--bg-card);border:0.5px solid var(--border);border-radius:6px;overflow:hidden;max-width:620px;margin:0 auto}
+.survey-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.survey-progress{padding:14px 24px 18px;border-bottom:0.5px solid var(--border-soft);background:var(--bg-soft)}
+.survey-progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:var(--fs-tiny);color:var(--ink-2)}
+.survey-progress-bar{display:flex;gap:3px;height:3px}
+.survey-progress-tick{flex:1;background:var(--border-soft)}
+.survey-progress-tick.done{background:var(--ink)}
+.survey-question{padding:48px 36px 32px;text-align:center}
+.survey-question-eyebrow{font-size:var(--fs-eyebrow);letter-spacing:0.14em;color:var(--ink-3);text-transform:uppercase;margin-bottom:18px}
+.survey-question-text{font-family:var(--serif);font-size:var(--fs-question);line-height:1.55;color:var(--ink);letter-spacing:-0.015em;font-weight:500;max-width:480px;margin:0 auto}
+.survey-buttons{padding:0 28px 24px}
+.survey-btn-row-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.survey-btn-row-5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.survey-btn{padding:18px;background:var(--bg-card);color:var(--ink);border:0.5px solid var(--border);font-size:var(--fs-pin);cursor:pointer;font-family:inherit;letter-spacing:0.02em;border-radius:3px;transition:all var(--tr)}
+.survey-btn:hover{background:var(--bg-soft)}
+.survey-btn-primary{background:var(--bg-dark);color:var(--paper-cream);border:none;font-weight:500}
+.survey-btn-primary:hover{background:var(--bg-deep)}
+.survey-btn-mute{background:var(--bg-card);color:var(--ink-3);border:0.5px solid var(--border-soft)}
+.survey-skip{padding:0 24px 22px;text-align:center}
+.survey-skip-btn{padding:8px 18px;background:transparent;color:var(--ink-3);border:none;font-size:var(--fs-meta);cursor:pointer;font-family:inherit}
+.survey-foot{padding:14px 24px;border-top:0.5px solid var(--border-soft);background:var(--bg-soft);display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-tiny);color:var(--ink-3)}
+
+/* === IDEOLOGY-CHECK MODAL === */
+.modal-overlay{position:fixed;inset:0;background:rgba(43,38,32,0.45);z-index:90;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadein 0.2s ease}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.modal-card{background:var(--bg-card);border:0.5px solid var(--border);border-radius:6px;max-width:520px;width:100%;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.18)}
+.idc-body{padding:36px 32px 24px;text-align:center}
+.idc-title{font-family:var(--serif);font-size:var(--fs-title-modal);font-weight:600;letter-spacing:-0.02em;margin:0 0 14px;color:var(--ink);line-height:1.3}
+.idc-desc{font-size:var(--fs-pin);color:var(--ink-2);line-height:1.7;margin:0 0 8px;max-width:380px;margin-left:auto;margin-right:auto}
+.idc-meta{font-size:var(--fs-tiny);color:var(--ink-3);letter-spacing:0.04em;margin-top:14px}
+.idc-buttons{padding:0 28px 22px;display:flex;flex-direction:column;gap:10px}
+
+/* === REVEAL & PROFILE === */
+.reveal-card{background:var(--bg-card);border:0.5px solid var(--border);border-radius:6px;overflow:hidden;max-width:680px;margin:0 auto}
+.reveal-intro{padding:24px 28px 14px;border-bottom:0.5px solid var(--border-soft)}
+.reveal-intro-title{font-family:var(--serif);font-size:var(--fs-title-h3);font-weight:600;letter-spacing:-0.015em;margin:0 0 6px}
+.reveal-intro-sub{font-size:var(--fs-meta);color:var(--ink-3);margin:0;line-height:1.65}
+.reveal-item{padding:18px 22px;border-bottom:0.5px solid var(--border-soft);display:flex;gap:14px;align-items:flex-start}
+.reveal-item:last-child{border-bottom:none}
+.reveal-num{flex-shrink:0;width:26px;height:26px;background:var(--ink);color:var(--paper-cream);display:flex;align-items:center;justify-content:center;font-size:var(--fs-tiny);font-weight:600;border-radius:50%;margin-top:2px}
+.reveal-item-body{flex:1;min-width:0}
+.reveal-q{font-size:var(--fs-pin);color:var(--ink-2);line-height:1.6;margin-bottom:8px;font-style:italic}
+.reveal-a-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.reveal-a-label{font-size:var(--fs-tiny);color:var(--ink-3)}
+.reveal-a{font-size:var(--fs-meta);color:var(--ink);font-weight:500;padding:2px 9px;background:var(--bg-soft);border:0.5px solid var(--border);border-radius:2px}
+.reveal-info{padding:10px 12px;background:var(--bg-soft);border-left:2px solid var(--ink);font-size:var(--fs-meta);line-height:1.55;color:var(--ink-2)}
+.reveal-info-eyebrow{font-size:var(--fs-eyebrow-tight);letter-spacing:0.14em;color:var(--ink-3);text-transform:uppercase}
+.reveal-info-tag{color:var(--ink);font-weight:500;margin:0 4px}
+.reveal-info-cmp{margin-top:5px;font-size:var(--fs-tiny);color:var(--ink-3);letter-spacing:0.02em}
+.reveal-info-warn{color:var(--accent-warn);font-weight:500}
+.reveal-foot{padding:14px 22px;border-top:0.5px solid var(--border-soft);background:var(--bg-soft);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* === PROFILE === */
+.profile-stats{padding:18px 22px;border-bottom:0.5px solid var(--border-soft);display:grid;grid-template-columns:repeat(4,1fr);gap:14px;background:var(--bg-soft)}
+.profile-stat-eb{font-size:var(--fs-eyebrow-tight);letter-spacing:0.14em;color:var(--ink-3);text-transform:uppercase;margin-bottom:5px}
+.profile-stat-num{font-family:var(--serif);font-size:var(--fs-stat-num);color:var(--ink);font-weight:600;line-height:1}
+.profile-stat-num.warn{color:var(--accent-warn)}
+.profile-stat-sub{font-size:var(--fs-eyebrow-tight);color:var(--ink-3);margin-top:3px}
+.profile-section{padding:22px 22px 18px;border-bottom:0.5px solid var(--border-soft)}
+.profile-section:last-child{border-bottom:none}
+.profile-h4{font-family:var(--serif);font-size:var(--fs-title-h4);font-weight:600;margin:0;color:var(--ink);letter-spacing:-0.015em}
+.profile-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px;flex-wrap:wrap;gap:6px}
+.prism-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px 32px}
+.prism-axis-head{display:flex;justify-content:space-between;align-items:baseline;font-size:var(--fs-tiny);color:var(--ink-3);margin-bottom:6px;letter-spacing:0.04em}
+.prism-axis-name{color:var(--ink);font-weight:500;letter-spacing:0}
+.prism-bar{position:relative;height:7px;background:var(--bg-card);border:0.5px solid var(--border);border-radius:1px}
+.prism-bar-mid{position:absolute;left:50%;top:-4px;bottom:-4px;width:1px;background:var(--ink-3)}
+.prism-bar-fill{position:absolute;left:50%;top:0;bottom:0;background:var(--ink)}
+.prism-axis-labels{display:flex;justify-content:space-between;font-size:var(--fs-eyebrow-tight);color:var(--ink-3);margin-top:5px;letter-spacing:0.04em}
+.prism-axis-pct{font-size:var(--fs-eyebrow-tight);color:var(--ink-3);margin-top:8px;letter-spacing:0.02em;line-height:1.5}
+.prism-axis-pct strong{color:var(--ink);font-weight:500}
+.prism-code{margin-top:18px;padding:11px 14px;background:var(--bg-soft);border:0.5px dashed var(--ink-3);border-radius:3px;font-size:var(--fs-tiny);color:var(--ink-2);line-height:1.65}
+.prism-code-tag{font-family:var(--mono);color:var(--ink);font-weight:500;margin:0 6px}
+.mirror-table{font-size:var(--fs-base)}
+.mirror-row-head{display:grid;grid-template-columns:1.6fr 0.7fr 1fr 0.6fr;padding:8px 4px;border-bottom:0.5px solid var(--border-soft);font-size:var(--fs-eyebrow-tight);letter-spacing:0.14em;color:var(--ink-3);text-transform:uppercase}
+.mirror-row{display:grid;grid-template-columns:1.6fr 0.7fr 1fr 0.6fr;padding:13px 4px;border-bottom:0.5px solid var(--border-soft);align-items:center}
+.mirror-row.hl{background:var(--bg-soft)}
+.mirror-status{text-align:right;font-size:var(--fs-eyebrow-tight);letter-spacing:0.04em;font-weight:500}
+.mirror-status.match{color:var(--ink)}
+.mirror-status.warn{color:var(--accent-warn)}
+.mirror-status.new{color:var(--ink-3)}
+.mirror-status.split{color:var(--ink-2)}
+.profile-foot{padding:18px 22px;background:var(--bg-soft);font-size:var(--fs-tiny);color:var(--ink-3);line-height:1.7}
+.profile-foot strong{color:var(--ink);font-weight:500}
+
+@media (max-width:640px){
+  .profile-stats{grid-template-columns:1fr 1fr}
+  .prism-grid{grid-template-columns:1fr}
+  .mirror-row-head,.mirror-row{grid-template-columns:1.6fr 1fr 0.7fr;padding-left:6px;padding-right:6px}
+  .mirror-row-head>div:nth-child(2),.mirror-row>div:nth-child(2){display:none}
+  .survey-question{padding:36px 24px 24px}
+  .survey-question-text{font-size:18px}
+  .survey-btn-row-5{grid-template-columns:repeat(5,1fr);gap:4px}
+  .survey-btn-row-5 .survey-btn{padding:12px 0;font-size:11px}
+  .reveal-item{padding:16px 18px}
+  .idc-title{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav" id="topnav">
+  <div class="topnav-inner">
+    <div class="brand" onclick="navigate('index')">
+      끝장토론
+      <span class="brand-tag">polem.org</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <span class="nav-link" data-nav="index" onclick="navigate('index')">의제</span>
+        <span class="nav-link" data-nav="profile" onclick="navigate('profile')">내 정보</span>
+        <span class="nav-link" onclick="navigate('three')">오늘의 3문항</span>
+      </div>
+      <div class="fs-toggle" role="group" aria-label="글자 크기 조절">
+        <button class="fs-toggle-btn" data-size="base" onclick="setFontSize('base')" aria-label="기본 글자 크기" title="기본 (15px)">A</button>
+        <button class="fs-toggle-btn" data-size="large" onclick="setFontSize('large')" aria-label="크게" title="크게 (17px)" style="font-size:var(--fs-small)">A</button>
+        <button class="fs-toggle-btn" data-size="xlarge" onclick="setFontSize('xlarge')" aria-label="아주 크게" title="아주 크게 (19px)" style="font-size:var(--fs-base)">A</button>
+      </div>
+      <div class="nav-user" onclick="navigate('profile')">한</div>
+    </div>
+    <button class="nav-burger" id="nav-burger" onclick="toggleMobileNav(event)">메뉴 ≡</button>
+    <div class="mobile-menu" id="mobile-menu">
+      <span class="nav-link" onclick="navigate('index'); closeMobileNav()">의제</span>
+      <span class="nav-link" onclick="navigate('profile'); closeMobileNav()">내 정보</span>
+      <span class="nav-link" onclick="navigate('three'); closeMobileNav()">오늘의 3문항</span>
+      <div class="fs-toggle" role="group" aria-label="글자 크기 조절">
+        <button class="fs-toggle-btn" data-size="base" onclick="setFontSize('base')">A 기본</button>
+        <button class="fs-toggle-btn" data-size="large" onclick="setFontSize('large')">A 크게</button>
+        <button class="fs-toggle-btn" data-size="xlarge" onclick="setFontSize('xlarge')">A 아주크게</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+<!-- ===================== INDEX VIEW ===================== -->
+<section id="view-index" class="hidden">
+<main class="main">
+<div class="card">
+
+  <div class="index-header">
+    <div>
+      <div class="eyebrow" style="margin-bottom:5px">의제 색인</div>
+      <h1 class="index-title">지금 진행 중인 토론</h1>
+      <div class="index-subtitle">총 547개 의제 · 지난 24시간 박제 1,839건 · 새 의제 8건</div>
+    </div>
+    <button class="btn btn-primary btn-large" onclick="navigate('proposal')">＋ 의제 제안</button>
+  </div>
+
+  <div class="index-controls">
+    <div class="search-wrap">
+      <input type="search" class="search-input" placeholder="의제 검색" />
+      <span class="search-label">검색</span>
+    </div>
+    <select class="select">
+      <option>전체 분야</option><option>정치</option><option>경제</option><option>사회</option><option>문화</option><option>외교·안보</option><option>환경·과학</option>
+    </select>
+    <select class="select">
+      <option>활동순</option><option>최신순</option><option>팽팽한 순</option><option>참여 많은 순</option><option>관람 많은 순</option>
+    </select>
+  </div>
+
+  <div class="index-table">
+    <div class="index-row-head">
+      <div>번호</div><div>의제</div><div>찬·반 비율</div><div style="text-align:right">참여</div><div style="text-align:right">활동</div>
+    </div>
+
+    <div class="index-row" onclick="navigate('board')" data-row="127">
+      <div class="index-row-num">#127</div>
+      <div>
+        <div class="index-row-meta"><span class="index-row-cat">경제</span></div>
+        <div class="index-row-title">다주택자 보유세 강화에 찬성하십니까?</div>
+      </div>
+      <div class="index-row-gauge"><div class="gauge"><div class="gauge-fill" style="width:71%"></div></div><div class="gauge-row"><span>71%</span><span>29%</span></div></div>
+      <div class="index-row-views" style="text-align:right;font-size:var(--fs-meta);color:var(--ink-2)">4,127<div style="font-size:var(--fs-eyebrow-tight);color:var(--ink-3)">관람 4.7만</div></div>
+      <div class="index-row-act" style="text-align:right;font-size:var(--fs-tiny);color:var(--ink-3)">5분 전</div>
+    </div>
+
+    <div class="index-row" onclick="navigate('board')" data-row="128">
+      <div class="index-row-num">#128</div>
+      <div>
+        <div class="index-row-meta"><span class="index-row-cat">사회</span><span class="index-row-tag">↑ 급증</span></div>
+        <div class="index-row-title">의대 정원 확대에 찬성하십니까?</div>
+      </div>
+      <div class="index-row-gauge"><div class="gauge"><div class="gauge-fill" style="width:38%"></div></div><div class="gauge-row"><span>38%</span><span>62%</span></div></div>
+      <div class="index-row-views" style="text-align:right;font-size:var(--fs-meta);color:var(--ink-2)">3,418<div style="font-size:var(--fs-eyebrow-tight);color:var(--ink-3)">관람 8.96만</div></div>
+      <div class="index-row-act" style="text-align:right;font-size:var(--fs-tiny);color:var(--ink-3)">2분 전</div>
+    </div>
+
+    <div class="index-row" onclick="navigate('board')" data-row="129">
+      <div class="index-row-num">#129</div>
+      <div>
+        <div class="index-row-meta"><span class="index-row-cat">정치</span></div>
+        <div class="index-row-title">모병제 전환에 찬성하십니까?</div>
+      </div>
+      <div class="index-row-gauge"><div class="gauge"><div class="gauge-fill" style="width:54%"></div></div><div class="gauge-row"><span>54%</span><span>46%</span></div></div>
+      <div class="index-row-views" style="text-align:right;font-size:var(--fs-meta);color:var(--ink-2)">2,336<div style="font-size:var(--fs-eyebrow-tight);color:var(--ink-3)">관람 3.15만</div></div>
+      <div class="index-row-act" style="text-align:right;font-size:var(--fs-tiny);color:var(--ink-3)">12분 전</div>
+    </div>
+
+    <div class="index-row" onclick="navigate('board')" data-row="130">
+      <div class="index-row-num">#130</div>
+      <div>
+        <div class="index-row-meta"><span class="index-row-cat">사회</span><span class="index-row-tag">팽팽</span></div>
+        <div class="index-row-title">사형제 부활에 찬성하십니까?</div>
+      </div>
+      <div class="index-row-gauge"><div class="gauge"><div class="gauge-fill" style="width:49%"></div></div><div class="gauge-row"><span>49%</span><span>51%</span></div></div>
+      <div class="index-row-views" style="text-align:right;font-size:var(--fs-meta);color:var(--ink-2)">1,823<div style="font-size:var(--fs-eyebrow-tight);color:var(--ink-3)">관람 2.48만</div></div>
+      <div class="index-row-act" style="text-align:right;font-size:var(--fs-tiny);color:var(--ink-3)">1시간 전</div>
+    </div>
+
+    <div class="index-row" onclick="navigate('board')" data-row="131">
+      <div class="index-row-num">#131</div>
+      <div>
+        <div class="index-row-meta"><span class="index-row-cat">문화</span><span class="index-row-tag-new">새 의제</span></div>
+        <div class="index-row-title">AI 생성물에 저작권을 부여해야 하는가?</div>
+      </div>
+      <div class="index-row-gauge"><div class="gauge"><div class="gauge-fill" style="width:33%"></div></div><div class="gauge-row"><span>33%</span><span>67%</span></div></div>
+      <div class="index-row-views" style="text-align:right;font-size:var(--fs-meta);color:var(--ink-2)">1,209<div style="font-size:var(--fs-eyebrow-tight);color:var(--ink-3)">관람 3.36만</div></div>
+      <div class="index-row-act" style="text-align:right;font-size:var(--fs-tiny);color:var(--ink-3)">8분 전</div>
+    </div>
+
+    <div class="index-row" onclick="navigate('board')" data-row="132">
+      <div class="index-row-num">#132</div>
+      <div>
+        <div class="index-row-meta"><span class="index-row-cat">경제</span></div>
+        <div class="index-row-title">부유세 신설에 찬성하십니까?</div>
+      </div>
+      <div class="index-row-gauge"><div class="gauge"><div class="gauge-fill" style="width:62%"></div></div><div class="gauge-row"><span>62%</span><span>38%</span></div></div>
+      <div class="index-row-views" style="text-align:right;font-size:var(--fs-meta);color:var(--ink-2)">1,547<div style="font-size:var(--fs-eyebrow-tight);color:var(--ink-3)">관람 1.93만</div></div>
+      <div class="index-row-act" style="text-align:right;font-size:var(--fs-tiny);color:var(--ink-3)">35분 전</div>
+    </div>
+
+    <div class="index-row" onclick="navigate('board')" data-row="089" style="opacity:0.6">
+      <div class="index-row-num">#089</div>
+      <div>
+        <div class="index-row-meta"><span class="index-row-cat">정치</span><span style="color:var(--ink-3);text-transform:uppercase">↓ 식는 중</span></div>
+        <div class="index-row-title" style="font-weight:400">선거제도 개편에 찬성하십니까?</div>
+      </div>
+      <div class="index-row-gauge"><div class="gauge"><div class="gauge-fill" style="width:55%"></div></div><div class="gauge-row"><span>55%</span><span>45%</span></div></div>
+      <div class="index-row-views" style="text-align:right;font-size:var(--fs-meta);color:var(--ink-2)">234<div style="font-size:var(--fs-eyebrow-tight);color:var(--ink-3)">관람 1,200</div></div>
+      <div class="index-row-act" style="text-align:right;font-size:var(--fs-tiny);color:var(--ink-3)">5시간 전</div>
+    </div>
+
+  </div>
+
+  <div class="index-pagi">
+    <div style="font-size:var(--fs-tiny);color:var(--ink-3)">7 / 547개 표시 중</div>
+    <div class="pagi-btns">
+      <button class="pagi-btn disabled">←</button>
+      <button class="pagi-btn active">1</button>
+      <button class="pagi-btn">2</button>
+      <button class="pagi-btn">3</button>
+      <span style="color:var(--ink-3);padding:0 4px">···</span>
+      <button class="pagi-btn">79</button>
+      <button class="pagi-btn">→</button>
+    </div>
+  </div>
+
+</div>
+</main>
+</section>
+
+<!-- ===================== BOARD VIEW (게시판) ===================== -->
+<section id="view-board" class="hidden">
+<main class="main">
+
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:var(--fs-meta);color:var(--ink-3)">
+  <span style="cursor:pointer" onclick="navigate('index')">의제 색인</span>
+  <span>/</span>
+  <span style="color:var(--ink)">정치 #129</span>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="eyebrow">의제 #129 · 정치</div>
+    <div style="font-size:var(--fs-tiny);color:var(--ink-3)">참여 2,336 · 관람 31.5만</div>
+  </div>
+
+  <div class="board-head">
+    <h1 class="board-title">모병제 전환에 찬성하십니까?</h1>
+    <div class="board-bigGauge">
+      <div style="width:54%"></div>
+      <div style="width:46%"></div>
+    </div>
+    <div class="board-counts">
+      <span>찬성 1,261 (54%)</span>
+      <span>반대 1,075 (46%)</span>
+    </div>
+  </div>
+
+  <div class="board-summary">
+    <span class="eyebrow-tight" style="margin-right:10px">AI 요약 04.28 09:00</span>
+    찬성: 현대전 전문성, 인구 감소, 청년 기회비용 / 반대: 휴전국가 병력수, 재정 부담, 안보의식 — <a onclick="showToast('전체 요약 보기 (데모)')">전체 보기</a>
+  </div>
+
+  <div class="board-grid">
+
+    <div class="board-col">
+      <div class="board-col-head">
+        <div class="board-col-head-left">
+          <span class="dot-pro"></span>
+          <span class="board-col-label">PRO · 찬성</span>
+        </div>
+        <div class="board-col-count">1,261개</div>
+      </div>
+
+      <div class="pin pin-pro">
+        <div class="pin-body">현대전은 드론·전자전 운용에 18개월로는 안 됨. 직업군인이 주력이 되어야</div>
+        <div class="pin-meta">
+          <div class="pin-meta-left"><span>@kimsu</span><span>08:42</span></div>
+          <div class="pin-meta-right">
+            <span class="pin-blind">블라인드 71%</span>
+            <span>↑ 47</span>
+            <span>댓 12</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pin pin-pro">
+        <div class="pin-quote">
+          <span class="pin-quote-eyebrow">인용 ─</span>
+          @hanmi · "정전국가에 병력 격차 무시 못 함"
+        </div>
+        <div class="pin-body">병력 *수*만 따지는 건 옛날 군대 논리. 현대전은 *질*. 5만의 정예가 50만 징집보다 강함</div>
+        <div class="pin-meta">
+          <div class="pin-meta-left"><span>@parkje</span><span>07:15</span></div>
+          <div class="pin-meta-right">
+            <span class="pin-blind">블라인드 58%</span>
+            <span>↑ 33</span>
+            <span>댓 8</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pin pin-pro">
+        <div class="pin-body">청년 1인당 1,800일 기회비용. 그 시간이 산업·교육으로 가야 함</div>
+        <div class="pin-meta">
+          <div class="pin-meta-left">
+            <span>@leesh</span><span>06:08</span>
+            <span class="pin-challenge">⚠ 1</span>
+          </div>
+          <div class="pin-meta-right">
+            <span class="pin-blind">블라인드 42%</span>
+            <span>↑ 21</span>
+            <span>댓 5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="board-col">
+      <div class="board-col-head">
+        <div class="board-col-head-left">
+          <span class="dot-con"></span>
+          <span class="board-col-label">CON · 반대</span>
+        </div>
+        <div class="board-col-count">1,075개</div>
+      </div>
+
+      <div class="pin pin-con">
+        <div class="pin-body">정전국가에 병력 격차 무시 못 함. 50만은 산수 이상의 정치적 의미</div>
+        <div class="pin-meta">
+          <div class="pin-meta-left"><span>@hanmi</span><span>09:02</span></div>
+          <div class="pin-meta-right">
+            <span class="pin-blind">블라인드 64%</span>
+            <span>↑ 51</span>
+            <span>댓 14</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pin pin-con">
+        <div class="pin-body">연 5~12조 추가 재정. 인구 절벽인데 군 예산이 복지 예산을 잠식함</div>
+        <div class="pin-meta">
+          <div class="pin-meta-left"><span>@choibo</span><span>08:30</span></div>
+          <div class="pin-meta-right">
+            <span class="pin-blind">블라인드 56%</span>
+            <span>↑ 38</span>
+            <span>댓 9</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pin pin-con">
+        <div class="pin-body">미국·영국 사례 봐라. 군이 저소득층 일자리로 고착됨</div>
+        <div class="pin-meta">
+          <div class="pin-meta-left">
+            <span>@junga</span><span>07:48</span>
+            <span class="pin-challenge">⚠ 2</span>
+          </div>
+          <div class="pin-meta-right">
+            <span class="pin-blind">블라인드 38%</span>
+            <span>↑ 29</span>
+            <span>댓 11</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="board-actions">
+    <button class="btn btn-secondary" onclick="showToast('찬성으로 박제 모달 (데모)')">＋ 찬성으로 박제</button>
+    <button class="btn btn-primary" onclick="showToast('반대로 박제 모달 (데모)')">＋ 반대로 박제</button>
+  </div>
+
+</div>
+
+<div style="margin-top:14px;font-size:var(--fs-tiny);color:var(--ink-3);text-align:center;letter-spacing:0.04em;line-height:1.7">
+  카드 클릭 → 댓글 펼침 (깊이 무한) · 회색 띠는 인용 박제 · ⚠는 출처 도전 · 황토색 % = 진영 가린 답변 동의율
+</div>
+
+</main>
+</section>
+
+<!-- ===================== PROPOSAL VIEW (의제 제안) ===================== -->
+<section id="view-proposal" class="hidden">
+<main class="main-narrow">
+
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:var(--fs-meta);color:var(--ink-3)">
+  <span style="cursor:pointer" onclick="navigate('index')">의제 색인</span>
+  <span>/</span>
+  <span style="color:var(--ink)">새 의제 제안</span>
+</div>
+
+<div class="card">
+
+  <div class="card-header">
+    <div class="eyebrow">의제 제안</div>
+    <span style="font-size:var(--fs-tiny);color:var(--ink-3);cursor:pointer" onclick="navigate('index')">× 닫기</span>
+  </div>
+
+  <div style="padding:24px 28px 14px">
+    <h2 style="font-family:var(--serif);font-size:var(--fs-stat-num);font-weight:600;letter-spacing:-0.015em;margin:0 0 6px;color:var(--ink)">새 의제 제안하기</h2>
+    <p style="font-size:var(--fs-meta);color:var(--ink-3);margin:0;line-height:1.65">자유롭게 적어주세요. AI가 토론 형식으로 다듬고, 관리자가 최종 승인합니다. 보통 1~2일 안에 답변드려요.</p>
+  </div>
+
+  <div class="prop-grid">
+
+    <div class="prop-col prop-col-input">
+      <div class="eyebrow-tight" style="margin-bottom:14px;font-weight:500">당신의 제안</div>
+
+      <div class="prop-field">
+        <label class="prop-label">어떤 주제로 토론하고 싶으세요?</label>
+        <textarea class="prop-input prop-textarea-small">모병제로 가야 할 거 같은데 어떻게 생각하세요</textarea>
+      </div>
+
+      <div class="prop-field">
+        <label class="prop-label">왜 이 의제가 필요하다고 생각하세요? <span class="opt">(선택)</span></label>
+        <textarea class="prop-input prop-textarea-large">인구 줄어들고 무인무기 시대인데 50만 병력 유지가 말이 안 됨. 그런데 정전국가라서 반대 의견도 많을 듯. 한 번 정리할 필요</textarea>
+      </div>
+
+      <div class="prop-field" style="margin-bottom:0">
+        <label class="prop-label">분야 <span class="opt">(자동 분류됨, 수정 가능)</span></label>
+        <select class="select" style="width:100%">
+          <option>정치 (자동)</option><option>경제</option><option>사회</option><option>문화</option><option>외교·안보</option><option>환경·과학</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="prop-col prop-col-ai">
+      <div class="prop-ai-status">
+        <div class="eyebrow-tight" style="font-weight:500">AI 정제 결과 <span class="prop-ai-status-dot">●</span></div>
+        <span style="font-size:var(--fs-eyebrow-tight);color:var(--ink-3)">실시간</span>
+      </div>
+
+      <div class="prop-ai-row">
+        <div class="prop-ai-key">의제 제목</div>
+        <div class="prop-ai-val-title">모병제 전환에 찬성하십니까?</div>
+      </div>
+
+      <div class="prop-ai-row">
+        <div class="prop-ai-key">분야</div>
+        <div class="prop-ai-val">정치</div>
+      </div>
+
+      <div class="prop-ai-row">
+        <div class="prop-ai-key">중복 체크</div>
+        <div class="prop-check">
+          <span class="prop-check-icon">✓</span>
+          <div class="prop-check-text">유사 게시판 없음. 새 의제로 등록 가능합니다.</div>
+        </div>
+      </div>
+
+      <div class="prop-ai-row" style="margin-bottom:0">
+        <div class="prop-ai-key">필터 검사</div>
+        <div class="prop-check">
+          <span class="prop-check-icon">✓</span>
+          <div class="prop-check-text">어그로·혐오·광고 표현 감지되지 않음</div>
+        </div>
+      </div>
+
+      <div class="prop-note">
+        <span style="color:var(--ink-3);letter-spacing:0.04em">참고 ─</span>
+        AI는 *형식만* 다듬어요. 토론 내용·시드 주장은 만들지 않습니다. 본문은 당신이 적은 그대로 게시판에 첨부됩니다.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="prop-foot">
+    <div class="prop-foot-meta">제안자 <strong>@한</strong>로 표시됨 · 권한 없음</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost" onclick="navigate('index')">취소</button>
+      <button class="btn btn-primary" onclick="showToast('관리자에게 보냈어요. 1-2일 내 답변드립니다 (데모)'); setTimeout(()=>navigate('index'),900)">관리자에게 보내기 →</button>
+    </div>
+  </div>
+
+</div>
+
+</main>
+</section>
+
+<!-- ===================== IDEOLOGY-CHECK MODAL VIEW ===================== -->
+<section id="view-ideology" class="hidden">
+<div class="modal-overlay">
+  <div class="modal-card">
+
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+      <div class="eyebrow">환영합니다 · @한</div>
+      <span style="font-size:var(--fs-tiny);color:var(--ink-3)">단계 3 / 3</span>
+    </div>
+
+    <div class="idc-body">
+      <h2 class="idc-title">사상검증을<br>하시겠습니까?</h2>
+      <p class="idc-desc">사회·윤리·경제·변화 4개 축으로<br>당신의 정치 성향을 측정합니다.</p>
+      <div class="idc-meta">약 5분 소요 · 12개 질문 · 결과는 본인만 봄</div>
+    </div>
+
+    <div class="idc-buttons">
+      <button class="btn btn-primary btn-large" onclick="navigate('likert')">예, 시작합니다 →</button>
+      <button class="btn btn-ghost" style="padding:13px;font-size:var(--fs-small)" onclick="navigate('index')">아니오, 나중에 답하겠습니다</button>
+    </div>
+
+    <div style="padding:14px 28px;border-top:0.5px solid var(--border-soft);background:var(--bg-soft);font-size:var(--fs-tiny);color:var(--ink-3);line-height:1.7">
+      <strong style="color:var(--ink);font-weight:500">건너뛰어도</strong> 매일 3문항 답변으로 점진 측정됩니다. 단 가입 시 한 번에 답하면 *기준점*이 잡혀 변화 추적이 정확해집니다.
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ===================== LIKERT VIEW (사상검증 진행) ===================== -->
+<section id="view-likert" class="hidden">
+<main class="main-narrow" style="padding-top:48px">
+
+<div class="survey-card">
+
+  <div class="survey-header">
+    <div class="eyebrow">사상검증</div>
+    <span style="font-size:var(--fs-tiny);color:var(--ink-3);cursor:pointer" onclick="navigate('index')">중단 ×</span>
+  </div>
+
+  <div class="survey-progress">
+    <div class="survey-progress-row">
+      <span style="letter-spacing:0.04em">5 / 12</span>
+      <span style="font-size:var(--fs-eyebrow-tight);letter-spacing:0.04em">축: 경제 (Economy)</span>
+    </div>
+    <div class="survey-progress-bar">
+      <div class="survey-progress-tick done"></div>
+      <div class="survey-progress-tick done"></div>
+      <div class="survey-progress-tick done"></div>
+      <div class="survey-progress-tick done"></div>
+      <div class="survey-progress-tick done"></div>
+      <div class="survey-progress-tick"></div>
+      <div class="survey-progress-tick"></div>
+      <div class="survey-progress-tick"></div>
+      <div class="survey-progress-tick"></div>
+      <div class="survey-progress-tick"></div>
+      <div class="survey-progress-tick"></div>
+      <div class="survey-progress-tick"></div>
+    </div>
+  </div>
+
+  <div class="survey-question">
+    <div class="survey-question-eyebrow">다음 의견에 어느 정도 동의하십니까?</div>
+    <div class="survey-question-text">"사회는 결과의 평등보다<br>기회의 평등을 추구해야 한다"</div>
+  </div>
+
+  <div class="survey-buttons">
+    <div style="display:flex;justify-content:space-between;font-size:var(--fs-eyebrow-tight);color:var(--ink-3);margin-bottom:10px;letter-spacing:0.04em">
+      <span>매우 반대</span><span>매우 동의</span>
+    </div>
+    <div class="survey-btn-row-5">
+      <button class="survey-btn" onclick="finishLikert()" style="font-weight:500">매우<br>반대</button>
+      <button class="survey-btn" onclick="finishLikert()">반대</button>
+      <button class="survey-btn survey-btn-mute" onclick="finishLikert()">중립</button>
+      <button class="survey-btn" onclick="finishLikert()">동의</button>
+      <button class="survey-btn survey-btn-primary" onclick="finishLikert()">매우<br>동의</button>
+    </div>
+  </div>
+
+  <div class="survey-foot">
+    <span style="cursor:pointer">← 이전 질문</span>
+    <span>본인만 보임</span>
+    <span style="cursor:pointer">건너뛰기 →</span>
+  </div>
+
+</div>
+
+</main>
+</section>
+
+<!-- ===================== THREE QUESTIONS VIEW (오늘의 3문항) ===================== -->
+<section id="view-three" class="hidden">
+<main class="main-narrow" style="padding-top:48px">
+
+<div class="survey-card">
+
+  <div class="survey-header">
+    <div class="eyebrow">오늘의 3문항</div>
+    <span style="font-size:var(--fs-tiny);color:var(--ink-3);cursor:pointer" onclick="navigate('index')">나중에 답하기 ×</span>
+  </div>
+
+  <div class="survey-progress">
+    <div class="survey-progress-row">
+      <span style="letter-spacing:0.04em">2 / 3</span>
+      <span style="font-size:var(--fs-eyebrow-tight);letter-spacing:0.04em">진영 가린 블라인드</span>
+    </div>
+    <div class="survey-progress-bar">
+      <div class="survey-progress-tick done" style="height:3px"></div>
+      <div class="survey-progress-tick done" style="height:3px"></div>
+      <div class="survey-progress-tick" style="height:3px"></div>
+    </div>
+  </div>
+
+  <div class="survey-question">
+    <div class="survey-question-eyebrow">다음 의견에 동의하십니까?</div>
+    <div class="survey-question-text">"특정 직역의 인력 확대만으로<br>지역 격차가 해소되지 않는다"</div>
+    <div style="font-size:var(--fs-tiny);color:var(--ink-3);letter-spacing:0.02em;margin-top:14px">의제명·진영은 가려져 있습니다 · 논리만으로 판단해주세요</div>
+  </div>
+
+  <div class="survey-buttons">
+    <div class="survey-btn-row-2">
+      <button class="survey-btn survey-btn-primary" onclick="navigate('reveal')">동의합니다</button>
+      <button class="survey-btn" onclick="navigate('reveal')">동의하지 않습니다</button>
+    </div>
+  </div>
+
+  <div class="survey-skip">
+    <button class="survey-skip-btn" onclick="navigate('reveal')">잘 모르겠습니다 →</button>
+  </div>
+
+  <div class="survey-foot">
+    <span>당신의 답변은 본인만 볼 수 있어요</span>
+    <span>매일 새 3문항</span>
+  </div>
+
+</div>
+
+</main>
+</section>
+
+<!-- ===================== REVEAL VIEW (3문항 결과) ===================== -->
+<section id="view-reveal" class="hidden">
+<main class="main-narrow" style="padding-top:32px">
+
+<div class="reveal-card">
+
+  <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+    <div class="eyebrow">오늘의 3문항 결과</div>
+    <span style="font-size:var(--fs-tiny);color:var(--ink-3)">04.28</span>
+  </div>
+
+  <div class="reveal-intro">
+    <h2 class="reveal-intro-title">당신의 답변, 그 정체</h2>
+    <p class="reveal-intro-sub">진영을 가린 채 묻고, 이제 답변이 어느 박제에서 왔는지 밝힙니다</p>
+  </div>
+
+  <div class="reveal-item">
+    <div class="reveal-num">1</div>
+    <div class="reveal-item-body">
+      <div class="reveal-q">"특정 직역의 인력 확대만으로 지역 격차가 해소되지 않는다"</div>
+      <div class="reveal-a-row">
+        <span class="reveal-a-label">당신의 답변</span>
+        <span class="reveal-a">동의</span>
+      </div>
+      <div class="reveal-info">
+        <span class="reveal-info-eyebrow">정체 ─</span>
+        <span class="reveal-info-tag">의대 정원 확대</span>의 <span class="reveal-info-tag">반대</span> 주장
+        <div class="reveal-info-cmp">→ 당신은 의대 정원 확대에 *반대* 입장에 가까움 · 박제 기록 없음 (새 발견)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal-item">
+    <div class="reveal-num">2</div>
+    <div class="reveal-item-body">
+      <div class="reveal-q">"현대전이 변하고 있는데 기존 인력 규모를 유지하는 것이 시대착오"</div>
+      <div class="reveal-a-row">
+        <span class="reveal-a-label">당신의 답변</span>
+        <span class="reveal-a">동의</span>
+      </div>
+      <div class="reveal-info">
+        <span class="reveal-info-eyebrow">정체 ─</span>
+        <span class="reveal-info-tag">모병제 전환</span>의 <span class="reveal-info-tag">찬성</span> 주장
+        <div class="reveal-info-cmp">→ 당신은 모병제 전환에 *찬성* 입장에 가까움 · 박제 5건 (찬성) — <strong style="color:var(--ink)">일치</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal-item">
+    <div class="reveal-num">3</div>
+    <div class="reveal-item-body">
+      <div class="reveal-q">"강력한 처벌은 정의가 아닌 사회의 보복 욕망일 뿐이다"</div>
+      <div class="reveal-a-row">
+        <span class="reveal-a-label">당신의 답변</span>
+        <span class="reveal-a">반대</span>
+      </div>
+      <div class="reveal-info">
+        <span class="reveal-info-eyebrow">정체 ─</span>
+        <span class="reveal-info-tag">사형제 부활</span>의 <span class="reveal-info-tag">반대</span> 주장
+        <div class="reveal-info-cmp">→ 당신은 사형제 부활에 *찬성* 입장에 가까움 · 박제 1건 (반대) — <span class="reveal-info-warn">불일치 · 살펴볼 만함</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal-foot">
+    <div style="font-size:var(--fs-tiny);color:var(--ink-3);line-height:1.55;flex:1;min-width:200px">불일치 1건 — 의식적 입장과 답변 패턴이 다름. 살펴볼 만한 의제예요</div>
+    <button class="btn btn-primary" onclick="navigate('profile')">내 정보 페이지 →</button>
+  </div>
+
+</div>
+
+</main>
+</section>
+
+<!-- ===================== PROFILE VIEW (내 정보) ===================== -->
+<section id="view-profile" class="hidden">
+<main class="main">
+
+<div class="card">
+
+  <div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px">
+    <div>
+      <div class="eyebrow" style="margin-bottom:4px">내 정보 (본인만 보임)</div>
+      <h1 style="font-family:var(--serif);font-size:var(--fs-title-h2);font-weight:600;letter-spacing:-0.015em;margin:0;color:var(--ink)">@한</h1>
+      <div style="font-size:var(--fs-meta);color:var(--ink-3);margin-top:4px">2026.01.15 가입 · 활동 103일 · 사상검증 완료</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost" style="padding:7px 12px;font-size:var(--fs-tiny)" onclick="showToast('설정 (데모)')">설정</button>
+      <button class="btn btn-secondary" style="padding:7px 12px;font-size:var(--fs-tiny)" onclick="showToast('공개 프로필 보기 (데모)')">공개 프로필 보기</button>
+    </div>
+  </div>
+
+  <div class="profile-stats">
+    <div>
+      <div class="profile-stat-eb">박제</div>
+      <div class="profile-stat-num">14</div>
+      <div class="profile-stat-sub">5개 의제</div>
+    </div>
+    <div>
+      <div class="profile-stat-eb">받은 동조</div>
+      <div class="profile-stat-num">317</div>
+      <div class="profile-stat-sub">평균 22.6 / 박제</div>
+    </div>
+    <div>
+      <div class="profile-stat-eb">3문항 답변</div>
+      <div class="profile-stat-num">87</div>
+      <div class="profile-stat-sub">29일 / 103일</div>
+    </div>
+    <div>
+      <div class="profile-stat-eb">살펴볼 만함</div>
+      <div class="profile-stat-num warn">3</div>
+      <div class="profile-stat-sub">불일치 의제</div>
+    </div>
+  </div>
+
+  <div class="profile-section">
+    <div class="profile-row">
+      <h2 class="profile-h4">가치관 프리즘 · 4축</h2>
+      <span style="font-size:var(--fs-tiny);color:var(--ink-3)">최근 갱신 04.28</span>
+    </div>
+
+    <div class="prism-grid">
+
+      <div>
+        <div class="prism-axis-head"><span class="prism-axis-name">S · 사회</span><span>−0.42 (공동체 쪽)</span></div>
+        <div class="prism-bar">
+          <div class="prism-bar-mid"></div>
+          <div class="prism-bar-fill" style="width:21%;transform:translateX(-100%)"></div>
+        </div>
+        <div class="prism-axis-labels"><span>공동체주의</span><span>개인주의</span></div>
+        <div class="prism-axis-pct">전체 사용자 중 <strong>상위 28%</strong> · 공동체주의 성향</div>
+      </div>
+
+      <div>
+        <div class="prism-axis-head"><span class="prism-axis-name">E · 윤리</span><span>+0.18 (상황 맥락 쪽)</span></div>
+        <div class="prism-bar">
+          <div class="prism-bar-mid"></div>
+          <div class="prism-bar-fill" style="width:9%"></div>
+        </div>
+        <div class="prism-axis-labels"><span>보편 원칙</span><span>상황 맥락</span></div>
+        <div class="prism-axis-pct">전체 분포 <strong>중앙 부근 (52%)</strong> · 실용적</div>
+      </div>
+
+      <div>
+        <div class="prism-axis-head"><span class="prism-axis-name">E · 경제</span><span>−0.31 (안정 분배 쪽)</span></div>
+        <div class="prism-bar">
+          <div class="prism-bar-mid"></div>
+          <div class="prism-bar-fill" style="width:15.5%;transform:translateX(-100%)"></div>
+        </div>
+        <div class="prism-axis-labels"><span>안정/분배</span><span>성장/위험</span></div>
+        <div class="prism-axis-pct">전체 사용자 중 <strong>상위 35%</strong> · 안정 분배 성향</div>
+      </div>
+
+      <div>
+        <div class="prism-axis-head"><span class="prism-axis-name">C · 변화</span><span>+0.55 (혁신 개방 쪽)</span></div>
+        <div class="prism-bar">
+          <div class="prism-bar-mid"></div>
+          <div class="prism-bar-fill" style="width:27.5%"></div>
+        </div>
+        <div class="prism-axis-labels"><span>전통/보존</span><span>혁신/개방</span></div>
+        <div class="prism-axis-pct">전체 사용자 중 <strong>상위 18%</strong> · 혁신 개방 성향</div>
+      </div>
+
+    </div>
+
+    <div class="prism-code">
+      <span style="color:var(--ink-3);letter-spacing:0.04em">코드 ─</span>
+      <span class="prism-code-tag">S−E+E−C+</span>
+      공동체·실용·분배·혁신 성향. 가입 시 사상검증 + 87회 3문항으로 측정.
+      <a style="color:var(--ink);border-bottom:1px solid var(--ink);cursor:pointer;margin-left:4px" onclick="showToast('시간 변화 차트 (v1.5+ 기능)')">시간 변화 →</a>
+    </div>
+  </div>
+
+  <div class="profile-section" style="border-bottom:none">
+    <div class="profile-row">
+      <h2 class="profile-h4">의제별 자기 거울</h2>
+      <span style="font-size:var(--fs-tiny);color:var(--ink-3)">박제 입장 vs 블라인드 답변</span>
+    </div>
+
+    <div class="mirror-table">
+      <div class="mirror-row-head">
+        <div>의제</div><div>박제</div><div>블라인드</div><div style="text-align:right">상태</div>
+      </div>
+
+      <div class="mirror-row">
+        <div>
+          <div style="font-size:var(--fs-small);color:var(--ink);font-weight:500;letter-spacing:-0.005em">모병제 전환</div>
+          <div style="font-size:var(--fs-eyebrow-tight);color:var(--ink-3);margin-top:2px">정치</div>
+        </div>
+        <div style="font-size:var(--fs-meta);color:var(--ink)">찬성 5</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="gauge" style="flex:1;max-width:120px"><div class="gauge-fill" style="width:78%"></div></div>
+          <span style="font-size:var(--fs-tiny);color:var(--ink-2)">7:2</span>
+        </div>
+        <div class="mirror-status match">일치</div>
+      </div>
+
+      <div class="mirror-row hl">
+        <div>
+          <div style="font-size:var(--fs-small);color:var(--ink);font-weight:500;letter-spacing:-0.005em">사형제 부활</div>
+          <div style="font-size:var(--fs-eyebrow-tight);color:var(--ink-3);margin-top:2px">사회</div>
+        </div>
+        <div style="font-size:var(--fs-meta);color:var(--ink)">반대 1</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="gauge" style="flex:1;max-width:120px"><div class="gauge-fill" style="width:67%"></div></div>
+          <span style="font-size:var(--fs-tiny);color:var(--ink-2)">4:2</span>
+        </div>
+        <div class="mirror-status warn">살펴볼 만함</div>
+      </div>
+
+      <div class="mirror-row">
+        <div>
+          <div style="font-size:var(--fs-small);color:var(--ink);font-weight:500;letter-spacing:-0.005em">다주택자 보유세 강화</div>
+          <div style="font-size:var(--fs-eyebrow-tight);color:var(--ink-3);margin-top:2px">경제</div>
+        </div>
+        <div style="font-size:var(--fs-meta);color:var(--ink)">찬성 3 / 반대 1</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="gauge" style="flex:1;max-width:120px"><div class="gauge-fill" style="width:60%"></div></div>
+          <span style="font-size:var(--fs-tiny);color:var(--ink-2)">3:2</span>
+        </div>
+        <div class="mirror-status match">일치</div>
+      </div>
+
+      <div class="mirror-row">
+        <div>
+          <div style="font-size:var(--fs-small);color:var(--ink);font-weight:500;letter-spacing:-0.005em">의대 정원 확대</div>
+          <div style="font-size:var(--fs-eyebrow-tight);color:var(--ink-3);margin-top:2px">사회</div>
+        </div>
+        <div style="font-size:var(--fs-meta);color:var(--ink-3)">박제 없음</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="gauge" style="flex:1;max-width:120px"><div class="gauge-fill" style="width:25%"></div></div>
+          <span style="font-size:var(--fs-tiny);color:var(--ink-2)">1:3</span>
+        </div>
+        <div class="mirror-status new">새 발견</div>
+      </div>
+
+      <div class="mirror-row">
+        <div>
+          <div style="font-size:var(--fs-small);color:var(--ink);font-weight:500;letter-spacing:-0.005em">부유세 신설</div>
+          <div style="font-size:var(--fs-eyebrow-tight);color:var(--ink-3);margin-top:2px">경제</div>
+        </div>
+        <div style="font-size:var(--fs-meta);color:var(--ink)">찬성 2</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="gauge" style="flex:1;max-width:120px"><div class="gauge-fill" style="width:50%"></div></div>
+          <span style="font-size:var(--fs-tiny);color:var(--ink-2)">1:1</span>
+        </div>
+        <div class="mirror-status split">갈림</div>
+      </div>
+
+      <div style="text-align:center;padding:14px 0 4px;font-size:var(--fs-tiny);color:var(--ink-3)">12개 의제 더 보기 ↓</div>
+
+    </div>
+  </div>
+
+  <div class="profile-foot">
+    <strong>두 레이어 자기 거울</strong> ─
+    4축 프리즘은 *추상적 성향*, 의제별 카운트는 *구체적 입장*. 두 데이터가 다르면 새 발견. <strong>상위 X%</strong>는 같은 사이트 사용자 분포 안 위치예요.
+  </div>
+
+</div>
+
+<div style="margin-top:18px;text-align:center">
+  <button class="btn btn-ghost" onclick="navigate('ideology')" style="margin-right:8px">사상검증 보기</button>
+  <button class="btn btn-ghost" onclick="navigate('three')" style="margin-right:8px">오늘의 3문항</button>
+  <button class="btn btn-ghost" onclick="navigate('reveal')">3문항 결과 보기</button>
+</div>
+
+</main>
+</section>
+
+<!-- ===================== OTHER VIEWS WILL BE ADDED ===================== -->
+
+<script>
+const state={view:'index'};
+
+function $(id){return document.getElementById(id);}
+
+function navigate(view){
+  document.querySelectorAll('section[id^="view-"]').forEach(s=>s.classList.add('hidden'));
+  const v=$('view-'+view);
+  if(v) v.classList.remove('hidden');
+  state.view=view;
+  document.querySelectorAll('.nav-link[data-nav]').forEach(l=>{
+    l.classList.toggle('active',l.dataset.nav===view);
+  });
+  window.scrollTo(0,0);
+  closeMobileNav();
+}
+
+function showToast(msg,ms){
+  ms=ms||2400;
+  const c=$('toast-container');if(!c) return;
+  const t=document.createElement('div');t.className='toast';t.textContent=msg;
+  c.appendChild(t);
+  setTimeout(()=>{t.classList.add('fading');setTimeout(()=>t.remove(),300);},ms);
+}
+
+function toggleMobileNav(e){if(e)e.stopPropagation();$('mobile-menu').classList.toggle('open');}
+function closeMobileNav(){const m=$('mobile-menu');if(m)m.classList.remove('open');}
+document.addEventListener('click',e=>{
+  const m=$('mobile-menu'),b=$('nav-burger');
+  if(!m||!b) return;
+  if(!m.contains(e.target)&&!b.contains(e.target))m.classList.remove('open');
+});
+
+function setFontSize(size){
+  const validSizes = ['base','large','xlarge'];
+  if(!validSizes.includes(size)) size = 'base';
+
+  // body class swap
+  document.body.classList.remove('fs-large','fs-xlarge');
+  if(size === 'large') document.body.classList.add('fs-large');
+  else if(size === 'xlarge') document.body.classList.add('fs-xlarge');
+
+  // active button highlight
+  document.querySelectorAll('.fs-toggle-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.size === size);
+  });
+
+  // persist
+  try{ localStorage.setItem('arena-fs', size); }catch(e){}
+}
+
+function loadFontSize(){
+  let size = 'base';
+  try{ size = localStorage.getItem('arena-fs') || 'base'; }catch(e){}
+  setFontSize(size);
+}
+
+function finishLikert(){
+  // 데모: 답변 후 진행 — 실제로는 12개 다 답해야 끝.
+  showToast('답변 기록 (데모 — 다음 질문으로 넘어갑니다)');
+  // 여기서 실제 사이트는 다음 질문으로. 데모는 마지막 단계 시뮬레이션:
+  setTimeout(() => navigate('profile'), 1100);
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  // 글자 크기 복원
+  loadFontSize();
+
+  // 데모 시작 시점: URL 해시 또는 첫 진입에 따라 결정
+  const hash = window.location.hash.replace('#','');
+  const validViews = ['index','board','proposal','ideology','likert','three','reveal','profile'];
+  if(validViews.includes(hash)){
+    navigate(hash);
+  } else {
+    navigate('index');
+  }
+});
+
+// 해시 기반 라우팅 추가 (뒤로가기 작동)
+window.addEventListener('hashchange',()=>{
+  const hash = window.location.hash.replace('#','');
+  const validViews = ['index','board','proposal','ideology','likert','three','reveal','profile'];
+  if(validViews.includes(hash) && hash !== state.view){
+    navigate(hash);
+  }
+});
+
+// navigate 호출 시 hash 업데이트
+const _origNavigate = navigate;
+window.navigate = function(view){
+  _origNavigate(view);
+  if(window.location.hash.replace('#','') !== view){
+    history.replaceState(null,'','#'+view);
+  }
+};
+</script>
+</body>
+</html>
