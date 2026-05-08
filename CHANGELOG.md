@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-05-09 — Phase 2 의제 색인 + 게시판 (읽기 전용)
+- `/` (홈) — 의제 색인 표. polem.html `view-index` 디자인 따름. 검색·카테고리·정렬(활동순/최신순/팽팽한 순/참여많은순)·페이지네이션
+- `/boards/[id]` — 게시판 상세. polem.html `view-board` 디자인 따름. 좌우 분할(찬/반), 비율 막대, AI 50:50 요약 placeholder
+- `components/board/BoardRow.tsx` — 색인 row (#번호, 카테고리 라벨, 새 의제/팽팽 태그, 비율 막대, 참여·관람 카운트)
+- `components/board/Pin.tsx` — 박제 카드 (PRO=흰 카드, CON=잉크 카드). 인용 박제 표시·블라인드 동의율·출처 도전 배지·동조/댓글 카운트
+- `components/board/BoardListFilters.tsx` — 검색/필터 (client, URL 동기화)
+- `components/ui/Gauge.tsx` — 찬·반 비율 막대 (헌법 2.4 진영색 회피, 흰/잉크)
+- `lib/format.ts` — `formatRelativeKo`, `formatCount` (1.2천, 4.7만)
+- `prisma/seed.ts` — 14개 의제 + 65개 박제 시드 (한국 사회 실 찬반 사안: 보유세·의대정원·모병제·사형제·AI저작권·부유세·선거제·원전·주4일제·동성결혼·AI학습데이터·기본소득·한미일·탄소세)
+- `package.json` — `db:migrate`, `db:seed`, `db:studio` 스크립트, `prisma.seed` 훅 (tsx)
+- 박제 작성 버튼은 Phase 3 진입 전까지 disabled
+
 ## 2026-05-09 — Phase 1 인증 + 사용자
 - `/login` — 카카오 로그인 버튼 (`#FEE500` 카카오 브랜드 컬러)
 - `/post-login` — OAuth 직후 라우터. 닉네임 미설정자는 `/onboarding/nickname` 으로 강제, 그 외는 next URL 로
