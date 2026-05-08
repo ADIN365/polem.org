@@ -42,4 +42,16 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+  events: {
+    // 신규 가입 시 빈 PrismScore row 생성 — Phase 5 Likert 답변으로 채움.
+    async createUser({ user }) {
+      try {
+        await prisma.prismScore.create({
+          data: { userId: user.id },
+        });
+      } catch {
+        // PrismScore 가 이미 있거나 race 상황은 무시 (기능 차단 아님)
+      }
+    },
+  },
 };
