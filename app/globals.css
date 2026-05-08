@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ───────────────────────────────────────────────────────────────
+   끝장토론 디자인 토큰 (MAPPING.md §1)
+   - 흑백 잉크/종이. 정당색 절대 X.
+   - 강조색은 황금(블라인드)·테라코타(살펴볼 만함)만 극히 제한 사용.
+   ─────────────────────────────────────────────────────────────── */
+
+:root {
+  /* 베이스 */
+  --bg-page:     #F5F5F4;
+  --bg-card:     #fff;
+  --bg-soft:     #FAFAF9;
+  --bg-dark:     #2B2620;
+  --bg-deep:     #3E342B;
+
+  /* 잉크 (글자) */
+  --ink:         #2B2620;
+  --ink-2:       #4A4239;
+  --ink-3:       #6F665C;
+  --ink-4:       #A8A09A;
+  --ink-soft:    #C8C2BC;
+
+  /* 종이 크림 (잉크 카드 위 글자) */
+  --paper-cream:     #F5F1E8;
+  --paper-cream-dim: #A8A4A0;
+
+  /* 테두리 */
+  --border:      #2B2620;
+  --border-soft: #D4CFC8;
+
+  /* 강조 (의도적으로 매우 절제) */
+  --accent-warm:       #9B7B2C;
+  --accent-warm-light: #C9A453;
+  --accent-warn:       #8B3D2E;
+
+  /* Font family */
+  --sans:  'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --serif: 'Noto Serif KR', Georgia, serif;
+  --mono:  'SF Mono', ui-monospace, Consolas, monospace;
+
+  /* Radius / transition */
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 6px;
+  --tr: 0.18s cubic-bezier(0.2, 0.6, 0.2, 1);
+
+  /* Font sizes — body class 로 토글 */
+  --fs-base:         15px;
+  --fs-small:        13px;
+  --fs-tiny:         11px;
+  --fs-meta:         12px;
+  --fs-pin:          14px;
+  --fs-button:       13px;
+  --fs-button-large: 15px;
+  --fs-eyebrow:      11px;
+  --fs-eyebrow-tight:10px;
+  --fs-input:        14px;
+  --fs-question:     23px;
+  --fs-title-h1:     26px;
+  --fs-title-h2:     24px;
+  --fs-title-h3:     22px;
+  --fs-title-h4:     17px;
+  --fs-title-modal:  30px;
+  --fs-stat-num:     24px;
+  --fs-brand:        23px;
+}
+
+body.fs-large {
+  --fs-base:         17px;
+  --fs-small:        15px;
+  --fs-tiny:         12px;
+  --fs-meta:         13px;
+  --fs-pin:          16px;
+  --fs-button:       14px;
+  --fs-button-large: 16px;
+  --fs-eyebrow:      12px;
+  --fs-eyebrow-tight:11px;
+  --fs-input:        15px;
+  --fs-question:     25px;
+  --fs-title-h1:     28px;
+  --fs-title-h2:     26px;
+  --fs-title-h3:     24px;
+  --fs-title-h4:     18px;
+  --fs-title-modal:  32px;
+  --fs-stat-num:     26px;
+  --fs-brand:        24px;
+}
+
+body.fs-xlarge {
+  --fs-base:         19px;
+  --fs-small:        16px;
+  --fs-tiny:         13px;
+  --fs-meta:         14px;
+  --fs-pin:          18px;
+  --fs-button:       15px;
+  --fs-button-large: 17px;
+  --fs-eyebrow:      13px;
+  --fs-eyebrow-tight:12px;
+  --fs-input:        16px;
+  --fs-question:     28px;
+  --fs-title-h1:     32px;
+  --fs-title-h2:     30px;
+  --fs-title-h3:     27px;
+  --fs-title-h4:     20px;
+  --fs-title-modal:  36px;
+  --fs-stat-num:     30px;
+  --fs-brand:        26px;
+}
+
+/* ─── 베이스 리셋 ────────────────────────────────────────────── */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-page);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: font-size 0.18s ease;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@layer utilities {
+  .serif { font-family: var(--serif); }
+  .mono { font-family: var(--mono); }
+}

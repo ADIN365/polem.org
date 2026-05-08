@@ -1,0 +1,458 @@
+// 끝장토론 (polem.org) — v1.0 schema
+// MAPPING.md §4 참조. v2/v3 (LogicNode/Tweet) 자리는 주석으로 표시.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =========================================================
+// NextAuth (Auth.js) Prisma Adapter 모델
+// https://authjs.dev/reference/adapter/prisma
+// =========================================================
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// =========================================================
+// v1.0 — Core Models
+// =========================================================
+
+model User {
+  id            String    @id @default(cuid())
+
+  // NextAuth 표준 (카카오 프로필에서 채움)
+  email         String?   @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+
+  // 끝장토론 고유 필드
+  nickname      String?   @unique // 화면에 보이는 이름. 닉네임 설정 화면에서 직접 입력
+  role          Role      @default(USER)
+
+  // privacy
+  prismPublic   Boolean   @default(true) // 4축 점수 공개 여부 (디폴트 공개, 토글 가능)
+
+  // moderation
+  warningCount   Int       @default(0)
+  suspendedUntil DateTime?
+  banned         Boolean   @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // relations — NextAuth
+  accounts Account[]
+  sessions Session[]
+
+  // relations — 끝장토론
+  pins              Pin[]
+  comments          Comment[]
+  endorsements      Endorsement[]
+  challenges        Challenge[]
+  reports           Report[]       @relation("Reporter")
+  proposals         Proposal[]
+  blindAnswers      BlindAnswer[]
+  likertAnswers     LikertAnswer[]
+  prismScore        PrismScore?
+  notifications     Notification[]
+  reviewedProposals Proposal[]     @relation("Reviewer")
+  resolvedReports   Report[]       @relation("Resolver")
+  proposedBoards    Board[]        @relation("BoardProposer")
+
+  @@index([nickname])
+}
+
+enum Role {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+model Board {
+  id       String  @id @default(cuid())
+  title    String
+  body     String? // 의제 본문 (제안자가 적은 배경)
+  category Category
+
+  proposerId String?
+  proposer   User?   @relation("BoardProposer", fields: [proposerId], references: [id])
+
+  proCount         Int @default(0) // 찬성 박제 수
+  conCount         Int @default(0) // 반대 박제 수
+  viewCount        Int @default(0)
+  participantCount Int @default(0) // 고유 참여자
+
+  status BoardStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // AI 50:50 요약 (배치 갱신)
+  aiSummaryPro String?
+  aiSummaryCon String?
+  aiSummaryAt  DateTime?
+
+  pins     Pin[]
+  proposal Proposal?
+
+  @@index([category, updatedAt])
+  @@index([status])
+}
+
+enum Category {
+  POLITICS // 정치
+  ECONOMY // 경제
+  SOCIETY // 사회
+  CULTURE // 문화
+  FOREIGN_AFFAIRS // 외교·안보
+  ENVIRONMENT // 환경·과학
+}
+
+enum BoardStatus {
+  ACTIVE
+  ARCHIVED
+  HIDDEN
+}
+
+model Pin {
+  id String @id @default(cuid())
+
+  boardId String
+  board   Board  @relation(fields: [boardId], references: [id])
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  side PinSide
+  body String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 인용 박제 (다른 박제 인용)
+  quotedPinId String?
+  quotedPin   Pin?    @relation("Quotation", fields: [quotedPinId], references: [id])
+  quotingPins Pin[]   @relation("Quotation")
+
+  // 블라인드 질문 변환 (배치 작업 결과, 옵션)
+  blindQuestion      String?
+  blindQuestionAt    DateTime?
+  blindAgreeCount    Int       @default(0)
+  blindDisagreeCount Int       @default(0)
+
+  // moderation
+  hidden  Boolean @default(false) // 신고 후 임시조치
+  deleted Boolean @default(false)
+
+  comments     Comment[]
+  endorsements Endorsement[]
+  challenges   Challenge[]
+  reports      Report[]
+  blindAnswers BlindAnswer[]
+
+  @@index([boardId, side, createdAt])
+  @@index([authorId])
+}
+
+enum PinSide {
+  PRO // 찬성
+  CON // 반대
+}
+
+model Comment {
+  id String @id @default(cuid())
+
+  pinId String
+  pin   Pin    @relation(fields: [pinId], references: [id])
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  parentId String?
+  parent   Comment?  @relation("CommentTree", fields: [parentId], references: [id])
+  children Comment[] @relation("CommentTree")
+
+  body      String
+  createdAt DateTime @default(now())
+
+  hidden  Boolean @default(false)
+  deleted Boolean @default(false)
+
+  @@index([pinId, createdAt])
+  @@index([parentId])
+}
+
+model Endorsement {
+  id String @id @default(cuid())
+
+  pinId String
+  pin   Pin    @relation(fields: [pinId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([pinId, userId])
+  @@index([userId])
+}
+
+model Challenge {
+  id String @id @default(cuid())
+
+  pinId String
+  pin   Pin    @relation(fields: [pinId], references: [id])
+
+  challengerId String
+  challenger   User   @relation(fields: [challengerId], references: [id])
+
+  body      String // 도전 내용
+  sourceUrl String // 도전자도 출처 첨부 필수
+  createdAt DateTime @default(now())
+
+  @@index([pinId])
+}
+
+model Report {
+  id String @id @default(cuid())
+
+  reporterId String
+  reporter   User   @relation("Reporter", fields: [reporterId], references: [id])
+
+  targetType ReportTargetType
+  targetId   String
+
+  pinId String?
+  pin   Pin?    @relation(fields: [pinId], references: [id])
+
+  reason ReportReason
+  body   String? // 자유 입력 (선택)
+
+  status       ReportStatus @default(PENDING)
+  resolvedById String?
+  resolvedBy   User?        @relation("Resolver", fields: [resolvedById], references: [id])
+  resolvedAt   DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([status, createdAt])
+}
+
+enum ReportTargetType {
+  PIN
+  COMMENT
+  USER
+}
+
+enum ReportReason {
+  PERSONAL_ATTACK // 인신공격
+  HATE_SPEECH // 혐오
+  AD_SPAM // 광고·스팸
+  FALSE_INFO // 허위사실
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  RESOLVED
+  DISMISSED
+}
+
+model Proposal {
+  id String @id @default(cuid())
+
+  proposerId String
+  proposer   User   @relation(fields: [proposerId], references: [id])
+
+  rawTitle String
+  rawBody  String?
+
+  aiTitle              String?
+  aiCategory           Category?
+  aiDuplicateOfBoardId String?
+  aiFiltered           Boolean   @default(false)
+
+  status         ProposalStatus @default(PENDING)
+  reviewerId     String?
+  reviewer       User?          @relation("Reviewer", fields: [reviewerId], references: [id])
+  reviewedAt     DateTime?
+  rejectionReason String?
+
+  createdBoardId String? @unique
+  createdBoard   Board?  @relation(fields: [createdBoardId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([status, createdAt])
+}
+
+enum ProposalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// =========================================================
+// 가치관 프리즘 (4축)
+// =========================================================
+
+model PrismScore {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  // 4 axes (-1.0 ~ +1.0)
+  society Float @default(0) // S: 공동체 ↔ 개인
+  ethics  Float @default(0) // E: 보편 원칙 ↔ 상황 맥락
+  economy Float @default(0) // E: 안정/분배 ↔ 성장/위험
+  change  Float @default(0) // C: 전통/보존 ↔ 혁신/개방
+
+  // 측정 출처
+  likertCompletedAt DateTime?
+  blindCount        Int       @default(0)
+  updatedAt         DateTime  @updatedAt
+}
+
+model LikertAnswer {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  questionId String // 1-12
+  axis       String // 'S' | 'E_ethics' | 'E_economy' | 'C'
+  value      Int // -2 ~ +2
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, questionId])
+}
+
+// =========================================================
+// 블라인드 답변 (오늘의 3문항)
+// =========================================================
+
+model BlindAnswer {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  pinId String // 어느 박제의 블라인드 질문이었는지 (사용자에게 명시 X)
+  pin   Pin    @relation(fields: [pinId], references: [id])
+
+  answer    BlindAnswerValue
+  createdAt DateTime         @default(now())
+
+  @@unique([userId, pinId])
+  @@index([userId, createdAt])
+  @@index([pinId])
+}
+
+enum BlindAnswerValue {
+  AGREE
+  DISAGREE
+  UNSURE
+}
+
+// =========================================================
+// 알림
+// =========================================================
+
+model Notification {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  type NotificationType
+  body String
+  link String?
+
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, read, createdAt])
+}
+
+enum NotificationType {
+  PROPOSAL_APPROVED
+  PROPOSAL_REJECTED
+  REPORT_RESOLVED
+  PIN_CHALLENGED
+  WARNING
+  SUSPENSION
+}
+
+// =========================================================
+// v2.0 — 논리 트리 (자리만 미리 표시, 주석)
+// =========================================================
+//
+// model LogicNode {
+//   id        String   @id @default(cuid())
+//   boardId   String
+//   board     Board    @relation(fields: [boardId], references: [id])
+//   pinIds    String[] // 어느 박제들에서 추출되었는지
+//   text      String
+//   side      PinSide
+//   createdAt DateTime @default(now())
+// }
+//
+// model LogicEdge {
+//   id           String @id @default(cuid())
+//   fromNodeId   String
+//   toNodeId     String
+//   relationType String // 'supports' | 'rebuts' | 'qualifies'
+// }
+//
+// =========================================================
+// v3.0 — 트윗 (자리만 미리 표시, 주석)
+// =========================================================
+//
+// model Tweet {
+//   id            String   @id @default(cuid())
+//   authorId      String
+//   author        User     @relation(fields: [authorId], references: [id])
+//   body          String
+//   parentId      String?
+//   quotedTweetId String?
+//   createdAt     DateTime @default(now())
+// }
