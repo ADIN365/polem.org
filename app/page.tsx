@@ -210,67 +210,64 @@ function EmptySite() {
           조용한 광장입니다
         </h1>
         <p className="text-meta text-ink-2 leading-relaxed mt-3 max-w-[460px] mx-auto">
-          첫 의제가 등록되면 여기 좌·우가 동등한 비율로 보관되기 시작합니다.
-          <br />
-          토론하고 싶은 사안이 있다면 직접 제안해보세요.
+          첫 의제가 등록되면 여기에 좌·우가 동등한 비율로 보관되기 시작합니다.
         </p>
       </header>
 
-      <section className="border-[0.5px] border-border rounded-lg bg-card overflow-hidden">
+      <section className="border-[0.5px] border-border rounded-lg bg-card overflow-hidden mb-6">
         <div className="px-6 py-5 border-b border-border">
           <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-[5px]">
-            이런 광장입니다
+            이 광장이 바라는 것
           </div>
-          <h2
-            className="font-serif font-semibold text-ink m-0"
-            style={{ fontSize: "var(--fs-title-h3)" }}
-          >
-            끝장토론, 다섯 가지 약속
-          </h2>
         </div>
-        <ul className="px-6 py-5 space-y-3 text-meta text-ink-2 leading-relaxed">
-          <li>
-            <span className="font-medium text-ink">의제는 영구 보관됩니다.</span>{" "}
-            찬·반 박제는 흐름에 떠내려가지 않고 한 의제 안에 좌·우로 정렬돼 남습니다.
-          </li>
-          <li>
-            <span className="font-medium text-ink">AI 는 사서지 판사가 아닙니다.</span>{" "}
-            정제·요약·변환 만 하고, 양측을 50:50 비율로 동등하게 다룹니다.
-          </li>
-          <li>
-            <span className="font-medium text-ink">점수 합산을 거부합니다.</span>{" "}
-            비추천·랭킹·배지 없이 박제·동조·답변 카운트만 따로 표시합니다.
-          </li>
-          <li>
-            <span className="font-medium text-ink">자기 거울은 본인에게만 비칩니다.</span>{" "}
-            가치관 4축과 블라인드 답변 결과는 다른 사람에게 노출되지 않습니다.
-          </li>
-          <li>
-            <span className="font-medium text-ink">진영 색을 쓰지 않습니다.</span>{" "}
-            빨강·파랑 대신 흑백 잉크와 종이 톤만으로 시각적 대립을 만듭니다.
-          </li>
-        </ul>
-        <div className="px-6 py-4 border-t border-border bg-soft flex flex-col sm:flex-row gap-2 sm:justify-end">
-          <Link
-            href="/proposal"
-            className="text-center px-[22px] py-[12px] text-button-large font-medium bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
+
+        <div className="px-6 py-5 border-b-[0.5px] border-border-soft">
+          <div
+            className="font-serif font-semibold text-ink mb-2"
+            style={{ fontSize: "var(--fs-title-h4)" }}
           >
-            ＋ 첫 의제 제안하기
-          </Link>
-          <Link
-            href="/login"
-            className="text-center px-[22px] py-[12px] text-button-large font-medium bg-card text-ink border-[0.5px] border-border rounded-md hover:bg-soft transition-colors"
+            한 사람의 자리에서
+          </div>
+          <p className="text-meta text-ink-2 leading-relaxed">
+            던지고 사라지는 의견 대신 *남는 기록* 을 쓰길 바랍니다.
+            <br />
+            자기 입장이 어디서 흔들리는지 스스로 마주하길 바랍니다.
+            <br />
+            남의 논리와 출처를 따라가며 자기 시야가 한 뼘씩 넓어지길 바랍니다.
+          </p>
+        </div>
+
+        <div className="px-6 py-5">
+          <div
+            className="font-serif font-semibold text-ink mb-2"
+            style={{ fontSize: "var(--fs-title-h4)" }}
           >
-            로그인
-          </Link>
+            우리 사회의 자리에서
+          </div>
+          <p className="text-meta text-ink-2 leading-relaxed">
+            잠깐의 분노가 아니라 *오래 남는 토론* 위에 다음 이야기가 얹히길 바랍니다.
+            <br />
+            다수결로 누른 정답 대신, 각자의 출처와 논리가 한 자리에 쌓이길 바랍니다.
+            <br />
+            진영 너머에 합의 가능한 한 줄이 늘어가길 바랍니다.
+          </p>
         </div>
       </section>
 
-      <p className="text-tiny text-ink-3 mt-6 text-center leading-relaxed">
-        제안한 의제는 AI 가 의제 형식으로 다듬고, 운영자 검토를 거쳐 게시판이 됩니다.
-        <br />
-        보통 1~2일 안에 결과 알림이 갑니다.
-      </p>
+      <div className="flex flex-col sm:flex-row gap-2 sm:justify-center">
+        <Link
+          href="/proposal"
+          className="text-center px-[22px] py-[12px] text-button-large font-medium bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
+        >
+          ＋ 첫 의제 제안하기
+        </Link>
+        <Link
+          href="/login"
+          className="text-center px-[22px] py-[12px] text-button-large font-medium bg-card text-ink border-[0.5px] border-border rounded-md hover:bg-soft transition-colors"
+        >
+          로그인
+        </Link>
+      </div>
     </div>
   );
 }
