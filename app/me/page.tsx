@@ -1,9 +1,11 @@
 import Link from "next/link";
 
+import MirrorTable from "@/components/profile/MirrorTable";
 import PrismChart from "@/components/profile/PrismChart";
 import { CATEGORY_LABEL } from "@/lib/constants";
 import { formatRelativeKo } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
+import { getMirrorRows } from "@/lib/profile/mirror";
 import { requireOnboarded } from "@/lib/session";
 
 import SignOutButton from "./SignOutButton";
@@ -19,7 +21,7 @@ export default async function MePage() {
   const session = await requireOnboarded("/me");
   const { user } = session;
 
-  const [proposals, notifications, prismScore] = await Promise.all([
+  const [proposals, notifications, prismScore, mirrorRows] = await Promise.all([
     prisma.proposal.findMany({
       where: { proposerId: user.id },
       orderBy: { createdAt: "desc" },
@@ -56,8 +58,10 @@ export default async function MePage() {
         economy: true,
         change: true,
         likertCompletedAt: true,
+        blindCount: true,
       },
     }),
+    getMirrorRows(user.id),
   ]);
 
   return (
@@ -202,12 +206,15 @@ export default async function MePage() {
         )}
       </Section>
 
-      <Section title="자기 거울" subtitle="Phase 6~7 예정">
-        <div className="px-5 py-8 text-center text-meta text-ink-3 leading-relaxed">
-          매일 *오늘의 3문항* 에 답하면 박제한 입장과의 *불일치* 가
-          <br />
-          본인에게만 비춰집니다.
-        </div>
+      <Section
+        title="의제별 자기 거울 (본인만 보임)"
+        subtitle={
+          prismScore?.blindCount
+            ? `블라인드 답변 ${prismScore.blindCount}회 누적`
+            : undefined
+        }
+      >
+        <MirrorTable rows={mirrorRows} />
       </Section>
 
       <div className="flex justify-end">

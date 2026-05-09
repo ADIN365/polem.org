@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-05-09 — Phase 7 의제별 자기 거울
+- `lib/profile/mirror.ts` — 사용자 박제 입장 (PRO/CON) 과 블라인드 답변의 *효과적 입장* (AGREE+side / DISAGREE+반대side) 을 의제 단위로 집계
+- 4 분류: *일치 / 살펴볼 만함 / 새 발견 / 갈림*. STANCE_THRESHOLD 0.7 (한쪽 비율 70%↑ 시 입장 인정)
+- `components/profile/MirrorTable.tsx` — 의제별 row + 카운트 + 상태 태그 + 한 줄 힌트
+- `/me` 의 *자기 거울* 섹션을 진짜 데이터로 교체. 누적 블라인드 답변 횟수 표시
+- 헌법 §2.3 — 본인에게만 노출. 다른 사용자 자기 거울 접근 X
+
 ## 2026-05-09 — Phase 6 오늘의 3문항 (블라인드)
 - `lib/ai/blind-convert.ts` + `scripts/convert-blind.ts` + `launchd/org.polem.blind.plist` — 박제 → 블라인드 질문 변환 cron (5분 주기, 5분 grace)
 - `/three` — 답하지 않은 박제 50개 후보 셔플 → 3개. 진영 가린 질문 한 화면씩 진행
