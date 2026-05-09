@@ -71,7 +71,7 @@ export default function ReportModal({
             신고
           </div>
           <p className="text-meta text-ink-3 leading-relaxed">
-            *주장* 에 대한 비판은 신고 대상이 아니에요. 사람·집단을 향한 공격·혐오·광고만 처리합니다.
+            주장 비판은 신고 대상이 아닙니다. 사람·집단을 향한 공격·혐오·광고만 처리합니다.
           </p>
         </div>
 

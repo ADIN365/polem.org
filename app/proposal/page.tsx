@@ -32,7 +32,7 @@ export default async function ProposalPage() {
         <ul className="text-meta text-ink-2 leading-relaxed space-y-1 pl-4 list-disc">
           <li>찬·반으로 명확히 갈릴 수 있는 정책·제도·사회 사안</li>
           <li>의문문 형식 — &quot;○○에 찬성하십니까?&quot; / &quot;○○를 도입해야 하는가?&quot;</li>
-          <li>한 사람·집단을 비하하는 표현 X — 헌법 §2.4</li>
+          <li>한 사람·집단을 비하하는 표현은 자제</li>
           <li>특정 정책·정당·인명은 그대로 적되, 가치 판단 어휘 자제</li>
         </ul>
       </section>

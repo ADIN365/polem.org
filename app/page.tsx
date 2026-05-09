@@ -210,7 +210,7 @@ function EmptySite() {
           조용한 광장입니다
         </h1>
         <p className="text-meta text-ink-2 leading-relaxed mt-3 max-w-[460px] mx-auto">
-          첫 의제가 등록되면 여기에 좌·우가 동등한 비율로 보관되기 시작합니다.
+          아직 의제가 없습니다. 토론하고 싶은 사안이 있다면 직접 제안해보세요.
         </p>
       </header>
 

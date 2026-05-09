@@ -45,8 +45,7 @@ export default async function RevealPage() {
             정체 공개
           </div>
           <p className="text-meta text-ink-3 leading-relaxed">
-            방금 답하신 블라인드 질문의 *원본 의제·박제* 입니다. 자기 답변과 어떤 입장이 만났는지
-            본인만 볼 수 있어요.
+            방금 답하신 질문의 원본 의제·박제 입니다. 본인만 볼 수 있어요.
           </p>
         </div>
 
@@ -111,7 +110,7 @@ export default async function RevealPage() {
       </div>
 
       <p className="text-tiny text-ink-3 mt-3 text-center leading-relaxed">
-        헌법 §2.3 — 이 결과는 *본인에게만* 보여요. 단, 박제별 *블라인드 동의율*은 누적되어 게시판 카드에 표시됩니다.
+        이 결과는 본인에게만 보입니다.
       </p>
     </div>
   );

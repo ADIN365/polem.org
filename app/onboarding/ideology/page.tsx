@@ -39,12 +39,10 @@ export default async function IdeologyOnboardingPage({ searchParams }: Props) {
             가치관 4축 측정
           </div>
           <p className="text-meta text-ink-2 leading-relaxed mb-2">
-            12문항 · 약 5분. 답하시면 4축 가치관 좌표가 *본인에게만* 보입니다.
+            12문항 · 약 5분. 답하시면 4축 가치관 좌표가 본인에게만 보입니다.
           </p>
           <p className="text-tiny text-ink-3 leading-relaxed mt-4">
             건너뛰셔도 됩니다. *오늘의 3문항* 에 답하면서 점수가 점진적으로 채워져요.
-            <br />
-            결과는 다른 사용자에게 공개되지 않습니다 (헌법 §2.3 Private-by-Design).
           </p>
         </div>
 

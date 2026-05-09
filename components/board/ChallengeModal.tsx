@@ -56,7 +56,7 @@ export default function ChallengeModal({
             출처 도전
           </div>
           <p className="text-meta text-ink-3 leading-relaxed">
-            도전자도 *다른 출처*를 첨부해야 합니다. 단순 다수결 X — 헌법 2.2.
+            도전 시 다른 출처 URL 첨부가 필요합니다.
           </p>
         </div>
 

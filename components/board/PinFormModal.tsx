@@ -80,7 +80,7 @@ export default function PinFormModal({
             {quoting ? "인용해서 박제" : isPro ? "찬성으로 박제" : "반대로 박제"}
           </div>
           <p className="text-meta text-ink-3 leading-relaxed">
-            영구 보관됩니다. 욕설·인신공격은 자동/수동 모더레이션 대상이에요.
+            등록 후 수정·삭제는 모더레이션 대상에 한해 가능합니다.
           </p>
         </div>
 

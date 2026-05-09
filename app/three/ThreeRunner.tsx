@@ -74,7 +74,7 @@ export default function ThreeRunner({ pins }: { pins: Pin[] }) {
             ))}
           </div>
           <p className="text-tiny text-ink-3 mt-2 leading-relaxed">
-            *진영을 가린* 질문입니다. 누구의 어떤 의제인지 답한 후 다음 화면에서 공개됩니다.
+            답한 뒤 다음 화면에서 어떤 의제·박제였는지 보여드립니다.
           </p>
         </div>
 

@@ -46,9 +46,9 @@ export default async function AdminReportsPage() {
         신고 처리 ({reports.length})
       </h1>
       <p className="text-meta text-ink-3 mb-6 leading-relaxed">
-        헌법 §2.4 — 격렬한 *논리* 토론은 권장. *욕설·인신공격·혐오·광고* 만 처리.
+        욕설·인신공격·혐오·광고만 처리. 논리 토론은 그대로 둡니다.
         <br />
-        대상별 차단 단계: 경고 → 7일 정지 → 영구 정지.
+        차단 단계: 경고 → 7일 정지 → 영구 정지.
       </p>
 
       {reports.length === 0 ? (

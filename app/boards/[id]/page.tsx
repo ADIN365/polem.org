@@ -124,9 +124,6 @@ export default async function BoardPage({ params }: Props) {
         />
       </article>
 
-      <p className="text-tiny text-ink-3 mt-4 text-center tracking-wide leading-relaxed">
-        박제 본문 클릭 → 댓글 펼침 (깊이 무한) · 회색 띠는 인용 박제 · ⚠는 출처 도전 · 황토색 % = 진영 가린 답변 동의율
-      </p>
     </div>
   );
 }
@@ -140,20 +137,15 @@ function BoardSummary({
   con: string | null;
   at: Date | null;
 }) {
+  if (!pro || !con) return null;
   return (
     <div className="px-[22px] py-[14px] border-b-[0.5px] border-border-soft text-meta text-ink-2 leading-loose bg-soft">
-      <span className="text-eyebrow-tight tracking-wider uppercase mr-[10px]">
-        AI 50:50 요약 {at ? formatDate(at) : "(Phase 10 예정)"}
-      </span>
-      {pro && con ? (
-        <>
-          찬성: {pro} / 반대: {con}
-        </>
-      ) : (
-        <span className="text-ink-3">
-          박제가 일정 수 이상 모이면, 매일 1~2회 양측을 50:50 비율로 요약해서 여기에 표시합니다.
+      {at ? (
+        <span className="text-eyebrow-tight tracking-wider uppercase mr-[10px] text-ink-3">
+          요약 {formatDate(at)}
         </span>
-      )}
+      ) : null}
+      찬성: {pro} / 반대: {con}
     </div>
   );
 }

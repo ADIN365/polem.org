@@ -73,9 +73,6 @@ export default async function MePage() {
         >
           내 정보
         </h1>
-        <p className="text-meta text-ink-3 mt-1">
-          공개 정보와 비공개 정보가 분리되어 있어요. (Private-by-Design)
-        </p>
       </header>
 
       <Section title="알림" subtitle={notifications.some((n) => !n.read) ? "읽지 않은 알림이 있어요." : undefined}>
@@ -167,14 +164,13 @@ export default async function MePage() {
             label="이메일"
             value={user.email ?? "미수신"}
             mono
-            note="비공개"
           />
           <Row label="권한" value={labelRole(user.role)} />
         </dl>
       </Section>
 
       <Section
-        title="가치관 4축 (본인만 보임)"
+        title="가치관 4축"
         subtitle={
           prismScore?.likertCompletedAt
             ? `측정 ${formatRelativeKo(prismScore.likertCompletedAt)}`
@@ -184,9 +180,7 @@ export default async function MePage() {
         {prismScore?.likertCompletedAt ? (
           <>
             <PrismChart scores={prismScore} />
-            <div className="px-5 pb-4 text-tiny text-ink-3 text-center leading-relaxed">
-              헌법 §2.3 — 이 점수는 *본인 외 누구에게도* 노출되지 않습니다.
-              <br />
+            <div className="px-5 pb-4 text-tiny text-ink-3 text-center">
               <Link href="/onboarding/likert?next=/me" className="underline hover:text-ink">
                 다시 측정
               </Link>
@@ -207,7 +201,7 @@ export default async function MePage() {
       </Section>
 
       <Section
-        title="의제별 자기 거울 (본인만 보임)"
+        title="의제별 자기 거울"
         subtitle={
           prismScore?.blindCount
             ? `블라인드 답변 ${prismScore.blindCount}회 누적`
