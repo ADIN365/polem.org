@@ -10,7 +10,7 @@ export default function Footer() {
             {SITE_NAME}
           </div>
           <div className="text-tiny text-ink-3 mt-1 tracking-wider">
-            {SITE_DOMAIN} · 한국어 정치 토론 플랫폼
+            {SITE_DOMAIN}
           </div>
         </div>
         <nav className="flex gap-4 text-meta text-ink-3 flex-wrap">
