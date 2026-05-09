@@ -13,7 +13,10 @@ export default function Footer() {
             {SITE_DOMAIN} · 한국어 정치 토론 플랫폼
           </div>
         </div>
-        <nav className="flex gap-4 text-meta text-ink-3">
+        <nav className="flex gap-4 text-meta text-ink-3 flex-wrap">
+          <Link href="/about" className="hover:text-ink transition-colors">
+            이런 광장입니다
+          </Link>
           <Link href="/terms" className="hover:text-ink transition-colors">
             이용약관
           </Link>
