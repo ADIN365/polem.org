@@ -4,7 +4,7 @@ export const SITE_DOMAIN = "polem.org";
 export const SITE_URL =
   process.env.NEXTAUTH_URL ?? "https://polem.org";
 export const SITE_DESCRIPTION =
-  "한국어 정치 토론 플랫폼. 토론 주제별 좌우 분할 영구 보관, AI 50:50 요약, 블라인드 답변으로 자기 거울.";
+  "정치·사회 토론 광장. 토론 주제별 영구 보관, 자기 거울로 비춰보는 한 발 깊은 토론.";
 
 // 상단 메뉴는 비움 — 토론 주제(홈)는 브랜드 클릭, 내정보는 우상단 동그라미, 주제 만들기·3문항은 /me
 // 또는 토론 주제 색인에서 진입. 헌법 §2.5 "광장" 정신상 메뉴 단순화.
