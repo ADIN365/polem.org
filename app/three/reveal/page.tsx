@@ -104,7 +104,7 @@ export default async function RevealPage() {
             href="/"
             className="px-4 py-[9px] text-button bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
           >
-            의제 색인으로
+            의제로
           </Link>
         </div>
       </div>

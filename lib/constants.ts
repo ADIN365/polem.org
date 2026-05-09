@@ -7,7 +7,7 @@ export const SITE_DESCRIPTION =
   "한국어 정치 토론 플랫폼. 의제별 좌우 분할 영구 보관, AI 50:50 요약, 블라인드 답변으로 자기 거울.";
 
 export const NAV_LINKS = [
-  { href: "/", label: "의제 색인" },
+  { href: "/", label: "의제" },
   { href: "/proposal", label: "의제 제안" },
   { href: "/three", label: "오늘의 3문항" },
   { href: "/me", label: "내 정보" },

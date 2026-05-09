@@ -5,7 +5,7 @@ import { BoardRow, type BoardRowData } from "@/components/board/BoardRow";
 import { prisma } from "@/lib/prisma";
 import { Prisma, type Category } from "@prisma/client";
 
-export const metadata = { title: "의제 색인" };
+export const metadata = { title: "의제" };
 export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 20;
@@ -145,7 +145,7 @@ export default async function HomePage({ searchParams }: Props) {
       <div className="border-[0.5px] border-border rounded-lg bg-card overflow-hidden">
         <div className="px-6 py-5 border-b border-border flex justify-between items-end flex-wrap gap-3">
           <div>
-            <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-[5px]">의제 색인</div>
+            <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-[5px]">의제</div>
             <h1
               className="font-serif font-semibold tracking-tight text-ink m-0"
               style={{ fontSize: "var(--fs-title-h1)" }}
@@ -202,7 +202,7 @@ function EmptySite() {
   return (
     <div className="max-w-narrow mx-auto px-6 pt-16 pb-20">
       <header className="text-center mb-10">
-        <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-2">의제 색인</div>
+        <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-2">의제</div>
         <h1
           className="font-serif font-semibold tracking-tight text-ink m-0"
           style={{ fontSize: "var(--fs-title-h1)" }}
