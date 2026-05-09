@@ -215,59 +215,51 @@ function EmptySite() {
       </header>
 
       <section className="border-[0.5px] border-border rounded-lg bg-card overflow-hidden mb-6">
-        <blockquote className="px-7 py-9 text-center border-b border-border">
+        <div className="px-7 py-10 text-center space-y-7">
           <p
             className="font-serif text-ink leading-snug tracking-tight"
             style={{ fontSize: "var(--fs-title-h2)" }}
           >
             토론은 사회를 건강하게 만드는 자양분입니다.
           </p>
-        </blockquote>
 
-        <div className="px-7 py-6 border-b-[0.5px] border-border-soft text-center space-y-2">
-          <p className="text-base text-ink-2 leading-relaxed">
-            생각이 다르다는 것은 싸울 이유가 아니라, 우리가 더 넓어질 기회입니다.
-          </p>
-          <p className="text-base text-ink-2 leading-relaxed">
-            상대의 목소리에 귀를 기울일 때 비로소 논리는 완성됩니다.
-          </p>
-        </div>
-
-        <ul className="px-7 py-6 space-y-3">
-          <li className="text-meta text-ink-2 leading-relaxed">
-            <span className="font-medium text-ink">감정 대신 팩트로</span> · 서로에 대한 모독이 아닌, 객관적 근거로 승부합니다.
-          </li>
-          <li className="text-meta text-ink-2 leading-relaxed">
-            <span className="font-medium text-ink">차이의 인정</span> · 틀린 것이 아니라 다른 것임을 존중합니다.
-          </li>
-          <li className="text-meta text-ink-2 leading-relaxed">
-            <span className="font-medium text-ink">끝까지 가는 토론</span> · 겉핥기식 대화가 아닌, 본질을 꿰뚫는 끝장을 봅니다.
-          </li>
-        </ul>
-
-        <div className="px-7 py-6 border-t border-border bg-soft text-center">
-          <p
-            className="font-serif text-ink leading-relaxed mb-4"
-            style={{ fontSize: "var(--fs-title-h4)" }}
-          >
-            지금, 당신의 논리로 사회를 발전시켜 보세요.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-2 sm:justify-center">
-            <Link
-              href="/proposal"
-              className="text-center px-[22px] py-[12px] text-button-large font-medium bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
-            >
-              ＋ 첫 의제 제안하기
-            </Link>
-            <Link
-              href="/login"
-              className="text-center px-[22px] py-[12px] text-button-large font-medium bg-card text-ink border-[0.5px] border-border rounded-md hover:bg-soft transition-colors"
-            >
-              로그인
-            </Link>
+          <div className="space-y-2">
+            <p className="text-base text-ink-2 leading-relaxed">
+              생각이 다르다는 것은 싸울 이유가 아니라, 우리가 더 넓어질 기회입니다.
+            </p>
+            <p className="text-base text-ink-2 leading-relaxed">
+              상대의 목소리에 귀를 기울일 때 비로소 논리는 완성됩니다.
+            </p>
           </div>
+
+          <ul className="space-y-2 text-meta text-ink-2 leading-relaxed">
+            <li>
+              <span className="font-medium text-ink">감정 대신 팩트로</span> · 서로에 대한 모독이 아닌, 객관적 근거로 승부합니다.
+            </li>
+            <li>
+              <span className="font-medium text-ink">차이의 인정</span> · 틀린 것이 아니라 다른 것임을 존중합니다.
+            </li>
+            <li>
+              <span className="font-medium text-ink">끝까지 가는 토론</span> · 겉핥기식 대화가 아닌, 본질을 꿰뚫는 끝장을 봅니다.
+            </li>
+          </ul>
         </div>
       </section>
+
+      <div className="flex flex-col sm:flex-row gap-2 sm:justify-center">
+        <Link
+          href="/proposal"
+          className="text-center px-[22px] py-[12px] text-button-large font-medium bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
+        >
+          ＋ 첫 의제 제안하기
+        </Link>
+        <Link
+          href="/login"
+          className="text-center px-[22px] py-[12px] text-button-large font-medium bg-card text-ink border-[0.5px] border-border rounded-md hover:bg-soft transition-colors"
+        >
+          로그인
+        </Link>
+      </div>
     </div>
   );
 }
