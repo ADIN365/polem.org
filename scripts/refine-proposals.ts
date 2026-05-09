@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * 발제 정제 cron worker.
+ * 주제(발제) 정제 cron worker.
  * 로컬 launchd 가 5분마다 실행. PENDING + 미정제 Proposal 가져와 claude -p 헤드리스로 정제.
  *
  * - Vercel 서버리스에선 사용 X (claude CLI 없음).
@@ -40,7 +40,7 @@ async function main() {
     });
 
     if (queue.length === 0) {
-      console.log("[refine] 처리할 발제 없음.");
+      console.log("[refine] 처리할 주제 없음.");
       return;
     }
 

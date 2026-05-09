@@ -14,7 +14,7 @@ export const metadata = { title: "내 정보" };
 export const dynamic = "force-dynamic";
 
 /**
- * Phase 4 단계 — 계정 + 자기 발제 + 알림.
+ * Phase 4 단계 — 계정 + 자기가 만든 주제 + 알림.
  * Phase 5/6/7 에서 4축 가치관 프리즘 + 의제별 자기 거울 추가.
  */
 export default async function MePage() {
@@ -80,7 +80,7 @@ export default async function MePage() {
           href="/proposal"
           className="px-4 py-[9px] text-button bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
         >
-          ＋ 발제
+          ＋ 주제 만들기
         </Link>
         <Link
           href="/three"
@@ -126,10 +126,10 @@ export default async function MePage() {
         )}
       </Section>
 
-      <Section title="내가 낸 발제">
+      <Section title="내가 만든 주제">
         {proposals.length === 0 ? (
           <Empty>
-            아직 발제한 의제가 없어요. <Link href="/proposal" className="underline">발제하기</Link>
+            아직 만든 주제가 없어요. <Link href="/proposal" className="underline">주제 만들기</Link>
           </Empty>
         ) : (
           <ul>

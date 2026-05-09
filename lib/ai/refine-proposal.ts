@@ -18,7 +18,7 @@ export async function refineProposal(
   rawBody: string | null,
 ): Promise<RefineResult> {
   const provider = selectProvider();
-  const userInput = `[발제 제목]\n${rawTitle}\n\n[배경]\n${rawBody?.trim() || "(없음)"}`;
+  const userInput = `[주제 제목]\n${rawTitle}\n\n[배경]\n${rawBody?.trim() || "(없음)"}`;
   const text = await provider.call(userInput, {
     system: PROPOSAL_REFINE_SYSTEM,
     jsonMode: true,

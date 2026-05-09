@@ -15,7 +15,7 @@ export default async function TopNav() {
   // 데스크탑은 브랜드(홈) + 동그라미(/me) 만으로 충분해서 NAV_LINKS 비움.
   const mobileLinks: MobileMenuLink[] = [
     { href: "/", label: "의제" },
-    ...(session?.user ? [{ href: "/proposal", label: "발제" }] : []),
+    ...(session?.user ? [{ href: "/proposal", label: "주제 만들기" }] : []),
     ...(session?.user ? [{ href: "/three", label: "오늘의 3문항" }] : []),
     ...(isAdmin ? [{ href: "/admin", label: "관리자" }] : []),
     { href: "/about", label: "이런 광장입니다" },

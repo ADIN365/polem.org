@@ -16,7 +16,7 @@ export default function ProposalForm() {
     e.preventDefault();
     const t = rawTitle.trim();
     if (t.length < 5) {
-      toast.error("발제 제목을 5자 이상 적어주세요.");
+      toast.error("주제 제목을 5자 이상 적어주세요.");
       return;
     }
     setSubmitting(true);
@@ -42,7 +42,7 @@ export default function ProposalForm() {
     <form onSubmit={submit} className="border-[0.5px] border-border rounded-lg bg-card overflow-hidden">
       <div className="px-6 py-5 space-y-4">
         <label className="block">
-          <span className="text-meta text-ink-2 block mb-[6px]">발제 제목</span>
+          <span className="text-meta text-ink-2 block mb-[6px]">주제 제목</span>
           <input
             type="text"
             value={rawTitle}

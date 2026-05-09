@@ -161,7 +161,7 @@ export default async function HomePage({ searchParams }: Props) {
             href="/proposal"
             className="px-[22px] py-[14px] text-button-large font-medium bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
           >
-            ＋ 발제
+            ＋ 주제 만들기
           </Link>
         </div>
 
