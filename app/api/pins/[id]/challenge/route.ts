@@ -10,11 +10,11 @@ interface Ctx {
 }
 
 /**
- * 출처 도전 — 헌법 2.2: 도전자도 *다른 출처*를 첨부 필수.
- * 같은 박제에 같은 사용자가 여러 번 도전 가능 (각각 다른 출처).
+ * 출처 반박 — 헌법 2.2: 반박자도 *다른 출처*를 첨부 필수.
+ * 같은 박제에 같은 사용자가 여러 번 반박 가능 (각각 다른 출처).
  */
 const Body = z.object({
-  body: z.string().trim().min(10, "도전 내용을 10자 이상 적어주세요.").max(800),
+  body: z.string().trim().min(10, "반박 내용을 10자 이상 적어주세요.").max(800),
   sourceUrl: z.string().trim().url("올바른 URL을 첨부해주세요."),
 });
 
@@ -42,7 +42,7 @@ export async function POST(req: Request, { params }: Ctx) {
     return NextResponse.json({ error: "박제를 찾을 수 없어요." }, { status: 404 });
   }
   if (pin.authorId === session.user.id) {
-    return NextResponse.json({ error: "자기 박제에는 도전할 수 없어요." }, { status: 400 });
+    return NextResponse.json({ error: "자기 박제에는 반박할 수 없어요." }, { status: 400 });
   }
 
   await prisma.challenge.create({

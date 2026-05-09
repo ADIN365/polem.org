@@ -246,8 +246,8 @@ model Challenge {
   challengerId String
   challenger   User   @relation(fields: [challengerId], references: [id])
 
-  body      String // 도전 내용
-  sourceUrl String // 도전자도 출처 첨부 필수
+  body      String // 반박 내용
+  sourceUrl String // 반박자도 출처 첨부 필수
   createdAt DateTime @default(now())
 
   @@index([pinId])

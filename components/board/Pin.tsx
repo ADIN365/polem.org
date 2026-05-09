@@ -108,7 +108,7 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
                   ? "border-[0.5px] border-ink-3 px-1 text-ink font-medium"
                   : "bg-[var(--paper-cream)] text-ink px-1 font-medium"
               }
-              title="출처 도전"
+              title="출처 반박"
             >
               ⚠ {challengeCount}
             </span>
@@ -179,9 +179,9 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
                 setShowChallenge(true);
               }}
               className="hover:opacity-80 transition-colors"
-              title="출처 도전"
+              title="출처 반박"
             >
-              도전
+              반박
             </button>
           ) : null}
 
@@ -221,7 +221,7 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
           onSuccess={(count) => {
             setChallengeCount(count);
             setShowChallenge(false);
-            toast.success("도전이 등록되었어요.");
+            toast.success("반박이 등록되었어요.");
           }}
         />
       ) : null}

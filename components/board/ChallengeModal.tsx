@@ -27,10 +27,10 @@ export default function ChallengeModal({
         body: JSON.stringify({ body: body.trim(), sourceUrl: sourceUrl.trim() }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "도전 등록 실패");
+      if (!res.ok) throw new Error(data.error ?? "반박 등록 실패");
       onSuccess(data.challengeCount);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "도전 등록 실패");
+      toast.error(err instanceof Error ? err.message : "반박 등록 실패");
     } finally {
       setSubmitting(false);
     }
@@ -53,16 +53,16 @@ export default function ChallengeModal({
             className="font-serif font-semibold tracking-tight text-ink mb-2"
             style={{ fontSize: "var(--fs-title-h3)" }}
           >
-            출처 도전
+            출처 반박
           </div>
           <p className="text-meta text-ink-3 leading-relaxed">
-            도전 시 다른 출처 URL 첨부가 필요합니다.
+            반박 시 다른 출처 URL 첨부가 필요합니다.
           </p>
         </div>
 
         <div className="px-7 py-3 space-y-3">
           <label className="block">
-            <span className="text-meta text-ink-2 block mb-1">도전 내용</span>
+            <span className="text-meta text-ink-2 block mb-1">반박 내용</span>
             <textarea
               value={body}
               onChange={(e) => setBody(e.target.value)}
@@ -100,7 +100,7 @@ export default function ChallengeModal({
             disabled={submitting || body.trim().length < 10 || !sourceUrl.trim()}
             className="px-4 py-[9px] text-button bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {submitting ? "등록 중…" : "도전 등록"}
+            {submitting ? "등록 중…" : "반박 등록"}
           </button>
         </div>
       </form>

@@ -84,7 +84,7 @@ function labelType(t: string) {
     PROPOSAL_APPROVED: "토론 주제 승인",
     PROPOSAL_REJECTED: "토론 주제 거절",
     REPORT_RESOLVED: "신고 처리",
-    PIN_CHALLENGED: "출처 도전",
+    PIN_CHALLENGED: "출처 반박",
     WARNING: "경고",
     SUSPENSION: "정지",
   };

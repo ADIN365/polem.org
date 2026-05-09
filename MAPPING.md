@@ -191,7 +191,7 @@ app/
       [id]/
         endorse/route.ts        # POST/DELETE 동조
         comments/route.ts       # GET 목록, POST 댓글
-        challenge/route.ts      # POST 출처 도전
+        challenge/route.ts      # POST 출처 반박
         report/route.ts         # POST 신고
         quote/route.ts          # POST 인용 박제
     proposals/
@@ -229,7 +229,7 @@ components/
     PinForm.tsx                 # 박제 작성 모달
     PinComments.tsx             # 댓글 트리 (깊이 무한)
     QuoteBlock.tsx              # 인용 박제 표시
-    ChallengeBadge.tsx          # 출처 도전 배지
+    ChallengeBadge.tsx          # 출처 반박 배지
   proposal/
     ProposalForm.tsx            # 사용자 입력
     ProposalAiPanel.tsx         # AI 정제 결과 (실시간)
@@ -487,8 +487,8 @@ model Challenge {
   pin         Pin      @relation(fields: [pinId], references: [id])
   challengerId String
   challenger  User     @relation(fields: [challengerId], references: [id])
-  body        String   // 도전 내용
-  sourceUrl   String   // 도전자도 출처 첨부 필수
+  body        String   // 반박 내용
+  sourceUrl   String   // 반박자도 출처 첨부 필수
   createdAt   DateTime @default(now())
 
   @@index([pinId])
@@ -698,7 +698,7 @@ enum NotificationType {
 | 박제 동조 | `POST /api/pins/[id]/endorse` | Endorsement |
 | 박제 댓글 | `GET/POST /api/pins/[id]/comments` | Comment |
 | 박제 인용 | `POST /api/pins/[id]/quote` | Pin (with quotedPinId) |
-| 박제 도전 | `POST /api/pins/[id]/challenge` | Challenge |
+| 박제 반박 | `POST /api/pins/[id]/challenge` | Challenge |
 | 박제 신고 | `POST /api/pins/[id]/report` | Report |
 | `/proposal` | `POST /api/proposals` | Proposal (with AI fields) |
 | `/three` | `GET /api/three` | Pin (블라인드 질문 변환된 것) |
