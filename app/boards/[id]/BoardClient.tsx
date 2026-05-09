@@ -131,8 +131,10 @@ function Column({
           <Pin key={p.id} pin={p} currentUserId={currentUserId} onQuote={onQuote} />
         ))
       ) : (
-        <div className="text-tiny text-ink-3 px-1 py-8 text-center">
-          아직 박제가 없어요. 첫 박제를 남겨보세요.
+        <div className="text-tiny text-ink-3 px-1 py-8 text-center leading-relaxed">
+          {isPro ? "찬성 박제가 비어 있어요." : "반대 박제가 비어 있어요."}
+          <br />
+          아래 *＋ {isPro ? "찬성" : "반대"}으로 박제* 로 첫 의견을 남겨보세요.
         </div>
       )}
     </div>

@@ -133,6 +133,12 @@ export default async function HomePage({ searchParams }: Props) {
   }
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const hasFilter = !!(searchParams.q || searchParams.category);
+
+  // 사이트 자체가 비어있는 *조용한 광장* 상태
+  if (total === 0 && !hasFilter) {
+    return <EmptySite />;
+  }
 
   return (
     <div className="max-w-site mx-auto px-6 pt-8 pb-20">
@@ -172,9 +178,7 @@ export default async function HomePage({ searchParams }: Props) {
           {boards.length > 0 ? (
             boards.map((b) => <BoardRow key={b.id} board={b} />)
           ) : (
-            <div className="px-6 py-16 text-center text-meta text-ink-3">
-              조건에 맞는 의제가 없어요. 검색어를 줄이거나 카테고리를 풀어보세요.
-            </div>
+            <EmptyFilter />
           )}
         </div>
 
@@ -190,6 +194,105 @@ export default async function HomePage({ searchParams }: Props) {
           />
         ) : null}
       </div>
+    </div>
+  );
+}
+
+function EmptySite() {
+  return (
+    <div className="max-w-narrow mx-auto px-6 pt-16 pb-20">
+      <header className="text-center mb-10">
+        <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-2">의제 색인</div>
+        <h1
+          className="font-serif font-semibold tracking-tight text-ink m-0"
+          style={{ fontSize: "var(--fs-title-h1)" }}
+        >
+          조용한 광장입니다
+        </h1>
+        <p className="text-meta text-ink-2 leading-relaxed mt-3 max-w-[460px] mx-auto">
+          첫 의제가 등록되면 여기 좌·우가 동등한 비율로 보관되기 시작합니다.
+          <br />
+          토론하고 싶은 사안이 있다면 직접 제안해보세요.
+        </p>
+      </header>
+
+      <section className="border-[0.5px] border-border rounded-lg bg-card overflow-hidden">
+        <div className="px-6 py-5 border-b border-border">
+          <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-[5px]">
+            이런 광장입니다
+          </div>
+          <h2
+            className="font-serif font-semibold text-ink m-0"
+            style={{ fontSize: "var(--fs-title-h3)" }}
+          >
+            끝장토론, 다섯 가지 약속
+          </h2>
+        </div>
+        <ul className="px-6 py-5 space-y-3 text-meta text-ink-2 leading-relaxed">
+          <li>
+            <span className="font-medium text-ink">의제는 영구 보관됩니다.</span>{" "}
+            찬·반 박제는 흐름에 떠내려가지 않고 한 의제 안에 좌·우로 정렬돼 남습니다.
+          </li>
+          <li>
+            <span className="font-medium text-ink">AI 는 사서지 판사가 아닙니다.</span>{" "}
+            정제·요약·변환 만 하고, 양측을 50:50 비율로 동등하게 다룹니다.
+          </li>
+          <li>
+            <span className="font-medium text-ink">점수 합산을 거부합니다.</span>{" "}
+            비추천·랭킹·배지 없이 박제·동조·답변 카운트만 따로 표시합니다.
+          </li>
+          <li>
+            <span className="font-medium text-ink">자기 거울은 본인에게만 비칩니다.</span>{" "}
+            가치관 4축과 블라인드 답변 결과는 다른 사람에게 노출되지 않습니다.
+          </li>
+          <li>
+            <span className="font-medium text-ink">진영 색을 쓰지 않습니다.</span>{" "}
+            빨강·파랑 대신 흑백 잉크와 종이 톤만으로 시각적 대립을 만듭니다.
+          </li>
+        </ul>
+        <div className="px-6 py-4 border-t border-border bg-soft flex flex-col sm:flex-row gap-2 sm:justify-end">
+          <Link
+            href="/proposal"
+            className="text-center px-[22px] py-[12px] text-button-large font-medium bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
+          >
+            ＋ 첫 의제 제안하기
+          </Link>
+          <Link
+            href="/login"
+            className="text-center px-[22px] py-[12px] text-button-large font-medium bg-card text-ink border-[0.5px] border-border rounded-md hover:bg-soft transition-colors"
+          >
+            로그인
+          </Link>
+        </div>
+      </section>
+
+      <p className="text-tiny text-ink-3 mt-6 text-center leading-relaxed">
+        제안한 의제는 AI 가 의제 형식으로 다듬고, 운영자 검토를 거쳐 게시판이 됩니다.
+        <br />
+        보통 1~2일 안에 결과 알림이 갑니다.
+      </p>
+    </div>
+  );
+}
+
+function EmptyFilter() {
+  return (
+    <div className="px-6 py-16 text-center">
+      <div
+        className="font-serif text-ink mb-2"
+        style={{ fontSize: "var(--fs-title-h4)" }}
+      >
+        조건에 맞는 의제가 없어요
+      </div>
+      <p className="text-meta text-ink-3 leading-relaxed">
+        검색어를 줄이거나 카테고리를 풀어보세요.
+      </p>
+      <Link
+        href="/"
+        className="inline-block mt-4 px-4 py-[8px] text-button text-ink-2 hover:text-ink border-[0.5px] border-border-soft rounded-md transition-colors"
+      >
+        전체 의제로
+      </Link>
     </div>
   );
 }
