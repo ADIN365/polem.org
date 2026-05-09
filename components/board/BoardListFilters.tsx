@@ -46,7 +46,7 @@ export default function BoardListFilters() {
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="의제 검색"
+          placeholder="토론 주제 검색"
           className="w-full pl-14 pr-3 py-[9px] border-[0.5px] border-border bg-card text-small text-ink rounded-md outline-none focus:border-ink"
         />
         <span className="absolute left-[14px] top-1/2 -translate-y-1/2 text-eyebrow-tight tracking-wider text-ink-3 font-medium uppercase pointer-events-none">

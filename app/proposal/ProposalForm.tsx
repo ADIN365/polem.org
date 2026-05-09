@@ -66,7 +66,7 @@ export default function ProposalForm() {
             onChange={(e) => setRawBody(e.target.value)}
             rows={6}
             maxLength={PROPOSAL_BODY_MAX}
-            placeholder="이 의제가 왜 필요한지·어떤 맥락인지 짧게 적어주세요. 토론 시작점에 도움이 됩니다."
+            placeholder="이 토론 주제가 왜 필요한지·어떤 맥락인지 짧게 적어주세요. 토론 시작점에 도움이 됩니다."
             className="w-full px-3 py-[10px] border-[0.5px] border-border bg-card text-input text-ink rounded-md outline-none focus:border-ink resize-none leading-relaxed"
           />
           <div className="text-tiny text-ink-3 mt-1 text-right">

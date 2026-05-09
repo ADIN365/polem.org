@@ -6,7 +6,7 @@ import IntroCard from "@/components/intro/IntroCard";
 import { prisma } from "@/lib/prisma";
 import { Prisma, type Category } from "@prisma/client";
 
-export const metadata = { title: "의제" };
+export const metadata = { title: "토론 주제" };
 export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 20;
@@ -146,7 +146,7 @@ export default async function HomePage({ searchParams }: Props) {
       <div className="border-[0.5px] border-border rounded-lg bg-card overflow-hidden">
         <div className="px-6 py-5 border-b border-border flex justify-between items-end flex-wrap gap-3">
           <div>
-            <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-[5px]">의제</div>
+            <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-[5px]">토론 주제</div>
             <h1
               className="font-serif font-semibold tracking-tight text-ink m-0"
               style={{ fontSize: "var(--fs-title-h1)" }}
@@ -154,7 +154,7 @@ export default async function HomePage({ searchParams }: Props) {
               지금 진행 중인 토론
             </h1>
             <div className="text-meta text-ink-3 mt-[6px] tracking-wide">
-              총 {total.toLocaleString()}개 의제
+              총 {total.toLocaleString()}개 토론 주제
             </div>
           </div>
           <Link
@@ -170,7 +170,7 @@ export default async function HomePage({ searchParams }: Props) {
         <div>
           <div className="grid grid-cols-[1fr_64px] md:grid-cols-[60px_1fr_180px_110px_70px] gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-[10px] border-b-[0.5px] border-border-soft text-eyebrow-tight tracking-wider text-ink-3 uppercase bg-soft">
             <div className="hidden md:block">번호</div>
-            <div>의제</div>
+            <div>토론 주제</div>
             <div className="hidden md:block">찬·반 비율</div>
             <div className="text-right hidden md:block">참여</div>
             <div className="text-right">활동</div>
@@ -203,7 +203,7 @@ function EmptySite() {
   return (
     <div className="max-w-narrow mx-auto px-6 pt-16 pb-20">
       <header className="text-center mb-10">
-        <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-2">의제</div>
+        <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-2">토론 주제</div>
         <h1
           className="font-serif font-semibold tracking-tight text-ink m-0"
           style={{ fontSize: "var(--fs-title-h1)" }}
@@ -211,7 +211,7 @@ function EmptySite() {
           조용한 광장입니다
         </h1>
         <p className="text-meta text-ink-2 leading-relaxed mt-3 max-w-[460px] mx-auto">
-          아직 의제가 없습니다.
+          아직 토론 주제가 없습니다.
         </p>
       </header>
 
@@ -227,7 +227,7 @@ function EmptyFilter() {
         className="font-serif text-ink mb-2"
         style={{ fontSize: "var(--fs-title-h4)" }}
       >
-        조건에 맞는 의제가 없어요
+        조건에 맞는 토론 주제가 없어요
       </div>
       <p className="text-meta text-ink-3 leading-relaxed">
         검색어를 줄이거나 카테고리를 풀어보세요.
@@ -236,7 +236,7 @@ function EmptyFilter() {
         href="/"
         className="inline-block mt-4 px-4 py-[8px] text-button text-ink-2 hover:text-ink border-[0.5px] border-border-soft rounded-md transition-colors"
       >
-        전체 의제로
+        전체 토론 주제로
       </Link>
     </div>
   );

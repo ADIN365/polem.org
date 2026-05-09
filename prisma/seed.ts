@@ -3,10 +3,10 @@ import { PrismaClient, Category, PinSide } from "@prisma/client";
 const prisma = new PrismaClient();
 
 /**
- * Phase 2/3 시드 — 의제 14개 + 박제 70+개 + 동조/댓글 일부.
+ * Phase 2/3 시드 — 토론 주제 14개 + 박제 70+개 + 동조/댓글 일부.
  * 실행: `npm run db:seed` (DATABASE_URL 필요)
  *
- * 의제 데이터는 한국 사회에서 *실제로 찬반이 갈리는* 사안 위주로,
+ * 토론 주제 데이터는 한국 사회에서 *실제로 찬반이 갈리는* 사안 위주로,
  * 헌법 2.4(진영색 회피)에 따라 진영을 한쪽으로 몰지 않게 다양화.
  */
 
@@ -202,7 +202,7 @@ async function main() {
     seedUserMap.set(handle, user.id);
   }
 
-  // 2) 의제 + 박제
+  // 2) 토론 주제 + 박제
   for (const board of BOARDS) {
     const proCount = board.pins.filter((p) => p.side === "PRO").length;
     const conCount = board.pins.filter((p) => p.side === "CON").length;
@@ -244,11 +244,11 @@ async function main() {
     }
   }
 
-  console.log(`[seed] 완료: ${BOARDS.length} 의제, ${BOARDS.reduce((a, b) => a + b.pins.length, 0)} 박제`);
+  console.log(`[seed] 완료: ${BOARDS.length} 토론 주제, ${BOARDS.reduce((a, b) => a + b.pins.length, 0)} 박제`);
 }
 
 function slugify(title: string): string {
-  // 의제 ID 안정화 — 동일 제목이면 동일 ID 로 upsert.
+  // 토론 주제 ID 안정화 — 동일 제목이면 동일 ID 로 upsert.
   const base = title
     .replace(/[\s?·,.()]/g, "-")
     .replace(/-+/g, "-")

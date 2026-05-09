@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props) {
   const description =
     board.aiSummaryPro && board.aiSummaryCon
       ? `찬: ${board.aiSummaryPro} / 반: ${board.aiSummaryCon}`
-      : board.body ?? "찬·반 영구 보관 토론 의제";
+      : board.body ?? "찬·반 영구 보관 토론 주제";
   return {
     title: board.title,
     description,
@@ -78,7 +78,7 @@ export default async function BoardPage({ params }: Props) {
     <div className="max-w-site mx-auto px-6 pt-8 pb-20">
       <nav className="flex items-center gap-2 mb-4 text-meta text-ink-3">
         <Link href="/" className="hover:text-ink transition-colors">
-          의제
+          토론 주제
         </Link>
         <span>/</span>
         <span className="text-ink">

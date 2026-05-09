@@ -136,7 +136,7 @@ body.fs-xlarge {
 
 | Route | 화면 | polem.html view | 권한 |
 |---|---|---|---|
-| `/` | 의제 색인 (홈) | `view-index` | 공개 |
+| `/` | 토론 주제 색인 (홈) | `view-index` | 공개 |
 | `/boards/[id]` | 게시판 (좌우 분할) | `view-board` | 공개 (작성은 로그인) |
 | `/proposal` | 주제 만들기 | `view-proposal` | 로그인 |
 | `/me` | 내 정보 | `view-profile` | 본인만 |
@@ -158,7 +158,7 @@ body.fs-xlarge {
 ```
 app/
   layout.tsx                    # 전체 레이아웃 (TopNav, Toast)
-  page.tsx                      # / 의제 색인
+  page.tsx                      # / 토론 주제 색인
   boards/
     [id]/page.tsx               # 게시판 상세
   proposal/page.tsx
@@ -221,8 +221,8 @@ components/
     Toast.tsx
     MobileMenu.tsx
   board/
-    BoardCard.tsx               # 의제 색인의 row
-    BoardIndex.tsx              # 의제 색인 표
+    BoardCard.tsx               # 토론 주제 색인의 row
+    BoardIndex.tsx              # 토론 주제 색인 표
     BoardHeader.tsx             # 게시판 상단 (제목·비율 막대)
     BoardSummary.tsx            # AI 50:50 요약 박스
     Pin.tsx                     # 박제 카드 (pin-pro / pin-con variants)
@@ -246,7 +246,7 @@ components/
     ProfileStats.tsx            # 4개 활동 카운트
     PrismChart.tsx              # 4축 시각화
     PrismAxis.tsx               # 한 축 (S/E/E/C)
-    MirrorTable.tsx             # 의제별 자기 거울 표
+    MirrorTable.tsx             # 토론 주제별 자기 거울 표
     MirrorRow.tsx
   modal/
     Modal.tsx                   # 공통 모달
@@ -299,7 +299,7 @@ interface PrismScore {
 // 각 축마다 PrismAxis 컴포넌트 + 게이지바 + Percentile + 라벨
 ```
 
-### 3.3 MirrorTable (의제별 자기 거울)
+### 3.3 MirrorTable (토론 주제별 자기 거울)
 
 ```tsx
 interface MirrorRow {
@@ -370,7 +370,7 @@ enum Role {
 model Board {
   id          String   @id @default(cuid())
   title       String
-  body        String?              // 의제 본문 (제안자가 적은 배경)
+  body        String?              // 토론 주제 본문 (제안자가 적은 배경)
   category    Category
   proposerId  String?              // 제안자 (관리자가 직접 만든 경우 null)
   proposer    User?    @relation(fields: [proposerId], references: [id])
@@ -706,7 +706,7 @@ enum NotificationType {
 | `/me` | `GET /api/me` | User, Pin, BlindAnswer, PrismScore (집계) |
 | `/onboarding/likert` | `POST /api/likert` | LikertAnswer + PrismScore (계산) |
 | `/admin/proposals` | `GET /api/admin/proposals` | Proposal (PENDING) |
-| 의제 승인 | `PATCH /api/admin/proposals/[id]` | Proposal + Board (생성) |
+| 토론 주제 승인 | `PATCH /api/admin/proposals/[id]` | Proposal + Board (생성) |
 | `/admin/reports` | `GET /api/admin/reports` | Report (PENDING) |
 | `/cron/ai-summary` | (Cron) | Board.aiSummaryPro/Con (배치 갱신) |
 | `/cron/blind-questions` | (Cron) | Pin.blindQuestion (배치 변환) |
@@ -717,20 +717,20 @@ enum NotificationType {
 
 | 작업 | 시점 | LLM | 입력 | 출력 |
 |---|---|---|---|---|
-| 의제 정제 | 사용자 제안 시 (실시간) | gpt-4o-mini | 자유 입력 텍스트 | 정제된 제목·카테고리·중복 후보·필터 결과 |
+| 토론 주제 정제 | 사용자 제안 시 (실시간) | gpt-4o-mini | 자유 입력 텍스트 | 정제된 제목·카테고리·중복 후보·필터 결과 |
 | 50:50 요약 | 매일 1-2회 (Cron) | gpt-4o-mini | 게시판 박제 100-300개 | PRO 한 줄·CON 한 줄 (50:50) |
-| 블라인드 질문 변환 | 박제 생성 후 (Cron, 비동기) | gpt-4o-mini | Pin.body | 의제명·고유명사 가린 질문 형태 |
+| 블라인드 질문 변환 | 박제 생성 후 (Cron, 비동기) | gpt-4o-mini | Pin.body | 토론 주제명·고유명사 가린 질문 형태 |
 | 부적절성 필터 | 모든 사용자 글 작성 시 | 한국어 비속어 사전 + 정규식 (LLM 아님) | 텍스트 | 차단/허용 |
 
 **모든 AI 결과는 *수정 가능*하게:**
-- 의제 정제 결과 → 사용자가 *틀렸어요* 신고 가능
+- 토론 주제 정제 결과 → 사용자가 *틀렸어요* 신고 가능
 - 50:50 요약 → 모더레이터가 수동 편집 가능
 - 블라인드 질문 → 모더레이터가 수동 편집 가능
 
 **LLM 호출 코드 위치:**
 ```
 lib/ai/
-  proposal-refine.ts      # 의제 정제
+  proposal-refine.ts      # 토론 주제 정제
   summary-batch.ts         # 50:50 요약
   blind-convert.ts         # 블라인드 질문 변환
   prompts.ts               # 시스템 프롬프트 모음
@@ -820,7 +820,7 @@ MEILISEARCH_API_KEY=
 ### 8.5 반대 콘텐츠 20% 섞기 (v2.5)
 
 수정할 것:
-- `/api/boards` (의제 색인) — 사용자 PrismScore 기반 *반대 의제* 일정 비율 노출
+- `/api/boards` (토론 주제 색인) — 사용자 PrismScore 기반 *반대 토론 주제* 일정 비율 노출
 - `lib/feed-mixer.ts` 추가
 
 영향:
@@ -868,7 +868,7 @@ MEILISEARCH_API_KEY=
 다음 변경 시 *여러 파일* 동시 수정 필요. 자동화 스크립트나 grep 추천.
 
 - **사이트 이름 변경** → 8.8 참조
-- **카테고리 추가/변경** → Prisma `Category` enum + Board 라우트 필터 옵션 + 의제 색인 select + 주제 만들기 select
+- **카테고리 추가/변경** → Prisma `Category` enum + Board 라우트 필터 옵션 + 토론 주제 색인 select + 주제 만들기 select
 - **블라인드 답변 종류 변경** (예: 5단계로) → `BlindAnswerValue` enum + 3문항 화면 버튼 + reveal 화면 표시 + 내 정보 거울 표 집계
 - **새 모더레이션 사유 추가** → `ReportReason` enum + 신고 모달 + 관리자 패널
 

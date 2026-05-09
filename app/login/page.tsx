@@ -31,7 +31,7 @@ export default async function LoginPage({ searchParams }: Props) {
             {SITE_NAME}
           </div>
           <p className="text-meta text-ink-3 leading-relaxed">
-            한국어 정치 토론. 의제별 좌우 분할 영구 보관.
+            한국어 정치 토론. 토론 주제별 좌우 분할 영구 보관.
             <br />
             카카오 계정으로 로그인하면 *닉네임*만 사이트에 보입니다.
           </p>

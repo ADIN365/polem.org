@@ -34,7 +34,7 @@ export const PIN_BODY_MAX = 1500;
 export const COMMENT_BODY_MIN = 1;
 export const COMMENT_BODY_MAX = 800;
 
-// 의제 본문 (주제 입력)
+// 토론 주제 본문 (주제 입력)
 export const PROPOSAL_TITLE_MAX = 80;
 export const PROPOSAL_BODY_MAX = 1000;
 

@@ -14,7 +14,7 @@ export interface BoardRowData {
   viewCount: number;
   updatedAt: Date;
   status: string;
-  /** 데스크탑에만 표시되는 page-relative 자리 번호. 의제 영구 ID 아님. */
+  /** 데스크탑에만 표시되는 page-relative 자리 번호. 토론 주제 영구 ID 아님. */
   number: number;
   isNew?: boolean;
 }
@@ -38,7 +38,7 @@ export function BoardRow({ board }: { board: BoardRowData }) {
         <div className="flex gap-2 items-baseline mb-[2px] text-eyebrow-tight tracking-wider text-ink-3 uppercase flex-wrap">
           <span>{CATEGORY_LABEL[board.category] ?? board.category}</span>
           {board.isNew ? (
-            <span className="text-paper-cream bg-ink px-[5px] font-medium">새 의제</span>
+            <span className="text-paper-cream bg-ink px-[5px] font-medium">새 토론 주제</span>
           ) : null}
           {tight ? (
             <span className="text-ink border-[0.5px] border-ink px-1 font-medium">팽팽</span>

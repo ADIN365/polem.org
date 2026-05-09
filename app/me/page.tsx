@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * Phase 4 단계 — 계정 + 자기가 만든 주제 + 알림.
- * Phase 5/6/7 에서 4축 가치관 프리즘 + 의제별 자기 거울 추가.
+ * Phase 5/6/7 에서 4축 가치관 프리즘 + 토론 주제별 자기 거울 추가.
  */
 export default async function MePage() {
   const session = await requireOnboarded("/me");
@@ -227,7 +227,7 @@ export default async function MePage() {
       </Section>
 
       <Section
-        title="의제별 자기 거울"
+        title="토론 주제별 자기 거울"
         subtitle={
           prismScore?.blindCount
             ? `블라인드 답변 ${prismScore.blindCount}회 누적`

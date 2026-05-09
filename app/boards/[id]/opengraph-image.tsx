@@ -4,7 +4,7 @@ import { CATEGORY_LABEL } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
-export const alt = "끝장토론 의제";
+export const alt = "끝장토론";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -29,7 +29,7 @@ export default async function BoardOG({ params }: { params: { id: string } }) {
       .catch(() => null),
   ]);
 
-  const title = board?.title ?? "끝장토론 의제";
+  const title = board?.title ?? "끝장토론";
   const category = board?.category ? (CATEGORY_LABEL[board.category] ?? board.category) : "";
   const pro = board?.proCount ?? 0;
   const con = board?.conCount ?? 0;
@@ -64,11 +64,11 @@ export default async function BoardOG({ params }: { params: { id: string } }) {
             textTransform: "uppercase",
           }}
         >
-          <span>{category || "의제"}</span>
+          <span>{category || "토론 주제"}</span>
           <span>끝장토론 · polem.org</span>
         </div>
 
-        {/* 가운데 — 의제 제목 */}
+        {/* 가운데 — 토론 주제 제목 */}
         <div
           style={{
             fontSize: title.length > 30 ? 64 : 84,

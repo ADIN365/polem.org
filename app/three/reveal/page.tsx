@@ -45,7 +45,7 @@ export default async function RevealPage() {
             정체 공개
           </div>
           <p className="text-meta text-ink-3 leading-relaxed">
-            방금 답하신 질문의 원본 의제·박제 입니다. 본인만 볼 수 있어요.
+            방금 답하신 질문의 원본 토론 주제·박제 입니다. 본인만 볼 수 있어요.
           </p>
         </div>
 
@@ -104,7 +104,7 @@ export default async function RevealPage() {
             href="/"
             className="px-4 py-[9px] text-button bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
           >
-            의제로
+            토론 주제로
           </Link>
         </div>
       </div>

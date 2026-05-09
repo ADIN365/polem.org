@@ -64,7 +64,7 @@ export default async function OG() {
             lineHeight: 1.5,
           }}
         >
-          한국어 정치·사회 의제 · 좌·우 영구 보관 토론
+          한국어 정치·사회 토론 주제 · 좌·우 영구 보관 토론
         </div>
       </div>
     ),

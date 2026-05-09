@@ -32,7 +32,7 @@ export async function summarizeBoard(
 
   const provider = selectProvider();
   const userInput = [
-    `[의제] ${boardTitle}`,
+    `[토론 주제] ${boardTitle}`,
     "",
     "[찬성 박제]",
     proLines.length === 0 ? "(없음)" : proLines.join("\n"),

@@ -75,7 +75,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
         data: {
           userId: proposal.proposerId,
           type: "PROPOSAL_APPROVED",
-          body: `의제가 승인됐어요: ${board.title}`,
+          body: `토론 주제가 승인됐어요: ${board.title}`,
           link: `/boards/${board.id}`,
         },
       });
@@ -100,7 +100,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
       data: {
         userId: proposal.proposerId,
         type: "PROPOSAL_REJECTED",
-        body: `의제가 거절됐어요: ${proposal.rawTitle.slice(0, 30)}…\n사유: ${rejectionReason}`,
+        body: `토론 주제가 거절됐어요: ${proposal.rawTitle.slice(0, 30)}…\n사유: ${rejectionReason}`,
       },
     }),
   ]);

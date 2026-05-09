@@ -14,7 +14,7 @@ export default async function TopNav() {
   // 모바일 햄버거 — 동그라미 아바타가 작아 진입 보조.
   // 데스크탑은 브랜드(홈) + 동그라미(/me) 만으로 충분해서 NAV_LINKS 비움.
   const mobileLinks: MobileMenuLink[] = [
-    { href: "/", label: "의제" },
+    { href: "/", label: "토론 주제" },
     ...(session?.user ? [{ href: "/proposal", label: "주제 만들기" }] : []),
     ...(session?.user ? [{ href: "/three", label: "오늘의 3문항" }] : []),
     ...(isAdmin ? [{ href: "/admin", label: "관리자" }] : []),

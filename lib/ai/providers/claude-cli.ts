@@ -5,7 +5,7 @@ import type { AiCallOptions, AiProvider } from "@/lib/ai/types";
 /**
  * `claude -p` 헤드리스 subprocess provider. Max 구독 안에서 비용 0.
  * 단 *Vercel 서버리스에선 사용 불가* (CLI 없음 + 10분 timeout).
- * 로컬 launchd cron 안 batch 작업 (의제 정제, 블라인드 변환, 50:50 요약) 에서만 호출.
+ * 로컬 launchd cron 안 batch 작업 (토론 주제 정제, 블라인드 변환, 50:50 요약) 에서만 호출.
  *
  * 환경변수:
  *   CLAUDE_BIN   — claude 실행파일 경로 (기본: which claude)

@@ -17,7 +17,7 @@ export default async function ProposalPage() {
           새 토론 주제 만들기
         </h1>
         <p className="text-meta text-ink-3 mt-2 leading-relaxed">
-          보내주신 내용은 *AI 가 의제 형식으로 정제* 후, *관리자 검토* 를 거쳐 게시판이 됩니다.
+          보내주신 내용은 *AI 가 토론 주제 형식으로 정제* 후, *관리자 검토* 를 거쳐 게시판이 됩니다.
           <br />
           정제·검토는 보통 *1~2일* 안에 끝나요. 결과는 알림으로 받습니다.
         </p>
@@ -27,7 +27,7 @@ export default async function ProposalPage() {
 
       <section className="mt-8 px-5 py-4 bg-soft border-[0.5px] border-border-soft rounded-md">
         <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-2">
-          좋은 의제의 조건
+          좋은 토론 주제의 조건
         </div>
         <ul className="text-meta text-ink-2 leading-relaxed space-y-1 pl-4 list-disc">
           <li>찬·반으로 명확히 갈릴 수 있는 정책·제도·사회 사안</li>

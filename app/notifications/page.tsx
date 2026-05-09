@@ -81,8 +81,8 @@ export default async function NotificationsPage() {
 
 function labelType(t: string) {
   const map: Record<string, string> = {
-    PROPOSAL_APPROVED: "의제 승인",
-    PROPOSAL_REJECTED: "의제 거절",
+    PROPOSAL_APPROVED: "토론 주제 승인",
+    PROPOSAL_REJECTED: "토론 주제 거절",
     REPORT_RESOLVED: "신고 처리",
     PIN_CHALLENGED: "출처 도전",
     WARNING: "경고",
