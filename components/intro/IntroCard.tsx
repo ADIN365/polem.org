@@ -21,12 +21,12 @@ export default async function IntroCard() {
             className="font-serif text-ink leading-snug tracking-tight"
             style={{ fontSize: "var(--fs-title-h2)" }}
           >
-            토론은 사회를 건강하게 만드는 자양분입니다.
+            토론은 건강한 사회를 위한 토양이 됩니다.
           </p>
 
           <div className="space-y-2">
             <p className="text-base text-ink-2 leading-relaxed">
-              생각이 다르다는 것은 싸울 이유가 아니라, 우리가 더 넓어질 기회입니다.
+              생각이 다르다는 것은 욕하고 비난할 이유가 아니라, 우리가 더 넓어질 기회입니다.
             </p>
             <p className="text-base text-ink-2 leading-relaxed">
               상대의 목소리에 귀를 기울일 때 비로소 논리는 완성됩니다.
@@ -37,7 +37,7 @@ export default async function IntroCard() {
             <li className="flex gap-2">
               <span className="text-ink-3 shrink-0">·</span>
               <span>
-                <span className="font-medium text-ink">감정 대신 팩트로</span> · 서로에 대한 모독이 아닌, 객관적 근거로 승부합니다.
+                <span className="font-medium text-ink">감정 대신 논리로</span> · 서로에 대한 모독이 아닌, 객관적 근거로 논증합니다.
               </span>
             </li>
             <li className="flex gap-2">
@@ -49,7 +49,7 @@ export default async function IntroCard() {
             <li className="flex gap-2">
               <span className="text-ink-3 shrink-0">·</span>
               <span>
-                <span className="font-medium text-ink">끝까지 가는 토론</span> · 겉핥기식 대화가 아닌, 본질을 꿰뚫는 끝장을 봅니다.
+                <span className="font-medium text-ink">말의 무게</span> · 말에는 그에 따르는 책임이 있음을 늘 견지합니다.
               </span>
             </li>
           </ul>
