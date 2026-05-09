@@ -47,28 +47,7 @@
   --radius-lg: 6px;
   --tr: 0.18s cubic-bezier(0.2, 0.6, 0.2, 1);
 
-  /* Font sizes — body class 로 토글 */
-  --fs-base:         15px;
-  --fs-small:        13px;
-  --fs-tiny:         11px;
-  --fs-meta:         12px;
-  --fs-pin:          14px;
-  --fs-button:       13px;
-  --fs-button-large: 15px;
-  --fs-eyebrow:      11px;
-  --fs-eyebrow-tight:10px;
-  --fs-input:        14px;
-  --fs-question:     23px;
-  --fs-title-h1:     26px;
-  --fs-title-h2:     24px;
-  --fs-title-h3:     22px;
-  --fs-title-h4:     17px;
-  --fs-title-modal:  30px;
-  --fs-stat-num:     24px;
-  --fs-brand:        23px;
-}
-
-body.fs-large {
+  /* Font sizes — body class 로 토글. default 17px base, fs-large 19, fs-xlarge 21 */
   --fs-base:         17px;
   --fs-small:        15px;
   --fs-tiny:         12px;
@@ -89,7 +68,7 @@ body.fs-large {
   --fs-brand:        24px;
 }
 
-body.fs-xlarge {
+body.fs-large {
   --fs-base:         19px;
   --fs-small:        16px;
   --fs-tiny:         13px;
@@ -108,6 +87,27 @@ body.fs-xlarge {
   --fs-title-modal:  36px;
   --fs-stat-num:     30px;
   --fs-brand:        26px;
+}
+
+body.fs-xlarge {
+  --fs-base:         21px;
+  --fs-small:        17px;
+  --fs-tiny:         14px;
+  --fs-meta:         15px;
+  --fs-pin:          20px;
+  --fs-button:       16px;
+  --fs-button-large: 18px;
+  --fs-eyebrow:      14px;
+  --fs-eyebrow-tight:13px;
+  --fs-input:        17px;
+  --fs-question:     31px;
+  --fs-title-h1:     35px;
+  --fs-title-h2:     33px;
+  --fs-title-h3:     30px;
+  --fs-title-h4:     22px;
+  --fs-title-modal:  40px;
+  --fs-stat-num:     33px;
+  --fs-brand:        28px;
 }
 
 /* ─── 베이스 리셋 ────────────────────────────────────────────── */

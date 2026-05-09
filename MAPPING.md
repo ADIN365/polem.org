@@ -62,38 +62,28 @@
 
 ```css
 :root {
-  /* default — 15px base */
-  --fs-base:         15px;
-  --fs-small:        13px;
-  --fs-tiny:         11px;
-  --fs-meta:         12px;
-  --fs-pin:          14px;
-  --fs-button:       13px;
-  --fs-button-large: 15px;
-  --fs-eyebrow:      11px;
-  --fs-eyebrow-tight:10px;
-  --fs-input:        14px;
-  --fs-question:     23px;
-  --fs-title-h1:     26px;
-  --fs-title-h2:     24px;
-  --fs-title-h3:     22px;
-  --fs-title-h4:     17px;
-  --fs-title-modal:  30px;
-  --fs-stat-num:     24px;
-  --fs-brand:        23px;
+  /* default — 17px base */
+  --fs-base:         17px;
+  --fs-small:        15px;
+  --fs-tiny:         12px;
+  --fs-meta:         13px;
+  --fs-pin:          16px;
+  --fs-button:       14px;
+  --fs-button-large: 16px;
+  --fs-eyebrow:      12px;
+  --fs-eyebrow-tight:11px;
+  --fs-input:        15px;
+  --fs-question:     25px;
+  --fs-title-h1:     28px;
+  --fs-title-h2:     26px;
+  --fs-title-h3:     24px;
+  --fs-title-h4:     18px;
+  --fs-title-modal:  32px;
+  --fs-stat-num:     26px;
+  --fs-brand:        24px;
 }
 
 body.fs-large {
-  --fs-base:17px; --fs-small:15px; --fs-tiny:12px;
-  --fs-meta:13px; --fs-pin:16px;   --fs-button:14px;
-  --fs-button-large:16px; --fs-eyebrow:12px; --fs-eyebrow-tight:11px;
-  --fs-input:15px; --fs-question:25px;
-  --fs-title-h1:28px; --fs-title-h2:26px; --fs-title-h3:24px;
-  --fs-title-h4:18px; --fs-title-modal:32px; --fs-stat-num:26px;
-  --fs-brand:24px;
-}
-
-body.fs-xlarge {
   --fs-base:19px; --fs-small:16px; --fs-tiny:13px;
   --fs-meta:14px; --fs-pin:18px;   --fs-button:15px;
   --fs-button-large:17px; --fs-eyebrow:13px; --fs-eyebrow-tight:12px;
@@ -101,6 +91,16 @@ body.fs-xlarge {
   --fs-title-h1:32px; --fs-title-h2:30px; --fs-title-h3:27px;
   --fs-title-h4:20px; --fs-title-modal:36px; --fs-stat-num:30px;
   --fs-brand:26px;
+}
+
+body.fs-xlarge {
+  --fs-base:21px; --fs-small:17px; --fs-tiny:14px;
+  --fs-meta:15px; --fs-pin:20px;   --fs-button:16px;
+  --fs-button-large:18px; --fs-eyebrow:14px; --fs-eyebrow-tight:13px;
+  --fs-input:17px; --fs-question:31px;
+  --fs-title-h1:35px; --fs-title-h2:33px; --fs-title-h3:30px;
+  --fs-title-h4:22px; --fs-title-modal:40px; --fs-stat-num:33px;
+  --fs-brand:28px;
 }
 ```
 

@@ -35,7 +35,7 @@ export default function FontSizeToggle() {
     >
       {SIZES.map((s, i) => {
         const active = size === s.value;
-        const fontSize = i === 0 ? 11 : i === 1 ? 13 : 15;
+        const fontSize = i === 0 ? 13 : i === 1 ? 15 : 17;
         return (
           <button
             key={s.value}
