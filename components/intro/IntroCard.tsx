@@ -34,7 +34,7 @@ export default async function IntroCard() {
           </div>
 
           <div className="text-center">
-            <ul className="inline-block space-y-2 text-small text-ink-2 leading-relaxed text-left">
+            <ul className="inline-block space-y-2 text-small text-ink-2 leading-relaxed text-left bg-soft rounded-md px-6 py-5">
               <li className="flex gap-2">
                 <span className="text-ink-3 shrink-0">·</span>
                 <span>
