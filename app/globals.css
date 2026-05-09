@@ -123,6 +123,12 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: font-size 0.18s ease;
+
+  /* 한국어 줄바꿈: 단어(어절) 단위로만 끊김.
+     긴 URL · 코드처럼 단어 자체가 너무 길면 그때만 잘리도록 anywhere. */
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  line-break: strict;
 }
 
 button {
