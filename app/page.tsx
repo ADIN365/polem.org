@@ -202,19 +202,6 @@ export default async function HomePage({ searchParams }: Props) {
 function EmptySite() {
   return (
     <div className="max-w-narrow mx-auto px-6 pt-16 pb-20">
-      <header className="text-center mb-10">
-        <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-2">토론 주제</div>
-        <h1
-          className="font-serif font-semibold tracking-tight text-ink m-0"
-          style={{ fontSize: "var(--fs-title-h1)" }}
-        >
-          조용한 광장입니다
-        </h1>
-        <p className="text-meta text-ink-2 leading-relaxed mt-3 max-w-[460px] mx-auto">
-          아직 토론 주제가 없습니다.
-        </p>
-      </header>
-
       <IntroCard />
     </div>
   );
