@@ -1,6 +1,6 @@
 import IntroCard from "@/components/intro/IntroCard";
 
-export const metadata = { title: "이런 광장입니다" };
+export const metadata = { title: "소개" };
 
 export default function AboutPage() {
   return (
