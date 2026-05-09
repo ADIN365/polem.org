@@ -3,7 +3,7 @@ import { PrismaClient, Category, PinSide } from "@prisma/client";
 const prisma = new PrismaClient();
 
 /**
- * Phase 2/3 시드 — 토론 주제 14개 + 박제 70+개 + 동조/댓글 일부.
+ * Phase 2/3 시드 — 토론 주제 14개 + 의견 70+개 + 동조/댓글 일부.
  * 실행: `npm run db:seed` (DATABASE_URL 필요)
  *
  * 토론 주제 데이터는 한국 사회에서 *실제로 찬반이 갈리는* 사안 위주로,
@@ -202,7 +202,7 @@ async function main() {
     seedUserMap.set(handle, user.id);
   }
 
-  // 2) 토론 주제 + 박제
+  // 2) 토론 주제 + 의견
   for (const board of BOARDS) {
     const proCount = board.pins.filter((p) => p.side === "PRO").length;
     const conCount = board.pins.filter((p) => p.side === "CON").length;
@@ -228,7 +228,7 @@ async function main() {
       },
     });
 
-    // 박제 — 기존 박제 모두 삭제 후 재생성 (멱등성)
+    // 의견 — 기존 의견 모두 삭제 후 재생성 (멱등성)
     await prisma.pin.deleteMany({ where: { boardId: created.id } });
     for (const pin of board.pins) {
       const authorId = seedUserMap.get(pin.author);
@@ -244,7 +244,7 @@ async function main() {
     }
   }
 
-  console.log(`[seed] 완료: ${BOARDS.length} 토론 주제, ${BOARDS.reduce((a, b) => a + b.pins.length, 0)} 박제`);
+  console.log(`[seed] 완료: ${BOARDS.length} 토론 주제, ${BOARDS.reduce((a, b) => a + b.pins.length, 0)} 의견`);
 }
 
 function slugify(title: string): string {

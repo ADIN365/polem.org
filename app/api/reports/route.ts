@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       where: { id: targetId },
       select: { id: true, authorId: true },
     });
-    if (!pin) return NextResponse.json({ error: "박제를 찾을 수 없어요." }, { status: 404 });
+    if (!pin) return NextResponse.json({ error: "의견을 찾을 수 없어요." }, { status: 404 });
     if (pin.authorId === session.user.id)
       return NextResponse.json({ error: "자기 글은 신고할 수 없어요." }, { status: 400 });
     pinId = pin.id;

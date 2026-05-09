@@ -45,7 +45,7 @@ export default async function RevealPage() {
             정체 공개
           </div>
           <p className="text-meta text-ink-3 leading-relaxed">
-            방금 답하신 질문의 원본 토론 주제·박제 입니다. 본인만 볼 수 있어요.
+            방금 답하신 질문의 원본 토론 주제·의견 입니다. 본인만 볼 수 있어요.
           </p>
         </div>
 
@@ -68,7 +68,7 @@ export default async function RevealPage() {
                   <div className="flex gap-2 items-baseline mb-2 text-eyebrow-tight tracking-wider text-ink-3 uppercase">
                     <span>{CATEGORY_LABEL[r.pin.board.category] ?? r.pin.board.category}</span>
                     <span>·</span>
-                    <span>{r.pin.side === "PRO" ? "찬성 박제" : "반대 박제"}</span>
+                    <span>{r.pin.side === "PRO" ? "찬성 의견" : "반대 의견"}</span>
                   </div>
 
                   <Link

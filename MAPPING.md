@@ -187,13 +187,13 @@ app/
       route.ts                  # GET 목록, POST 생성 (관리자)
       [id]/route.ts             # GET 상세
     pins/
-      route.ts                  # POST 박제 생성
+      route.ts                  # POST 의견 생성
       [id]/
         endorse/route.ts        # POST/DELETE 동조
         comments/route.ts       # GET 목록, POST 댓글
         challenge/route.ts      # POST 출처 반박
         report/route.ts         # POST 신고
-        quote/route.ts          # POST 인용 박제
+        quote/route.ts          # POST 인용 의견
     proposals/
       route.ts                  # GET 목록, POST 제안
       [id]/route.ts             # PATCH 승인/거절 (관리자)
@@ -212,7 +212,7 @@ app/
       users/[id]/ban/route.ts   # POST 차단
     cron/
       ai-summary/route.ts       # 50:50 요약 (배치)
-      blind-questions/route.ts  # 박제 → 블라인드 변환 (배치)
+      blind-questions/route.ts  # 의견 → 블라인드 변환 (배치)
 
 components/
   layout/
@@ -225,10 +225,10 @@ components/
     BoardIndex.tsx              # 토론 주제 색인 표
     BoardHeader.tsx             # 게시판 상단 (제목·비율 막대)
     BoardSummary.tsx            # AI 50:50 요약 박스
-    Pin.tsx                     # 박제 카드 (pin-pro / pin-con variants)
-    PinForm.tsx                 # 박제 작성 모달
+    Pin.tsx                     # 의견 카드 (pin-pro / pin-con variants)
+    PinForm.tsx                 # 의견 작성 모달
     PinComments.tsx             # 댓글 트리 (깊이 무한)
-    QuoteBlock.tsx              # 인용 박제 표시
+    QuoteBlock.tsx              # 인용 의견 표시
     ChallengeBadge.tsx          # 출처 반박 배지
   proposal/
     ProposalForm.tsx            # 사용자 입력
@@ -265,7 +265,7 @@ components/
 
 ## 3. 컴포넌트 맵
 
-### 3.1 Pin (박제 카드) — 두 variants
+### 3.1 Pin (의견 카드) — 두 variants
 
 ```tsx
 // 핵심: pin-pro 는 흰색 카드, pin-con 은 잉크 카드
@@ -280,7 +280,7 @@ interface PinProps {
   endorseCount: number;
   commentCount: number;
   challengeCount?: number;
-  quote?: { author: string; body: string }; // 인용 박제 시
+  quote?: { author: string; body: string }; // 인용 의견 시
 }
 ```
 
@@ -374,8 +374,8 @@ model Board {
   category    Category
   proposerId  String?              // 제안자 (관리자가 직접 만든 경우 null)
   proposer    User?    @relation(fields: [proposerId], references: [id])
-  proCount    Int      @default(0) // 찬성 박제 수
-  conCount    Int      @default(0) // 반대 박제 수
+  proCount    Int      @default(0) // 찬성 의견 수
+  conCount    Int      @default(0) // 반대 의견 수
   viewCount   Int      @default(0)
   participantCount Int @default(0) // 고유 참여자
   status      BoardStatus @default(ACTIVE)
@@ -420,7 +420,7 @@ model Pin {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  // 인용 박제 (다른 박제 인용)
+  // 인용 의견 (다른 의견 인용)
   quotedPinId String?
   quotedPin   Pin?    @relation("Quotation", fields: [quotedPinId], references: [id])
   quotingPins Pin[]   @relation("Quotation")
@@ -600,7 +600,7 @@ model BlindAnswer {
   id              String   @id @default(cuid())
   userId          String
   user            User     @relation(fields: [userId], references: [id])
-  pinId           String   // 어느 박제의 블라인드 질문이었는지 (시스템은 알지만 사용자에게 명시 X)
+  pinId           String   // 어느 의견의 블라인드 질문이었는지 (시스템은 알지만 사용자에게 명시 X)
   pin             Pin      @relation(fields: [pinId], references: [id])
   answer          BlindAnswerValue
   createdAt       DateTime @default(now())
@@ -650,7 +650,7 @@ enum NotificationType {
 //   id        String  @id @default(cuid())
 //   boardId   String
 //   board     Board   @relation(fields: [boardId], references: [id])
-//   pinIds    String[] // 어느 박제들에서 추출되었는지
+//   pinIds    String[] // 어느 의견들에서 추출되었는지
 //   text      String   // AI 가 추출한 핵심 명제
 //   side      PinSide
 //   createdAt DateTime @default(now())
@@ -694,12 +694,12 @@ enum NotificationType {
 |---|---|---|
 | `/` | `GET /api/boards` | Board (list) |
 | `/boards/[id]` | `GET /api/boards/[id]` | Board, Pin (relations) |
-| `/boards/[id]` 박제 작성 | `POST /api/pins` | Pin (create) + Board (counter ++) |
-| 박제 동조 | `POST /api/pins/[id]/endorse` | Endorsement |
-| 박제 댓글 | `GET/POST /api/pins/[id]/comments` | Comment |
-| 박제 인용 | `POST /api/pins/[id]/quote` | Pin (with quotedPinId) |
-| 박제 반박 | `POST /api/pins/[id]/challenge` | Challenge |
-| 박제 신고 | `POST /api/pins/[id]/report` | Report |
+| `/boards/[id]` 의견 작성 | `POST /api/pins` | Pin (create) + Board (counter ++) |
+| 의견 동조 | `POST /api/pins/[id]/endorse` | Endorsement |
+| 의견 댓글 | `GET/POST /api/pins/[id]/comments` | Comment |
+| 의견 인용 | `POST /api/pins/[id]/quote` | Pin (with quotedPinId) |
+| 의견 반박 | `POST /api/pins/[id]/challenge` | Challenge |
+| 의견 신고 | `POST /api/pins/[id]/report` | Report |
 | `/proposal` | `POST /api/proposals` | Proposal (with AI fields) |
 | `/three` | `GET /api/three` | Pin (블라인드 질문 변환된 것) |
 | `/three` 답변 | `POST /api/three/answer` | BlindAnswer |
@@ -718,8 +718,8 @@ enum NotificationType {
 | 작업 | 시점 | LLM | 입력 | 출력 |
 |---|---|---|---|---|
 | 토론 주제 정제 | 사용자 제안 시 (실시간) | gpt-4o-mini | 자유 입력 텍스트 | 정제된 제목·카테고리·중복 후보·필터 결과 |
-| 50:50 요약 | 매일 1-2회 (Cron) | gpt-4o-mini | 게시판 박제 100-300개 | PRO 한 줄·CON 한 줄 (50:50) |
-| 블라인드 질문 변환 | 박제 생성 후 (Cron, 비동기) | gpt-4o-mini | Pin.body | 토론 주제명·고유명사 가린 질문 형태 |
+| 50:50 요약 | 매일 1-2회 (Cron) | gpt-4o-mini | 게시판 의견 100-300개 | PRO 한 줄·CON 한 줄 (50:50) |
+| 블라인드 질문 변환 | 의견 생성 후 (Cron, 비동기) | gpt-4o-mini | Pin.body | 토론 주제명·고유명사 가린 질문 형태 |
 | 부적절성 필터 | 모든 사용자 글 작성 시 | 한국어 비속어 사전 + 정규식 (LLM 아님) | 텍스트 | 차단/허용 |
 
 **모든 AI 결과는 *수정 가능*하게:**

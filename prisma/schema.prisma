@@ -117,8 +117,8 @@ model Board {
   proposerId String?
   proposer   User?   @relation("BoardProposer", fields: [proposerId], references: [id])
 
-  proCount         Int @default(0) // 찬성 박제 수
-  conCount         Int @default(0) // 반대 박제 수
+  proCount         Int @default(0) // 찬성 의견 수
+  conCount         Int @default(0) // 반대 의견 수
   viewCount        Int @default(0)
   participantCount Int @default(0) // 고유 참여자
 
@@ -169,7 +169,7 @@ model Pin {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // 인용 박제 (다른 박제 인용)
+  // 인용 의견 (다른 의견 인용)
   quotedPinId String?
   quotedPin   Pin?    @relation("Quotation", fields: [quotedPinId], references: [id])
   quotingPins Pin[]   @relation("Quotation")
@@ -378,7 +378,7 @@ model BlindAnswer {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  pinId String // 어느 박제의 블라인드 질문이었는지 (사용자에게 명시 X)
+  pinId String // 어느 의견의 블라인드 질문이었는지 (사용자에게 명시 X)
   pin   Pin    @relation(fields: [pinId], references: [id])
 
   answer    BlindAnswerValue
@@ -432,7 +432,7 @@ enum NotificationType {
 //   id        String   @id @default(cuid())
 //   boardId   String
 //   board     Board    @relation(fields: [boardId], references: [id])
-//   pinIds    String[] // 어느 박제들에서 추출되었는지
+//   pinIds    String[] // 어느 의견들에서 추출되었는지
 //   text      String
 //   side      PinSide
 //   createdAt DateTime @default(now())

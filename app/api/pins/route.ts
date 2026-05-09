@@ -55,18 +55,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "게시판을 찾을 수 없어요." }, { status: 404 });
   }
 
-  // 인용 박제 검증 — 같은 게시판일 필요는 없지만 존재해야 하고 hidden/deleted 가 아니어야.
+  // 인용 의견 검증 — 같은 게시판일 필요는 없지만 존재해야 하고 hidden/deleted 가 아니어야.
   if (quotedPinId) {
     const quoted = await prisma.pin.findUnique({
       where: { id: quotedPinId },
       select: { id: true, hidden: true, deleted: true },
     });
     if (!quoted || quoted.hidden || quoted.deleted) {
-      return NextResponse.json({ error: "인용할 박제를 찾을 수 없어요." }, { status: 400 });
+      return NextResponse.json({ error: "인용할 의견을 찾을 수 없어요." }, { status: 400 });
     }
   }
 
-  // 같은 게시판에 동일 사용자 박제는 *허용* (헌법 2.2 — 다수결 변질 방지하지만 박제 자체는 의견 표명).
+  // 같은 게시판에 동일 사용자 의견는 *허용* (헌법 2.2 — 다수결 변질 방지하지만 의견 자체는 의견 표명).
   // 단 동일 본문 + 같은 사용자 + 같은 board 의 빠른 중복은 막음 (5분 이내).
   const recent = await prisma.pin.findFirst({
     where: {
@@ -78,7 +78,7 @@ export async function POST(req: Request) {
     select: { id: true },
   });
   if (recent) {
-    return NextResponse.json({ error: "방금 같은 내용으로 박제했어요." }, { status: 409 });
+    return NextResponse.json({ error: "방금 같은 내용으로 의견을 남겼어요." }, { status: 409 });
   }
 
   const pin = await prisma.$transaction(async (tx) => {
@@ -100,8 +100,8 @@ export async function POST(req: Request) {
         updatedAt: new Date(),
       },
     });
-    // 참여자 수는 distinct 작가 수. 박제 만들 때마다 다시 계산하면 비용 큼.
-    // 단순 휴리스틱: 같은 작가의 박제가 처음일 때만 +1.
+    // 참여자 수는 distinct 작가 수. 의견 만들 때마다 다시 계산하면 비용 큼.
+    // 단순 휴리스틱: 같은 작가의 의견이 처음일 때만 +1.
     const otherPins = await tx.pin.count({
       where: { boardId, authorId: session.user.id, id: { not: created.id } },
     });

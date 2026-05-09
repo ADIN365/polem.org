@@ -11,7 +11,7 @@ interface Ctx {
 
 /**
  * 출처 반박 — 헌법 2.2: 반박자도 *다른 출처*를 첨부 필수.
- * 같은 박제에 같은 사용자가 여러 번 반박 가능 (각각 다른 출처).
+ * 같은 의견에 같은 사용자가 여러 번 반박 가능 (각각 다른 출처).
  */
 const Body = z.object({
   body: z.string().trim().min(10, "반박 내용을 10자 이상 적어주세요.").max(800),
@@ -39,10 +39,10 @@ export async function POST(req: Request, { params }: Ctx) {
     select: { id: true, hidden: true, deleted: true, authorId: true },
   });
   if (!pin || pin.hidden || pin.deleted) {
-    return NextResponse.json({ error: "박제를 찾을 수 없어요." }, { status: 404 });
+    return NextResponse.json({ error: "의견을 찾을 수 없어요." }, { status: 404 });
   }
   if (pin.authorId === session.user.id) {
-    return NextResponse.json({ error: "자기 박제에는 반박할 수 없어요." }, { status: 400 });
+    return NextResponse.json({ error: "자기 의견에는 반박할 수 없어요." }, { status: 400 });
   }
 
   await prisma.challenge.create({

@@ -38,7 +38,7 @@ export default function BoardClient({
   };
 
   const handleQuote = (pin: PinData) => {
-    // 인용 박제는 같은 side 로 가는 게 자연스럽지만 사용자가 변경 가능. 디폴트는 인용된 박제와 같은 side.
+    // 인용 의견는 같은 side 로 가는 게 자연스럽지만 사용자가 변경 가능. 디폴트는 인용된 의견와 같은 side.
     openCompose(pin.side, {
       id: pin.id,
       body: pin.body,
@@ -69,20 +69,20 @@ export default function BoardClient({
           onClick={() => openCompose("PRO")}
           className="flex-1 px-[14px] py-[11px] text-pin bg-card text-ink border-[0.5px] border-ink rounded-md hover:bg-soft transition-colors font-medium"
         >
-          ＋ 찬성으로 박제
+          ＋ 찬성 의견
         </button>
         <button
           type="button"
           onClick={() => openCompose("CON")}
           className="flex-1 px-[14px] py-[11px] text-pin bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors font-medium"
         >
-          ＋ 반대로 박제
+          ＋ 반대 의견
         </button>
       </div>
 
       {!currentUserId ? (
         <div className="px-[18px] pt-3 pb-1 text-center text-tiny text-ink-3">
-          박제·동조·댓글은 <Link href={`/login?callbackUrl=/boards/${boardId}`} className="underline">로그인</Link> 후 가능해요.
+          의견·동조·댓글은 <Link href={`/login?callbackUrl=/boards/${boardId}`} className="underline">로그인</Link> 후 가능해요.
         </div>
       ) : null}
 
@@ -132,9 +132,9 @@ function Column({
         ))
       ) : (
         <div className="text-tiny text-ink-3 px-1 py-8 text-center leading-relaxed">
-          {isPro ? "찬성 박제가 비어 있어요." : "반대 박제가 비어 있어요."}
+          {isPro ? "찬성 의견이 비어 있어요." : "반대 의견이 비어 있어요."}
           <br />
-          아래 *＋ {isPro ? "찬성" : "반대"}으로 박제* 로 첫 의견을 남겨보세요.
+          아래 *＋ {isPro ? "찬성" : "반대"} 의견* 버튼으로 첫 의견을 남겨보세요.
         </div>
       )}
     </div>

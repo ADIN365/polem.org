@@ -18,9 +18,9 @@ const STATUS_TONE: Record<MirrorStatus, string> = {
 };
 
 const STATUS_HINT: Record<MirrorStatus, string> = {
-  match: "박제한 입장과 블라인드 답변이 같은 방향.",
-  warn: "박제 입장과 블라인드 답변이 다른 방향. 한 번 더 살펴볼 토론 주제.",
-  new: "박제는 안 했지만 블라인드 답변이 한쪽으로 기울었어요.",
+  match: "의견한 입장과 블라인드 답변이 같은 방향.",
+  warn: "의견 입장과 블라인드 답변이 다른 방향. 한 번 더 살펴볼 토론 주제.",
+  new: "의견는 안 했지만 블라인드 답변이 한쪽으로 기울었어요.",
   split: "한 토론 주제 안에서 입장이 갈리는 중. 결정 미정.",
 };
 
@@ -33,7 +33,7 @@ export default function MirrorTable({ rows }: { rows: MirrorRow[] }) {
         <Link href="/three" className="underline hover:text-ink">
           오늘의 3문항
         </Link>{" "}
-        · 박제·동조를 더 쌓이면 토론 주제별로 자기 입장 정렬을 비춰드릴게요.
+        · 의견·동조를 더 쌓이면 토론 주제별로 자기 입장 정렬을 비춰드릴게요.
       </div>
     );
   }
@@ -57,7 +57,7 @@ export default function MirrorTable({ rows }: { rows: MirrorRow[] }) {
                 {r.boardTitle}
               </Link>
               <div className="mt-2 flex gap-3 text-tiny text-ink-3 flex-wrap">
-                <Pair label="내 박제" pro={r.myPros} con={r.myCons} />
+                <Pair label="내 의견" pro={r.myPros} con={r.myCons} />
                 <Pair label="블라인드" pro={r.blindEffPro} con={r.blindEffCon} unsure={r.blindUnsure} />
               </div>
             </div>

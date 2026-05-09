@@ -1,5 +1,5 @@
 // 토론 주제별 자기 거울 집계.
-// 박제 입장 (직접 PRO/CON 의견 표명) 과 블라인드 답변 (진영 가린 채 평가) 을 토론 주제 단위로 비교.
+// 의견 입장 (직접 PRO/CON 의견 표명) 과 블라인드 답변 (진영 가린 채 평가) 을 토론 주제 단위로 비교.
 // 헌법 §2.3 — 본인에게만 노출. 다른 사용자의 자기 거울 엔 절대 접근 X.
 
 import type { BlindAnswerValue, Category } from "@prisma/client";
@@ -74,7 +74,7 @@ export async function getMirrorRows(userId: string): Promise<MirrorRow[]> {
     const board = boardMap.get(boardId);
     if (!board) continue;
     const status = classify(v);
-    if (!status) continue; // 박제·블라인드 모두 0 또는 의미 없음
+    if (!status) continue; // 의견·블라인드 모두 0 또는 의미 없음
     rows.push({
       boardId,
       boardTitle: board.title,
@@ -129,7 +129,7 @@ function classify(v: ReturnType<typeof defaults>): MirrorStatus | null {
   if (pinStance === "NONE" && blindStance === "NONE") return null;
   if (pinStance === "NONE") return "new";
   if (pinStance === "MIXED" || blindStance === "MIXED") return "split";
-  if (blindStance === "NONE") return null; // 박제만 있고 블라인드 없으면 비교 의미 X
+  if (blindStance === "NONE") return null; // 의견만 있고 블라인드 없으면 비교 의미 X
   if (pinStance === blindStance) return "match";
   return "warn";
 }

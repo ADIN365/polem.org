@@ -27,10 +27,10 @@ export async function POST(req: Request) {
     select: { id: true, hidden: true, deleted: true, blindQuestion: true, authorId: true },
   });
   if (!pin || pin.hidden || pin.deleted || !pin.blindQuestion) {
-    return NextResponse.json({ error: "응답 가능한 박제가 아니에요." }, { status: 404 });
+    return NextResponse.json({ error: "응답 가능한 의견이 아니에요." }, { status: 404 });
   }
   if (pin.authorId === session.user.id) {
-    return NextResponse.json({ error: "자기 박제에는 답할 수 없어요." }, { status: 400 });
+    return NextResponse.json({ error: "자기 의견에는 답할 수 없어요." }, { status: 400 });
   }
 
   const { answer } = parsed.data;

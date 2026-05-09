@@ -12,7 +12,7 @@ interface PinSnippet {
 }
 
 /**
- * 박제 100~300개 → 50:50 양측 요약 한 줄씩.
+ * 의견 100~300개 → 50:50 양측 요약 한 줄씩.
  * 헌법 §2.1 — 우열 평가 절대 X. 길이 비슷하게 맞춤.
  */
 export async function summarizeBoard(
@@ -34,10 +34,10 @@ export async function summarizeBoard(
   const userInput = [
     `[토론 주제] ${boardTitle}`,
     "",
-    "[찬성 박제]",
+    "[찬성 의견]",
     proLines.length === 0 ? "(없음)" : proLines.join("\n"),
     "",
-    "[반대 박제]",
+    "[반대 의견]",
     conLines.length === 0 ? "(없음)" : conLines.join("\n"),
   ].join("\n");
 

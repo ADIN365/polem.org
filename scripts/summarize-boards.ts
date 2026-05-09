@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * 50:50 양측 요약 cron worker. 일 1~2회.
- * - 활성 게시판 중 *마지막 요약 24시간 이상 경과 + 박제 4개 이상* 인 board 처리
+ * - 활성 게시판 중 *마지막 요약 24시간 이상 경과 + 의견 4개 이상* 인 board 처리
  * - claude -p 헤드리스
  */
 import "dotenv/config";
@@ -57,7 +57,7 @@ async function main() {
         });
         const summary = await summarizeBoard(b.title, pins);
         if (!summary) {
-          console.log(`[summary] ${b.id.slice(0, 8)} skip — 박제 부족 또는 파싱 실패`);
+          console.log(`[summary] ${b.id.slice(0, 8)} skip — 의견 부족 또는 파싱 실패`);
           continue;
         }
         await prisma.board.update({

@@ -70,7 +70,7 @@ export default function ChallengeModal({
               maxLength={800}
               required
               className="w-full px-3 py-[10px] border-[0.5px] border-border bg-card text-input text-ink rounded-md outline-none focus:border-ink resize-none"
-              placeholder="이 박제의 어떤 사실관계에 동의할 수 없는지 적어주세요."
+              placeholder="이 의견의 어떤 사실관계에 동의할 수 없는지 적어주세요."
             />
           </label>
           <label className="block">

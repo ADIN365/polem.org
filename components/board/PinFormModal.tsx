@@ -47,12 +47,12 @@ export default function PinFormModal({
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "박제 등록 실패");
-      toast.success("박제가 등록됐어요.");
+      if (!res.ok) throw new Error(data.error ?? "의견 등록 실패");
+      toast.success("의견이 등록됐어요.");
       onClose();
       router.refresh();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "박제 등록 실패");
+      toast.error(err instanceof Error ? err.message : "의견 등록 실패");
     } finally {
       setSubmitting(false);
     }
@@ -77,7 +77,7 @@ export default function PinFormModal({
             className="font-serif font-semibold tracking-tight text-ink mb-2"
             style={{ fontSize: "var(--fs-title-h3)" }}
           >
-            {quoting ? "인용해서 박제" : isPro ? "찬성으로 박제" : "반대로 박제"}
+            {quoting ? "인용해서 의견 남기기" : isPro ? "찬성 의견 남기기" : "반대 의견 남기기"}
           </div>
           <p className="text-meta text-ink-3 leading-relaxed">
             등록 후 수정·삭제는 모더레이션 대상에 한해 가능합니다.
@@ -133,7 +133,7 @@ export default function PinFormModal({
                 : "bg-dark text-paper-cream hover:bg-deep",
             ].join(" ")}
           >
-            {submitting ? "등록 중…" : isPro ? "＋ 찬성 박제" : "＋ 반대 박제"}
+            {submitting ? "등록 중…" : isPro ? "＋ 찬성 의견" : "＋ 반대 의견"}
           </button>
         </div>
       </form>

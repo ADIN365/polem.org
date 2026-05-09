@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 export default async function ThreePage() {
   const session = await requireOnboarded("/three");
 
-  // 후보: 변환된 blindQuestion 가 있고, 본인 박제가 아니고, 본인이 아직 답 안 한 박제.
+  // 후보: 변환된 blindQuestion 가 있고, 본인 의견이 아니고, 본인이 아직 답 안 한 의견.
   // 50개 가져와 셔플 → 3개. (사용자 수 적을 때 단순 — 나중 PostgreSQL ORDER BY RANDOM()).
   const candidates = await prisma.pin.findMany({
     where: {
@@ -43,7 +43,7 @@ export default async function ThreePage() {
         <p className="text-meta text-ink-2 leading-relaxed mb-6">
           답하지 않은 블라인드 질문이 모두 소진됐어요.
           <br />
-          박제가 더 쌓이면 새 질문이 변환됩니다.
+          의견이 더 쌓이면 새 질문이 변환됩니다.
         </p>
         <Link
           href="/"

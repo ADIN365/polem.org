@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 
 /**
  * 잉크/종이 톤 Toast. 광고·게이미피케이션 회피 헌법에 따라
- * 알림은 *최소화*. 주로 신고 결과·박제 답변 같은 사용자 직접 트리거 결과만 띄움.
+ * 알림은 *최소화*. 주로 신고 결과·의견 답변 같은 사용자 직접 트리거 결과만 띄움.
  */
 export default function ToastProvider() {
   return (

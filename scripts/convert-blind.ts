@@ -1,9 +1,9 @@
 #!/usr/bin/env tsx
 /**
- * 박제 → 블라인드 질문 변환 cron worker.
- * 로컬 launchd 가 5분마다. blindQuestion null + 생성 5분 경과한 박제 처리.
+ * 의견 → 블라인드 질문 변환 cron worker.
+ * 로컬 launchd 가 5분마다. blindQuestion null + 생성 5분 경과한 의견 처리.
  *
- * 5분 grace: 사용자가 박제 직후 *오늘의 3문항* 에서 자기 박제를 보면 정체 식별 가능 →
+ * 5분 grace: 사용자가 의견 직후 *오늘의 3문항* 에서 자기 의견을 보면 정체 식별 가능 →
  * 약간의 지연으로 가림.
  */
 import "dotenv/config";
@@ -46,7 +46,7 @@ async function main() {
     });
 
     if (queue.length === 0) {
-      console.log("[blind] 처리할 박제 없음.");
+      console.log("[blind] 처리할 의견 없음.");
       return;
     }
     console.log(`[blind] 시작: ${queue.length}건`);

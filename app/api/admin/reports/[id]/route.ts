@@ -15,7 +15,7 @@ const Body = z.discriminatedUnion("action", [
     action: z.literal("resolve"),
     /** 위반자에게 적용할 단계 */
     sanction: z.enum(["WARN", "SUSPEND_7D", "BAN"]),
-    /** 박제·댓글이면 본문 숨김 처리 */
+    /** 의견·댓글이면 본문 숨김 처리 */
     hideContent: z.boolean().default(true),
     note: z.string().trim().max(500).optional(),
   }),
@@ -82,7 +82,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
       },
     });
 
-    // 2) 대상 콘텐츠 숨김 (박제·댓글)
+    // 2) 대상 콘텐츠 숨김 (의견·댓글)
     if (hideContent) {
       if (report.targetType === "PIN") {
         await tx.pin.update({ where: { id: report.targetId }, data: { hidden: true } });

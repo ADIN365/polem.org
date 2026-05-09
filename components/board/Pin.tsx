@@ -50,7 +50,7 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
       return;
     }
     if (isMine) {
-      toast("자기 박제에는 동조할 수 없어요.");
+      toast("자기 의견에는 동조할 수 없어요.");
       return;
     }
     if (busy) return;
@@ -137,7 +137,7 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
               endorsed ? (isPro ? "text-ink font-semibold" : "text-paper-cream font-semibold") : "",
               isMine ? "opacity-40 cursor-not-allowed" : "hover:opacity-80",
             ].join(" ")}
-            title={isMine ? "자기 박제에는 동조할 수 없어요" : "동조"}
+            title={isMine ? "자기 의견에는 동조할 수 없어요" : "동조"}
             aria-pressed={endorsed}
           >
             {endorsed ? "↑●" : "↑"} {endorseCount}
@@ -164,7 +164,7 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
                 onQuote?.(pin);
               }}
               className="hover:opacity-80 transition-colors"
-              title="이 박제를 인용해서 박제"
+              title="이 의견을 인용해서 의견 남기기"
             >
               인용
             </button>
@@ -195,7 +195,7 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
               }}
               className="hover:opacity-80 transition-colors opacity-70"
               title="신고"
-              aria-label="이 박제 신고"
+              aria-label="이 의견 신고"
             >
               ⋯
             </button>

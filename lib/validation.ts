@@ -28,7 +28,7 @@ export function canChangeNicknameNow(nicknameUpdatedAt: Date | null): boolean {
   return !next || next.getTime() <= Date.now();
 }
 
-// 박제·댓글 본문 길이 한도 (Phase 3 에서 사용)
+// 의견·댓글 본문 길이 한도 (Phase 3 에서 사용)
 export const PIN_BODY_MIN = 8;
 export const PIN_BODY_MAX = 1500;
 export const COMMENT_BODY_MIN = 1;

@@ -11,7 +11,7 @@ interface Ctx {
 
 /**
  * 동조(↑) 추가. 헌법 2.2 — 비추천 없음. 좋아요만.
- * 자신의 박제에 동조 가능 여부는 명세 미확정 — 일단 허용하지 않음.
+ * 자신의 의견에 동조 가능 여부는 명세 미확정 — 일단 허용하지 않음.
  */
 export async function POST(_req: Request, { params }: Ctx) {
   const session = await getServerSession(authOptions);
@@ -23,10 +23,10 @@ export async function POST(_req: Request, { params }: Ctx) {
     select: { id: true, authorId: true, hidden: true, deleted: true },
   });
   if (!pin || pin.hidden || pin.deleted) {
-    return NextResponse.json({ error: "박제를 찾을 수 없어요." }, { status: 404 });
+    return NextResponse.json({ error: "의견을 찾을 수 없어요." }, { status: 404 });
   }
   if (pin.authorId === session.user.id) {
-    return NextResponse.json({ error: "자기 박제에는 동조할 수 없어요." }, { status: 400 });
+    return NextResponse.json({ error: "자기 의견에는 동조할 수 없어요." }, { status: 400 });
   }
 
   try {

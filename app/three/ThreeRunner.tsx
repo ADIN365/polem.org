@@ -74,7 +74,7 @@ export default function ThreeRunner({ pins }: { pins: Pin[] }) {
             ))}
           </div>
           <p className="text-tiny text-ink-3 mt-2 leading-relaxed">
-            답한 뒤 다음 화면에서 어떤 토론 주제·박제였는지 보여드립니다.
+            답한 뒤 다음 화면에서 어떤 토론 주제·의견였는지 보여드립니다.
           </p>
         </div>
 

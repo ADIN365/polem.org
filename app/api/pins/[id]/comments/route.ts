@@ -69,7 +69,7 @@ export async function POST(req: Request, { params }: Ctx) {
     select: { id: true, hidden: true, deleted: true },
   });
   if (!pin || pin.hidden || pin.deleted) {
-    return NextResponse.json({ error: "박제를 찾을 수 없어요." }, { status: 404 });
+    return NextResponse.json({ error: "의견을 찾을 수 없어요." }, { status: 404 });
   }
 
   if (parsed.data.parentId) {
