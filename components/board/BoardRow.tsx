@@ -14,7 +14,7 @@ export interface BoardRowData {
   viewCount: number;
   updatedAt: Date;
   status: string;
-  // 표시용 인덱스 (#127 등)
+  /** 데스크탑에만 표시되는 page-relative 자리 번호. 의제 영구 ID 아님. */
   number: number;
   isNew?: boolean;
 }
@@ -27,10 +27,12 @@ export function BoardRow({ board }: { board: BoardRowData }) {
   return (
     <Link
       href={`/boards/${board.id}`}
-      className="grid grid-cols-[44px_1fr_64px] md:grid-cols-[60px_1fr_180px_110px_70px] gap-2 md:gap-3 px-4 md:px-6 py-3 md:py-[14px] border-b-[0.5px] border-border-soft items-center hover:bg-soft transition-colors"
+      className="grid grid-cols-[1fr_64px] md:grid-cols-[60px_1fr_180px_110px_70px] gap-2 md:gap-3 px-4 md:px-6 py-3 md:py-[14px] border-b-[0.5px] border-border-soft items-center hover:bg-soft transition-colors"
       style={{ opacity: dimmed ? 0.7 : 1 }}
     >
-      <div className="font-mono text-tiny text-ink-3">#{String(board.number).padStart(3, "0")}</div>
+      <div className="hidden md:block font-mono text-tiny text-ink-3">
+        #{String(board.number).padStart(3, "0")}
+      </div>
 
       <div className="min-w-0">
         <div className="flex gap-2 items-baseline mb-[2px] text-eyebrow-tight tracking-wider text-ink-3 uppercase flex-wrap">
