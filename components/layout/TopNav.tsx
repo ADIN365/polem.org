@@ -4,10 +4,20 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NAV_LINKS, SITE_DOMAIN, SITE_NAME } from "@/lib/constants";
 import FontSizeToggle from "./FontSizeToggle";
+import MobileMenu, { type MobileMenuLink } from "./MobileMenu";
 
 export default async function TopNav() {
   const session = await getServerSession(authOptions);
   const initial = (session?.user?.nickname ?? session?.user?.name ?? "ㄱ").trim().charAt(0);
+  const isAdmin = session?.user?.role === "ADMIN";
+
+  const mobileLinks: MobileMenuLink[] = [
+    ...NAV_LINKS.map((l) => ({ href: l.href, label: l.label })),
+    ...(isAdmin ? [{ href: "/admin", label: "관리자" }] : []),
+    session?.user
+      ? { href: "/api/auth/signout", label: "로그아웃" }
+      : { href: "/login", label: "로그인" },
+  ];
 
   return (
     <header className="sticky top-0 z-50 bg-page/[0.92] backdrop-blur-md backdrop-saturate-150 border-b-[0.5px] border-border">
@@ -24,7 +34,7 @@ export default async function TopNav() {
           </span>
         </Link>
 
-        <div className="flex items-center gap-[14px]">
+        <div className="flex items-center gap-2 md:gap-[14px]">
           <nav className="hidden md:flex gap-1 items-center">
             {NAV_LINKS.map((l) => (
               <Link
@@ -35,7 +45,7 @@ export default async function TopNav() {
                 {l.label}
               </Link>
             ))}
-            {session?.user?.role === "ADMIN" ? (
+            {isAdmin ? (
               <Link
                 href="/admin"
                 className="px-[14px] py-2 text-small text-ink hover:text-ink rounded-sm transition-colors border-b border-ink"
@@ -45,7 +55,9 @@ export default async function TopNav() {
             ) : null}
           </nav>
 
-          <FontSizeToggle />
+          <div className="hidden md:flex">
+            <FontSizeToggle />
+          </div>
 
           {session?.user ? (
             <Link
@@ -58,11 +70,13 @@ export default async function TopNav() {
           ) : (
             <Link
               href="/login"
-              className="px-3 py-[7px] text-small text-ink-2 hover:text-ink border-[0.5px] border-border rounded-sm transition-colors"
+              className="hidden md:inline-block px-3 py-[7px] text-small text-ink-2 hover:text-ink border-[0.5px] border-border rounded-sm transition-colors"
             >
               로그인
             </Link>
           )}
+
+          <MobileMenu links={mobileLinks} />
         </div>
       </div>
     </header>

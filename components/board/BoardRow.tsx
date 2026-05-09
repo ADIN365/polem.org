@@ -27,13 +27,13 @@ export function BoardRow({ board }: { board: BoardRowData }) {
   return (
     <Link
       href={`/boards/${board.id}`}
-      className="grid grid-cols-[60px_1fr_180px_110px_70px] gap-3 px-6 py-[14px] border-b-[0.5px] border-border-soft items-center hover:bg-soft transition-colors"
+      className="grid grid-cols-[44px_1fr_64px] md:grid-cols-[60px_1fr_180px_110px_70px] gap-2 md:gap-3 px-4 md:px-6 py-3 md:py-[14px] border-b-[0.5px] border-border-soft items-center hover:bg-soft transition-colors"
       style={{ opacity: dimmed ? 0.7 : 1 }}
     >
       <div className="font-mono text-tiny text-ink-3">#{String(board.number).padStart(3, "0")}</div>
 
-      <div>
-        <div className="flex gap-2 items-baseline mb-[2px] text-eyebrow-tight tracking-wider text-ink-3 uppercase">
+      <div className="min-w-0">
+        <div className="flex gap-2 items-baseline mb-[2px] text-eyebrow-tight tracking-wider text-ink-3 uppercase flex-wrap">
           <span>{CATEGORY_LABEL[board.category] ?? board.category}</span>
           {board.isNew ? (
             <span className="text-paper-cream bg-ink px-[5px] font-medium">새 의제</span>
@@ -43,6 +43,10 @@ export function BoardRow({ board }: { board: BoardRowData }) {
           ) : null}
         </div>
         <div className="text-base text-ink font-medium tracking-tight">{board.title}</div>
+        {/* 모바일에서만 — 비율 막대 인라인 */}
+        <div className="md:hidden mt-2">
+          <Gauge proCount={board.proCount} conCount={board.conCount} height={4} />
+        </div>
       </div>
 
       <div className="hidden md:block">

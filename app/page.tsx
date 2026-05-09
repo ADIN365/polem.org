@@ -161,7 +161,7 @@ export default async function HomePage({ searchParams }: Props) {
         <BoardListFilters />
 
         <div>
-          <div className="grid grid-cols-[60px_1fr_180px_110px_70px] gap-3 px-6 py-[10px] border-b-[0.5px] border-border-soft text-eyebrow-tight tracking-wider text-ink-3 uppercase bg-soft">
+          <div className="grid grid-cols-[44px_1fr_64px] md:grid-cols-[60px_1fr_180px_110px_70px] gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-[10px] border-b-[0.5px] border-border-soft text-eyebrow-tight tracking-wider text-ink-3 uppercase bg-soft">
             <div>번호</div>
             <div>의제</div>
             <div className="hidden md:block">찬·반 비율</div>
