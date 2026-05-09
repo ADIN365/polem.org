@@ -42,9 +42,9 @@ export async function PATCH(req: Request, { params }: Ctx) {
     where: { id: params.id },
     select: { id: true, status: true, proposerId: true, rawTitle: true, rawBody: true },
   });
-  if (!proposal) return NextResponse.json({ error: "제안을 찾을 수 없어요." }, { status: 404 });
+  if (!proposal) return NextResponse.json({ error: "발제를 찾을 수 없어요." }, { status: 404 });
   if (proposal.status !== "PENDING")
-    return NextResponse.json({ error: "이미 처리된 제안이에요." }, { status: 409 });
+    return NextResponse.json({ error: "이미 처리된 발제예요." }, { status: 409 });
 
   if (parsed.data.action === "approve") {
     const { aiTitle, aiCategory } = parsed.data;

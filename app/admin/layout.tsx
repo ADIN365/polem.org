@@ -16,7 +16,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </Link>
         <span className="text-ink-3">·</span>
         <Link href="/admin/proposals" className="text-ink-2 hover:text-ink transition-colors">
-          의제 제안
+          발제
         </Link>
         <span className="text-ink-3">·</span>
         <Link href="/admin/reports" className="text-ink-2 hover:text-ink transition-colors">

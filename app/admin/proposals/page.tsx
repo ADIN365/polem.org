@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import ProposalRow from "./ProposalRow";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "의제 제안 검토" };
+export const metadata = { title: "발제 검토" };
 
 export default async function AdminProposalsPage() {
   const proposals = await prisma.proposal.findMany({
@@ -35,12 +35,12 @@ export default async function AdminProposalsPage() {
         className="font-serif font-semibold tracking-tight text-ink mb-6"
         style={{ fontSize: "var(--fs-title-h2)" }}
       >
-        의제 제안 검토
+        발제 검토
       </h1>
 
       <Group title={`검토 대기 (${refined.length})`} description="AI 정제 끝. 승인 시 게시판 생성.">
         {refined.length === 0 ? (
-          <Empty>검토 대기 중인 정제된 제안이 없어요.</Empty>
+          <Empty>검토 대기 중인 정제된 발제가 없어요.</Empty>
         ) : (
           refined.map((p) => (
             <ProposalRow
@@ -64,7 +64,7 @@ export default async function AdminProposalsPage() {
         description="AI 가 차단했지만 false positive 가능 — 검토 후 거절·승인 결정."
       >
         {blocked.length === 0 ? (
-          <Empty>차단된 제안이 없어요.</Empty>
+          <Empty>차단된 발제가 없어요.</Empty>
         ) : (
           blocked.map((p) => (
             <ProposalRow
@@ -88,7 +88,7 @@ export default async function AdminProposalsPage() {
         description="cron worker 가 5분마다 처리. 시간이 지나도 머무르면 worker 점검 필요."
       >
         {queued.length === 0 ? (
-          <Empty>정제 대기 중인 제안이 없어요.</Empty>
+          <Empty>정제 대기 중인 발제가 없어요.</Empty>
         ) : (
           queued.map((p) => (
             <div

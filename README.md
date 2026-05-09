@@ -165,4 +165,4 @@ DATABASE_URL=<neon-direct> npx prisma migrate deploy
 
 ## 다음 (Sprint 2)
 
-`CLAUDE.md §6 Phase 4~7` — 의제 제안(AI 정제) · 사상검증(12 Likert) · 오늘의 3문항(블라인드) · 내 정보 자기 거울. AI 통합은 초기에 *Max 요금제 안 `claude -p` 헤드리스* 로 시작, 나중에 Anthropic API + OpenAI + Gemini 3개 fallback router 로 확장.
+`CLAUDE.md §6 Phase 4~7` — 발제(AI 정제) · 사상검증(12 Likert) · 오늘의 3문항(블라인드) · 내 정보 자기 거울. AI 통합은 초기에 *Max 요금제 안 `claude -p` 헤드리스* 로 시작, 나중에 Anthropic API + OpenAI + Gemini 3개 fallback router 로 확장.

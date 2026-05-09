@@ -10,7 +10,7 @@ const Body = z.object({
   rawTitle: z
     .string()
     .trim()
-    .min(5, "제안 제목을 5자 이상 적어주세요.")
+    .min(5, "발제 제목을 5자 이상 적어주세요.")
     .max(PROPOSAL_TITLE_MAX, `제목은 ${PROPOSAL_TITLE_MAX}자 이내`),
   rawBody: z
     .string()
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
   });
   if (recent) {
     return NextResponse.json(
-      { error: "방금 같은 제안을 보냈어요. 검토 결과를 기다려주세요." },
+      { error: "방금 같은 발제를 보냈어요. 검토 결과를 기다려주세요." },
       { status: 409 },
     );
   }

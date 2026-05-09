@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 
 import { authOptions } from "@/lib/auth";
-import { NAV_LINKS, SITE_DOMAIN, SITE_NAME } from "@/lib/constants";
+import { SITE_DOMAIN, SITE_NAME } from "@/lib/constants";
 import FontSizeToggle from "./FontSizeToggle";
 import MobileMenu, { type MobileMenuLink } from "./MobileMenu";
 
@@ -11,8 +11,12 @@ export default async function TopNav() {
   const initial = (session?.user?.nickname ?? session?.user?.name ?? "ㄱ").trim().charAt(0);
   const isAdmin = session?.user?.role === "ADMIN";
 
+  // 모바일 햄버거 — 동그라미 아바타가 작아 진입 보조.
+  // 데스크탑은 브랜드(홈) + 동그라미(/me) 만으로 충분해서 NAV_LINKS 비움.
   const mobileLinks: MobileMenuLink[] = [
-    ...NAV_LINKS.map((l) => ({ href: l.href, label: l.label })),
+    { href: "/", label: "의제" },
+    ...(session?.user ? [{ href: "/proposal", label: "발제" }] : []),
+    ...(session?.user ? [{ href: "/three", label: "오늘의 3문항" }] : []),
     ...(isAdmin ? [{ href: "/admin", label: "관리자" }] : []),
     { href: "/about", label: "이런 광장입니다" },
     session?.user
@@ -36,25 +40,14 @@ export default async function TopNav() {
         </Link>
 
         <div className="flex items-center gap-2 md:gap-[14px]">
-          <nav className="hidden md:flex gap-1 items-center">
-            {NAV_LINKS.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className="px-[14px] py-2 text-small text-ink-2 hover:text-ink rounded-sm transition-colors"
-              >
-                {l.label}
-              </Link>
-            ))}
-            {isAdmin ? (
-              <Link
-                href="/admin"
-                className="px-[14px] py-2 text-small text-ink hover:text-ink rounded-sm transition-colors border-b border-ink"
-              >
-                관리자
-              </Link>
-            ) : null}
-          </nav>
+          {isAdmin ? (
+            <Link
+              href="/admin"
+              className="hidden md:inline-block px-[14px] py-2 text-small text-ink hover:text-ink rounded-sm transition-colors border-b border-ink"
+            >
+              관리자
+            </Link>
+          ) : null}
 
           <div className="hidden md:flex">
             <FontSizeToggle />

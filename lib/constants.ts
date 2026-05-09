@@ -6,12 +6,9 @@ export const SITE_URL =
 export const SITE_DESCRIPTION =
   "한국어 정치 토론 플랫폼. 의제별 좌우 분할 영구 보관, AI 50:50 요약, 블라인드 답변으로 자기 거울.";
 
-export const NAV_LINKS = [
-  { href: "/", label: "의제" },
-  { href: "/proposal", label: "의제 제안" },
-  { href: "/three", label: "오늘의 3문항" },
-  { href: "/me", label: "내 정보" },
-] as const;
+// 상단 메뉴는 비움 — 의제(홈)는 브랜드 클릭, 내정보는 우상단 동그라미, 발제·3문항은 /me 또는
+// 의제 색인에서 진입. 헌법 §2.5 "광장" 정신상 메뉴 단순화.
+export const NAV_LINKS: { href: string; label: string }[] = [];
 
 // 카테고리 라벨 (Prisma Category enum 과 1:1)
 export const CATEGORY_LABEL: Record<string, string> = {

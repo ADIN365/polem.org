@@ -142,7 +142,7 @@ export default function ProposalRow({
             value={rejectReason}
             onChange={(e) => setRejectReason(e.target.value)}
             rows={2}
-            placeholder="거절 사유 (제안자에게 알림으로 전달)"
+            placeholder="거절 사유 (발제자에게 알림으로 전달)"
             className="w-full px-3 py-[8px] border-[0.5px] border-border bg-card text-input text-ink rounded-md outline-none focus:border-ink resize-none"
           />
         </div>

@@ -52,7 +52,7 @@ export default async function AdminHome() {
           href="/admin/proposals"
           className="px-4 py-[10px] text-button bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
         >
-          의제 제안 큐
+          발제 큐
         </Link>
         <Link
           href="/admin/reports"

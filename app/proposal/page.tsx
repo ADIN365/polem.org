@@ -1,7 +1,7 @@
 import { requireOnboarded } from "@/lib/session";
 import ProposalForm from "./ProposalForm";
 
-export const metadata = { title: "의제 제안" };
+export const metadata = { title: "발제" };
 
 export default async function ProposalPage() {
   await requireOnboarded("/proposal");
@@ -9,15 +9,15 @@ export default async function ProposalPage() {
   return (
     <div className="max-w-narrow mx-auto px-6 pt-10 pb-20">
       <header className="mb-6">
-        <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-[5px]">의제 제안</div>
+        <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-[5px]">발제</div>
         <h1
           className="font-serif font-semibold tracking-tight text-ink m-0"
           style={{ fontSize: "var(--fs-title-h1)" }}
         >
-          새 토론 거리 제안하기
+          새 토론 거리 발제하기
         </h1>
         <p className="text-meta text-ink-3 mt-2 leading-relaxed">
-          제안하신 내용은 *AI 가 의제 형식으로 정제* 후, *관리자 검토* 를 거쳐 게시판이 됩니다.
+          발제하신 내용은 *AI 가 의제 형식으로 정제* 후, *관리자 검토* 를 거쳐 게시판이 됩니다.
           <br />
           정제·검토는 보통 *1~2일* 안에 끝나요. 결과는 알림으로 받습니다.
         </p>
