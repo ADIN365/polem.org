@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-05-09 — Phase 6 오늘의 3문항 (블라인드)
+- `lib/ai/blind-convert.ts` + `scripts/convert-blind.ts` + `launchd/org.polem.blind.plist` — 박제 → 블라인드 질문 변환 cron (5분 주기, 5분 grace)
+- `/three` — 답하지 않은 박제 50개 후보 셔플 → 3개. 진영 가린 질문 한 화면씩 진행
+- `POST /api/three/answer` — BlindAnswer create + Pin.blindAgreeCount/blindDisagreeCount 증분 + PrismScore.blindCount 증분 (Phase 7 자기 거울 데이터 출처)
+- `/three/reveal` — 최근 5분 답변 *원본 의제·박제* 공개 + 입장 일치 / 살펴볼 만함 태그
+- 블라인드 자기 답이 박제 입장과 일치 X → 본인에게만 *살펴볼 만함* 노출 (헌법 §2.3 Private)
+
 ## 2026-05-09 — Phase 5 사상검증 12 Likert + 4축 PrismScore
 - `lib/likert/questions.ts` — 4축(S/E_ethics/E_economy/C) × 3문항 = 12개. 한국 사회 맥락. direction 부호로 역코딩 처리
 - `lib/likert/score.ts` — 답변 합산/정규화 (-1~+1). `formatPrismCode`, `scoreToPercent` 헬퍼
