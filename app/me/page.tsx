@@ -157,13 +157,24 @@ export default async function MePage() {
         )}
       </Section>
 
-      <Section title="계정">
+      <Section
+        title="계정"
+        action={
+          <Link
+            href="/me/edit"
+            className="text-tiny text-ink-3 hover:text-ink underline underline-offset-2"
+          >
+            수정
+          </Link>
+        }
+      >
         <dl className="divide-y divide-[var(--border-soft)]">
           <Row label="닉네임" value={user.nickname} bold />
           <Row
             label="이메일"
-            value={user.email ?? "미수신"}
+            value={user.email}
             mono
+            placeholder="등록 안 함"
           />
           <Row label="권한" value={labelRole(user.role)} />
         </dl>
@@ -221,17 +232,19 @@ export default async function MePage() {
 function Section({
   title,
   subtitle,
+  action,
   children,
 }: {
   title: string;
   subtitle?: string;
+  action?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <section className="border-[0.5px] border-border-soft rounded-md bg-card overflow-hidden">
       <div className="px-5 py-3 border-b-[0.5px] border-border-soft bg-soft flex justify-between items-center">
         <span className="text-eyebrow tracking-widest text-ink-3 uppercase">{title}</span>
-        {subtitle ? <span className="text-tiny text-ink-3">{subtitle}</span> : null}
+        {action ?? (subtitle ? <span className="text-tiny text-ink-3">{subtitle}</span> : null)}
       </div>
       {children}
     </section>
@@ -250,12 +263,14 @@ function Row({
   bold,
   mono,
   note,
+  placeholder,
 }: {
   label: string;
   value: string | null;
   bold?: boolean;
   mono?: boolean;
   note?: string;
+  placeholder?: string;
 }) {
   return (
     <div className="px-5 py-3 grid grid-cols-[100px_1fr] gap-3 items-baseline">
@@ -265,7 +280,7 @@ function Row({
           mono ? "font-mono" : ""
         }`}
       >
-        {value ?? <span className="text-ink-3">—</span>}
+        {value ?? <span className="text-ink-3">{placeholder ?? "—"}</span>}
         {note ? <span className="ml-2 text-tiny text-ink-3">({note})</span> : null}
       </dd>
     </div>

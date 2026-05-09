@@ -48,19 +48,22 @@ export const authOptions: NextAuthOptions = {
         // 가입 직후 — adapter 가 만든 Prisma User 가 user 로 들어옴
         token.id = user.id;
         const u = user as typeof user & {
+          email?: string | null;
           nickname?: string | null;
           role?: string;
           banned?: boolean;
         };
+        token.email = u.email ?? null;
         token.nickname = u.nickname ?? null;
         token.role = u.role ?? "USER";
         token.banned = u.banned ?? false;
       } else if (trigger === "update" && token.id) {
         const fresh = await prisma.user.findUnique({
           where: { id: token.id as string },
-          select: { nickname: true, role: true, banned: true },
+          select: { email: true, nickname: true, role: true, banned: true },
         });
         if (fresh) {
+          token.email = fresh.email;
           token.nickname = fresh.nickname;
           token.role = fresh.role;
           token.banned = fresh.banned;
@@ -71,6 +74,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = (token.id as string) ?? "";
+        session.user.email = (token.email as string | null) ?? null;
         session.user.nickname = (token.nickname as string | null) ?? null;
         session.user.role = (token.role as string) ?? "USER";
         session.user.banned = (token.banned as boolean) ?? false;
