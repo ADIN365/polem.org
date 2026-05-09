@@ -1,5 +1,7 @@
 import { PrismaClient, Category, PinSide } from "@prisma/client";
 
+import { seedPersonas } from "./seed-personas";
+
 const prisma = new PrismaClient();
 
 /**
@@ -244,7 +246,10 @@ async function main() {
     }
   }
 
-  console.log(`[seed] 완료: ${BOARDS.length} 토론 주제, ${BOARDS.reduce((a, b) => a + b.pins.length, 0)} 의견`);
+  console.log(`[seed] 기본 시드 완료: ${BOARDS.length} 토론 주제, ${BOARDS.reduce((a, b) => a + b.pins.length, 0)} 의견`);
+
+  // 페르소나 시드 — 14명 추가 + 동조·댓글·반박
+  await seedPersonas(prisma);
 }
 
 function slugify(title: string): string {
