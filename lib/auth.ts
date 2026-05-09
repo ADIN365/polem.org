@@ -34,46 +34,23 @@ if (naverEnabled) {
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
-  // jwt 전략 — 매 페이지 마다 Session 테이블 SELECT 안 하게. nickname/role 변경 시 update() 필요.
-  session: { strategy: "jwt" },
+  session: { strategy: "database" },
   providers,
   pages: {
     signIn: "/login",
   },
   callbacks: {
-    // 가입/로그인 직후, 그리고 update() 호출 시 호출됨
-    async jwt({ token, user, trigger }) {
-      // 첫 sign-in 또는 update() 트리거 시 DB 에서 최신 사용자 정보 동기화
-      if (user) {
-        // 가입 직후 — adapter 가 만든 Prisma User 가 user 로 들어옴
-        token.id = user.id;
+    async session({ session, user }) {
+      if (session.user) {
+        session.user.id = user.id;
         const u = user as typeof user & {
           nickname?: string | null;
           role?: string;
           banned?: boolean;
         };
-        token.nickname = u.nickname ?? null;
-        token.role = u.role ?? "USER";
-        token.banned = u.banned ?? false;
-      } else if (trigger === "update" && token.id) {
-        const fresh = await prisma.user.findUnique({
-          where: { id: token.id as string },
-          select: { nickname: true, role: true, banned: true },
-        });
-        if (fresh) {
-          token.nickname = fresh.nickname;
-          token.role = fresh.role;
-          token.banned = fresh.banned;
-        }
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = (token.id as string) ?? "";
-        session.user.nickname = (token.nickname as string | null) ?? null;
-        session.user.role = (token.role as string) ?? "USER";
-        session.user.banned = (token.banned as boolean) ?? false;
+        session.user.nickname = u.nickname ?? null;
+        session.user.role = u.role ?? "USER";
+        session.user.banned = u.banned ?? false;
       }
       return session;
     },
