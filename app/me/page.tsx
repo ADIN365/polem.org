@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import PrismChart from "@/components/profile/PrismChart";
 import { CATEGORY_LABEL } from "@/lib/constants";
 import { formatRelativeKo } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
@@ -18,7 +19,7 @@ export default async function MePage() {
   const session = await requireOnboarded("/me");
   const { user } = session;
 
-  const [proposals, notifications] = await Promise.all([
+  const [proposals, notifications, prismScore] = await Promise.all([
     prisma.proposal.findMany({
       where: { proposerId: user.id },
       orderBy: { createdAt: "desc" },
@@ -45,6 +46,16 @@ export default async function MePage() {
         link: true,
         read: true,
         createdAt: true,
+      },
+    }),
+    prisma.prismScore.findUnique({
+      where: { userId: user.id },
+      select: {
+        society: true,
+        ethics: true,
+        economy: true,
+        change: true,
+        likertCompletedAt: true,
       },
     }),
   ]);
@@ -158,11 +169,44 @@ export default async function MePage() {
         </dl>
       </Section>
 
-      <Section title="가치관 프리즘 · 자기 거울" subtitle="Phase 5~7 예정">
+      <Section
+        title="가치관 4축 (본인만 보임)"
+        subtitle={
+          prismScore?.likertCompletedAt
+            ? `측정 ${formatRelativeKo(prismScore.likertCompletedAt)}`
+            : undefined
+        }
+      >
+        {prismScore?.likertCompletedAt ? (
+          <>
+            <PrismChart scores={prismScore} />
+            <div className="px-5 pb-4 text-tiny text-ink-3 text-center leading-relaxed">
+              헌법 §2.3 — 이 점수는 *본인 외 누구에게도* 노출되지 않습니다.
+              <br />
+              <Link href="/onboarding/likert?next=/me" className="underline hover:text-ink">
+                다시 측정
+              </Link>
+            </div>
+          </>
+        ) : (
+          <div className="px-5 py-8 text-center text-meta text-ink-3 leading-relaxed">
+            아직 사상검증을 끝내지 않으셨어요.
+            <br />
+            <Link
+              href="/onboarding/likert?next=/me"
+              className="inline-block mt-3 px-4 py-[9px] text-button bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
+            >
+              12문항 측정하기 (5분)
+            </Link>
+          </div>
+        )}
+      </Section>
+
+      <Section title="자기 거울" subtitle="Phase 6~7 예정">
         <div className="px-5 py-8 text-center text-meta text-ink-3 leading-relaxed">
-          사상검증(12 Likert)을 끝내면 4축 점수가 본인에게만 보입니다.
+          매일 *오늘의 3문항* 에 답하면 박제한 입장과의 *불일치* 가
           <br />
-          오늘의 3문항에 답하면, 박제한 입장과의 *불일치*도 본인에게만 비춰집니다.
+          본인에게만 비춰집니다.
         </div>
       </Section>
 

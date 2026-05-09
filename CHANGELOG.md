@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-05-09 — Phase 5 사상검증 12 Likert + 4축 PrismScore
+- `lib/likert/questions.ts` — 4축(S/E_ethics/E_economy/C) × 3문항 = 12개. 한국 사회 맥락. direction 부호로 역코딩 처리
+- `lib/likert/score.ts` — 답변 합산/정규화 (-1~+1). `formatPrismCode`, `scoreToPercent` 헬퍼
+- `POST /api/likert` — 12문항 답변 받음 → upsert LikertAnswer + PrismScore. 누락 거절
+- `/onboarding/ideology` — 사상검증 안내 + *시작/나중에* 버튼. 이미 완료한 사용자는 자동 next URL 로
+- `/onboarding/likert` — 한 화면 한 문항 진행. 진행 막대 12칸, 자동 다음, 마지막 답변 시 자동 저장
+- `/me` 의 4축 프리즘 — `PrismChart` 추가 (검정 마커 + 중앙선). 미완료 시 *측정하기* CTA
+- 닉네임 설정 직후 자동으로 `/onboarding/ideology` 로 이동 (명세 §5 가입 흐름 일치)
+
 ## 2026-05-09 — Phase 4 의제 제안 + AI 정제 (cron 비실시간)
 - `/proposal` — 자유 입력 폼 (rawTitle 5~80자, rawBody 0~2000자). 1시간 이내 동일 제목 중복 차단
 - `POST /api/proposals` — Proposal row 생성 (status PENDING, ai* null)

@@ -40,7 +40,8 @@ export default function NicknameForm({ next = "/" }: { next?: string }) {
       // 세션 새로고침해서 nickname 반영
       await update();
       toast.success("환영합니다!");
-      router.push(next);
+      // 닉네임 설정 직후 사상검증 안내로. 사용자가 *나중에* 누르면 next URL 로 진행.
+      router.push(`/onboarding/ideology?next=${encodeURIComponent(next)}`);
       router.refresh();
     } catch {
       setError("네트워크 오류가 발생했어요.");
