@@ -18,7 +18,7 @@ export default async function TopNav() {
     ...(session?.user ? [{ href: "/proposal", label: "주제 만들기" }] : []),
     ...(session?.user ? [{ href: "/three", label: "오늘의 3문항" }] : []),
     ...(isAdmin ? [{ href: "/admin", label: "관리자" }] : []),
-    { href: "/about", label: "이런 광장입니다" },
+    { href: "/about", label: "소개" },
     session?.user
       ? { href: "/api/auth/signout", label: "로그아웃" }
       : { href: "/login", label: "로그인" },
