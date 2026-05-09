@@ -1,5 +1,6 @@
 // NextAuth Session 에 끝장토론 고유 필드 추가 (callbacks.session 과 일치).
 import "next-auth";
+import "next-auth/jwt";
 
 declare module "next-auth" {
   interface Session {
@@ -12,5 +13,14 @@ declare module "next-auth" {
       role: string;
       banned: boolean;
     };
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id?: string;
+    nickname?: string | null;
+    role?: string;
+    banned?: boolean;
   }
 }
