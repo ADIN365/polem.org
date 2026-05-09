@@ -33,26 +33,28 @@ export default async function IntroCard() {
             </p>
           </div>
 
-          <ul className="space-y-2 text-meta text-ink-2 leading-relaxed text-left max-w-[520px] mx-auto">
-            <li className="flex gap-2">
-              <span className="text-ink-3 shrink-0">·</span>
-              <span>
-                <span className="font-medium text-ink">감정 대신 논리로</span> · 서로에 대한 모독이 아닌, 객관적 근거로 논증합니다.
-              </span>
-            </li>
-            <li className="flex gap-2">
-              <span className="text-ink-3 shrink-0">·</span>
-              <span>
-                <span className="font-medium text-ink">차이의 인정</span> · 틀린 것이 아니라 다른 것임을 존중합니다.
-              </span>
-            </li>
-            <li className="flex gap-2">
-              <span className="text-ink-3 shrink-0">·</span>
-              <span>
-                <span className="font-medium text-ink">말의 무게</span> · 말에는 그에 따르는 책임이 있음을 늘 견지합니다.
-              </span>
-            </li>
-          </ul>
+          <div className="text-center">
+            <ul className="inline-block space-y-2 text-base text-ink-2 leading-relaxed text-left">
+              <li className="flex gap-2">
+                <span className="text-ink-3 shrink-0">·</span>
+                <span>
+                  <span className="font-medium text-ink">감정 대신 논리로</span> · 서로에 대한 모독이 아닌, 객관적 근거로 논증합니다.
+                </span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-ink-3 shrink-0">·</span>
+                <span>
+                  <span className="font-medium text-ink">차이의 인정</span> · 틀린 것이 아니라 다른 것임을 존중합니다.
+                </span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-ink-3 shrink-0">·</span>
+                <span>
+                  <span className="font-medium text-ink">말의 무게</span> · 말에는 그에 따르는 책임이 있음을 늘 견지합니다.
+                </span>
+              </li>
+            </ul>
+          </div>
 
           <p
             className="font-serif text-ink leading-relaxed pt-2"
