@@ -70,7 +70,7 @@ export default async function IntroCard() {
           href="/proposal"
           className="text-center px-[22px] py-[12px] text-button-large font-medium bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
         >
-          ＋ 주제 만들기
+          ＋ 토론 주제 만들기
         </Link>
         {session?.user ? (
           <Link

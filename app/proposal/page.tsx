@@ -1,7 +1,7 @@
 import { requireOnboarded } from "@/lib/session";
 import ProposalForm from "./ProposalForm";
 
-export const metadata = { title: "주제 만들기" };
+export const metadata = { title: "토론 주제 만들기" };
 
 export default async function ProposalPage() {
   await requireOnboarded("/proposal");
@@ -9,7 +9,7 @@ export default async function ProposalPage() {
   return (
     <div className="max-w-narrow mx-auto px-6 pt-10 pb-20">
       <header className="mb-6">
-        <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-[5px]">주제 만들기</div>
+        <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-[5px]">토론 주제 만들기</div>
         <h1
           className="font-serif font-semibold tracking-tight text-ink m-0"
           style={{ fontSize: "var(--fs-title-h1)" }}

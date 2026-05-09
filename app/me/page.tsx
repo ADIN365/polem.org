@@ -80,7 +80,7 @@ export default async function MePage() {
           href="/proposal"
           className="px-4 py-[9px] text-button bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
         >
-          ＋ 주제 만들기
+          ＋ 토론 주제 만들기
         </Link>
         <Link
           href="/three"
@@ -129,7 +129,7 @@ export default async function MePage() {
       <Section title="내가 만든 주제">
         {proposals.length === 0 ? (
           <Empty>
-            아직 만든 주제가 없어요. <Link href="/proposal" className="underline">주제 만들기</Link>
+            아직 만든 주제가 없어요. <Link href="/proposal" className="underline">토론 주제 만들기</Link>
           </Empty>
         ) : (
           <ul>

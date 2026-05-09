@@ -138,7 +138,7 @@ body.fs-xlarge {
 |---|---|---|---|
 | `/` | 토론 주제 색인 (홈) | `view-index` | 공개 |
 | `/boards/[id]` | 게시판 (좌우 분할) | `view-board` | 공개 (작성은 로그인) |
-| `/proposal` | 주제 만들기 | `view-proposal` | 로그인 |
+| `/proposal` | 토론 주제 만들기 | `view-proposal` | 로그인 |
 | `/me` | 내 정보 | `view-profile` | 본인만 |
 | `/u/[nickname]` | 공개 프로필 | (데모 X, 새 디자인) | 공개 |
 | `/login` | 로그인 (카카오 OAuth) | (데모 X) | 공개 |
@@ -868,7 +868,7 @@ MEILISEARCH_API_KEY=
 다음 변경 시 *여러 파일* 동시 수정 필요. 자동화 스크립트나 grep 추천.
 
 - **사이트 이름 변경** → 8.8 참조
-- **카테고리 추가/변경** → Prisma `Category` enum + Board 라우트 필터 옵션 + 토론 주제 색인 select + 주제 만들기 select
+- **카테고리 추가/변경** → Prisma `Category` enum + Board 라우트 필터 옵션 + 토론 주제 색인 select + 토론 주제 만들기 select
 - **블라인드 답변 종류 변경** (예: 5단계로) → `BlindAnswerValue` enum + 3문항 화면 버튼 + reveal 화면 표시 + 내 정보 거울 표 집계
 - **새 모더레이션 사유 추가** → `ReportReason` enum + 신고 모달 + 관리자 패널
 
