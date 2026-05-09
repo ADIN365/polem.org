@@ -33,15 +33,24 @@ export default async function IntroCard() {
             </p>
           </div>
 
-          <ul className="space-y-2 text-meta text-ink-2 leading-relaxed">
-            <li>
-              <span className="font-medium text-ink">감정 대신 팩트로</span> · 서로에 대한 모독이 아닌, 객관적 근거로 승부합니다.
+          <ul className="space-y-2 text-meta text-ink-2 leading-relaxed text-left max-w-[520px] mx-auto">
+            <li className="flex gap-2">
+              <span className="text-ink-3 shrink-0">·</span>
+              <span>
+                <span className="font-medium text-ink">감정 대신 팩트로</span> · 서로에 대한 모독이 아닌, 객관적 근거로 승부합니다.
+              </span>
             </li>
-            <li>
-              <span className="font-medium text-ink">차이의 인정</span> · 틀린 것이 아니라 다른 것임을 존중합니다.
+            <li className="flex gap-2">
+              <span className="text-ink-3 shrink-0">·</span>
+              <span>
+                <span className="font-medium text-ink">차이의 인정</span> · 틀린 것이 아니라 다른 것임을 존중합니다.
+              </span>
             </li>
-            <li>
-              <span className="font-medium text-ink">끝까지 가는 토론</span> · 겉핥기식 대화가 아닌, 본질을 꿰뚫는 끝장을 봅니다.
+            <li className="flex gap-2">
+              <span className="text-ink-3 shrink-0">·</span>
+              <span>
+                <span className="font-medium text-ink">끝까지 가는 토론</span> · 겉핥기식 대화가 아닌, 본질을 꿰뚫는 끝장을 봅니다.
+              </span>
             </li>
           </ul>
 

@@ -14,6 +14,7 @@ export default async function TopNav() {
   const mobileLinks: MobileMenuLink[] = [
     ...NAV_LINKS.map((l) => ({ href: l.href, label: l.label })),
     ...(isAdmin ? [{ href: "/admin", label: "관리자" }] : []),
+    { href: "/about", label: "이런 광장입니다" },
     session?.user
       ? { href: "/api/auth/signout", label: "로그아웃" }
       : { href: "/login", label: "로그인" },
