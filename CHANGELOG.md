@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-05-09 — Phase 4 의제 제안 + AI 정제 (cron 비실시간)
+- `/proposal` — 자유 입력 폼 (rawTitle 5~80자, rawBody 0~2000자). 1시간 이내 동일 제목 중복 차단
+- `POST /api/proposals` — Proposal row 생성 (status PENDING, ai* null)
+- `lib/ai/` — provider 추상화 (`AiProvider` 인터페이스 + `claudeCli` 구현). Anthropic/OpenAI/Gemini 추가 자리 미리 둠
+- `lib/ai/refine-proposal.ts` — claude -p 헤드리스로 정제. JSON 파싱 안전 처리
+- `scripts/refine-proposals.ts` — 5분 cron worker (lock 파일 + dotenv/config + 5건씩 batch)
+- `launchd/org.polem.refine.plist` — `~/Library/LaunchAgents/` 에 복사 후 `launchctl load`
+- `/admin` 권한 가드 layout + 대시보드 (정제 대기·검토 대기·차단·활성 게시판·가입자 카운트)
+- `/admin/proposals` — 정제·차단·정제 대기 3그룹 표시. 정제 결과 *수정 후 승인* 가능 + 거절 사유 입력
+- `PATCH /api/admin/proposals/[id]` — 승인 시 Board 생성 + Notification 알림. 거절 시 사유 알림
+- `/me` — 자기 제안 목록 + 알림 미리보기 추가 (Phase 8 알림 페이지 풀 구현 전 단계)
+- TopNav — ADMIN role 사용자에게만 *관리자* 링크 노출
+
 ## 2026-05-09 — 네이버 OAuth 추가 + dynamic param decode 패치
 - `lib/auth.ts` — 카카오 + 네이버 두 provider 동시 지원. 환경변수 미설정 시 자동 비활성
 - `/login` — 두 버튼 노출 (카카오 #FEE500, 네이버 #03C75A)

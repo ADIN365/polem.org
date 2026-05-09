@@ -35,6 +35,14 @@ export default async function TopNav() {
                 {l.label}
               </Link>
             ))}
+            {session?.user?.role === "ADMIN" ? (
+              <Link
+                href="/admin"
+                className="px-[14px] py-2 text-small text-ink hover:text-ink rounded-sm transition-colors border-b border-ink"
+              >
+                관리자
+              </Link>
+            ) : null}
           </nav>
 
           <FontSizeToggle />
