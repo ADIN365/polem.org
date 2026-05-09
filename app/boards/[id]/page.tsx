@@ -20,9 +20,22 @@ export async function generateMetadata({ params }: Props) {
   const id = decodeURIComponent(params.id);
   const board = await prisma.board.findUnique({
     where: { id },
-    select: { title: true },
+    select: { title: true, body: true, aiSummaryPro: true, aiSummaryCon: true },
   });
-  return { title: board?.title ?? "게시판" };
+  if (!board) return { title: "게시판" };
+  const description =
+    board.aiSummaryPro && board.aiSummaryCon
+      ? `찬: ${board.aiSummaryPro} / 반: ${board.aiSummaryCon}`
+      : board.body ?? "찬·반 영구 보관 토론 의제";
+  return {
+    title: board.title,
+    description,
+    openGraph: {
+      title: board.title,
+      description,
+      type: "article",
+    },
+  };
 }
 
 export default async function BoardPage({ params }: Props) {

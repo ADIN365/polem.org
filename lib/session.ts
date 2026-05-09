@@ -26,3 +26,21 @@ export async function requireOnboarded(callbackUrl?: string) {
   }
   return session as typeof session & { user: { nickname: string } };
 }
+
+/**
+ * suspendedUntil 시점 통과 시 자동 해제. 단순 헬퍼.
+ * API 라우트 등 데이터 변경 진입점에서 사용.
+ */
+export async function isSuspended(userId: string): Promise<{ suspended: boolean; until: Date | null }> {
+  const { prisma } = await import("@/lib/prisma");
+  const u = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { suspendedUntil: true, banned: true },
+  });
+  if (!u) return { suspended: true, until: null };
+  if (u.banned) return { suspended: true, until: null };
+  if (u.suspendedUntil && u.suspendedUntil.getTime() > Date.now()) {
+    return { suspended: true, until: u.suspendedUntil };
+  }
+  return { suspended: false, until: null };
+}

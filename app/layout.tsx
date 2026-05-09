@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 
 import "./globals.css";
 import AuthSessionProvider from "@/components/AuthSessionProvider";
@@ -51,6 +52,7 @@ export default function RootLayout({
           <Footer />
           <ToastProvider />
         </AuthSessionProvider>
+        <Analytics />
       </body>
     </html>
   );

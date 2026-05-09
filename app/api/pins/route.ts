@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { authOptions } from "@/lib/auth";
+import { checkProfanity, looksLikeSpam } from "@/lib/moderation/profanity";
 import { prisma } from "@/lib/prisma";
 import { PIN_BODY_MAX, PIN_BODY_MIN } from "@/lib/validation";
 import { getServerSession } from "next-auth";
@@ -33,6 +34,18 @@ export async function POST(req: Request) {
   }
 
   const { boardId, side, body, quotedPinId } = parsed.data;
+
+  // 욕설 / 혐오 / 광고 자동 필터
+  const prof = checkProfanity(body);
+  if (!prof.ok) {
+    return NextResponse.json({ error: prof.reason }, { status: 422 });
+  }
+  if (looksLikeSpam(body)) {
+    return NextResponse.json(
+      { error: "광고·스팸 으로 보이는 패턴이 감지됐어요." },
+      { status: 422 },
+    );
+  }
 
   const board = await prisma.board.findUnique({
     where: { id: boardId },

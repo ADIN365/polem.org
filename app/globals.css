@@ -145,3 +145,31 @@ a {
   .serif { font-family: var(--serif); }
   .mono { font-family: var(--mono); }
 }
+
+/* ─── 법적 페이지 (terms/privacy/policy) ───────────────────── */
+.legal-prose h2 {
+  font-family: var(--serif);
+  font-size: var(--fs-title-h3);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 28px 0 8px;
+  padding-top: 18px;
+  border-top: 0.5px solid var(--border-soft);
+}
+.legal-prose h2:first-child { border-top: none; padding-top: 0; }
+.legal-prose ul, .legal-prose ol {
+  padding-left: 22px;
+  margin: 4px 0 14px;
+}
+.legal-prose ul { list-style: disc; }
+.legal-prose ol { list-style: decimal; }
+.legal-prose li { margin-bottom: 4px; }
+.legal-prose p { margin: 6px 0 10px; }
+.legal-prose .legal-note {
+  margin-top: 28px;
+  padding-top: 14px;
+  border-top: 0.5px solid var(--border-soft);
+  font-size: var(--fs-tiny);
+  color: var(--ink-3);
+}

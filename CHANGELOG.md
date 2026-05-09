@@ -1,5 +1,40 @@
 # Changelog
 
+## 2026-05-09 — Phase 8~13 (Sprint 3, Phase 12 보류)
+
+### Phase 8 모더레이션 + 신고
+- `lib/moderation/profanity.ts` — 한국어 비속어/혐오 정규식 + 광고 도배 휴리스틱
+- 박제·댓글 작성 API 진입 시 자동 차단 (422 + 안내 메시지)
+- `POST /api/reports` — Pin/Comment/User 대상 신고 (5사유), 24h 이내 동일 대상 중복 차단
+- `components/board/ReportModal.tsx` + Pin 카드의 ⋯ 트리거
+- `/notifications` + `POST /api/me/notifications` 모두 읽음 처리
+
+### Phase 9 관리자 패널 풀
+- `PATCH /api/admin/reports/[id]` — resolve(WARN/SUSPEND_7D/BAN, hideContent) / dismiss. 위반자 식별 → 차단 단계 적용 + Notification, 신고자에게도 결과 알림
+- `/admin/reports` — PENDING 큐. 박제 본문 인용·신고 사유 표시·4가지 액션 버튼
+- `/admin` 대시보드 — 신고 처리 대기·정지 사용자 카운트 추가
+- `lib/session.isSuspended()` — suspendedUntil 통과 자동 해제 헬퍼
+
+### Phase 10 AI 50:50 요약 cron
+- `lib/ai/summarize-board.ts` — claude -p 헤드리스로 양측 한 줄씩 (헌법 §2.1 길이 균형)
+- `scripts/summarize-boards.ts` — 24시간 이상 묵은 활성 게시판 5개씩, lock 파일
+- `launchd/org.polem.summary.plist` — 매일 09:00, 21:00 KST
+
+### Phase 11 약관·정책·법적 페이지
+- `/terms` 이용약관 — 영구 보관 명시·금지 행위·차단 단계·임시조치
+- `/privacy` 개인정보처리방침 — 수집 항목 최소화·AI 처리 위탁 명시·6개월 로그 보관
+- `/policy` 운영정책 — 격렬한 논리 vs 욕설/인신공격 분리, 정보통신망법 §44조의2 임시조치, 선거 기간 강화
+- `components/legal/LegalLayout.tsx` + globals.css `.legal-prose`
+
+### Phase 12 (Meilisearch) 보류
+- 명세대로 사용자 5천+ 시점에 도입. 현재 PostgreSQL ILIKE 검색 유지
+
+### Phase 13 SEO·OG·sitemap·robots·analytics
+- `app/sitemap.ts` — / + 게시판들 (5000개 한도, 1시간 캐시)
+- `app/robots.ts` — 색인 허용/차단 명시 (api/admin/onboarding/me 등 차단)
+- 게시판 페이지 generateMetadata — AI 50:50 요약 description + OG type article
+- `@vercel/analytics` 통합 (cookieless, 개인정보 영향 X)
+
 ## 2026-05-09 — Phase 7 의제별 자기 거울
 - `lib/profile/mirror.ts` — 사용자 박제 입장 (PRO/CON) 과 블라인드 답변의 *효과적 입장* (AGREE+side / DISAGREE+반대side) 을 의제 단위로 집계
 - 4 분류: *일치 / 살펴볼 만함 / 새 발견 / 갈림*. STANCE_THRESHOLD 0.7 (한쪽 비율 70%↑ 시 입장 인정)

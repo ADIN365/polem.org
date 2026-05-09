@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getServerSession } from "next-auth";
 
 import { authOptions } from "@/lib/auth";
+import { checkProfanity, looksLikeSpam } from "@/lib/moderation/profanity";
 import { prisma } from "@/lib/prisma";
 import { COMMENT_BODY_MAX, COMMENT_BODY_MIN } from "@/lib/validation";
 
@@ -57,6 +58,11 @@ export async function POST(req: Request, { params }: Ctx) {
       { status: 400 },
     );
   }
+
+  const prof = checkProfanity(parsed.data.body);
+  if (!prof.ok) return NextResponse.json({ error: prof.reason }, { status: 422 });
+  if (looksLikeSpam(parsed.data.body))
+    return NextResponse.json({ error: "광고·스팸 으로 보이는 패턴이 감지됐어요." }, { status: 422 });
 
   const pin = await prisma.pin.findUnique({
     where: { id: params.id },

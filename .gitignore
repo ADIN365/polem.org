@@ -39,4 +39,5 @@ next-env.d.ts
 # launchd cron logs
 refine.log
 blind.log
+summary.log
 

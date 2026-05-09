@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { formatRelativeKo } from "@/lib/format";
 import ChallengeModal from "./ChallengeModal";
 import CommentTree from "./CommentTree";
+import ReportModal from "./ReportModal";
 
 export interface PinData {
   id: string;
@@ -40,6 +41,7 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [busy, setBusy] = useState(false);
   const [showChallenge, setShowChallenge] = useState(false);
+  const [showReport, setShowReport] = useState(false);
 
   const onEndorse = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -182,6 +184,22 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
               도전
             </button>
           ) : null}
+
+          {!isMine ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!currentUserId) return toast("로그인이 필요해요.");
+                setShowReport(true);
+              }}
+              className="hover:opacity-80 transition-colors opacity-70"
+              title="신고"
+              aria-label="이 박제 신고"
+            >
+              ⋯
+            </button>
+          ) : null}
         </div>
       </div>
 
@@ -205,6 +223,14 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
             setShowChallenge(false);
             toast.success("도전이 등록되었어요.");
           }}
+        />
+      ) : null}
+
+      {showReport ? (
+        <ReportModal
+          targetType="PIN"
+          targetId={pin.id}
+          onClose={() => setShowReport(false)}
         />
       ) : null}
     </article>

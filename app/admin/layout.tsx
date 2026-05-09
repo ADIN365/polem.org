@@ -8,7 +8,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   await requireAdmin();
   return (
     <div className="max-w-site mx-auto px-6 pt-6 pb-20">
-      <nav className="flex items-center gap-2 mb-6 text-meta">
+      <nav className="flex items-center gap-2 mb-6 text-meta flex-wrap">
         <span className="text-eyebrow tracking-widest text-ink-3 uppercase">관리자</span>
         <span className="text-ink-3">/</span>
         <Link href="/admin" className="text-ink-2 hover:text-ink transition-colors">
@@ -17,6 +17,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <span className="text-ink-3">·</span>
         <Link href="/admin/proposals" className="text-ink-2 hover:text-ink transition-colors">
           의제 제안
+        </Link>
+        <span className="text-ink-3">·</span>
+        <Link href="/admin/reports" className="text-ink-2 hover:text-ink transition-colors">
+          신고
         </Link>
       </nav>
       {children}

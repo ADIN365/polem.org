@@ -5,20 +5,29 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 
 export default async function AdminHome() {
-  const [pendingProposals, refinedProposals, filteredProposals, activeBoards, totalUsers] =
-    await Promise.all([
-      prisma.proposal.count({
-        where: { status: "PENDING", aiTitle: null, aiFiltered: false },
-      }),
-      prisma.proposal.count({
-        where: { status: "PENDING", aiTitle: { not: null } },
-      }),
-      prisma.proposal.count({
-        where: { status: "PENDING", aiFiltered: true },
-      }),
-      prisma.board.count({ where: { status: "ACTIVE" } }),
-      prisma.user.count(),
-    ]);
+  const [
+    pendingProposals,
+    refinedProposals,
+    filteredProposals,
+    pendingReports,
+    activeBoards,
+    totalUsers,
+    bannedUsers,
+  ] = await Promise.all([
+    prisma.proposal.count({
+      where: { status: "PENDING", aiTitle: null, aiFiltered: false },
+    }),
+    prisma.proposal.count({
+      where: { status: "PENDING", aiTitle: { not: null } },
+    }),
+    prisma.proposal.count({
+      where: { status: "PENDING", aiFiltered: true },
+    }),
+    prisma.report.count({ where: { status: "PENDING" } }),
+    prisma.board.count({ where: { status: "ACTIVE" } }),
+    prisma.user.count(),
+    prisma.user.count({ where: { banned: true } }),
+  ]);
 
   return (
     <div>
@@ -33,16 +42,23 @@ export default async function AdminHome() {
         <Stat label="정제 대기" value={pendingProposals} hint="AI 정제 cron 실행 대기" />
         <Stat label="검토 대기" value={refinedProposals} hint="정제 끝, 관리자 승인 대기" highlight />
         <Stat label="AI 차단됨" value={filteredProposals} hint="관리자 검토 후 거절" />
+        <Stat label="신고 처리 대기" value={pendingReports} highlight={pendingReports > 0} />
         <Stat label="활성 게시판" value={activeBoards} />
-        <Stat label="가입자" value={totalUsers} />
+        <Stat label="가입자" value={totalUsers} hint={bannedUsers > 0 ? `정지 ${bannedUsers}` : undefined} />
       </div>
 
-      <div className="mt-8 flex gap-2">
+      <div className="mt-8 flex gap-2 flex-wrap">
         <Link
           href="/admin/proposals"
           className="px-4 py-[10px] text-button bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
         >
-          의제 제안 큐 보기
+          의제 제안 큐
+        </Link>
+        <Link
+          href="/admin/reports"
+          className="px-4 py-[10px] text-button bg-card text-ink border-[0.5px] border-border rounded-md hover:bg-soft transition-colors"
+        >
+          신고 큐
         </Link>
       </div>
     </div>
