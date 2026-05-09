@@ -210,64 +210,64 @@ function EmptySite() {
           조용한 광장입니다
         </h1>
         <p className="text-meta text-ink-2 leading-relaxed mt-3 max-w-[460px] mx-auto">
-          아직 의제가 없습니다. 토론하고 싶은 사안이 있다면 직접 제안해보세요.
+          아직 의제가 없습니다.
         </p>
       </header>
 
       <section className="border-[0.5px] border-border rounded-lg bg-card overflow-hidden mb-6">
-        <div className="px-6 py-5 border-b border-border">
-          <div className="text-eyebrow tracking-widest text-ink-3 uppercase mb-[5px]">
-            이 광장이 바라는 것
-          </div>
-        </div>
-
-        <div className="px-6 py-5 border-b-[0.5px] border-border-soft">
-          <div
-            className="font-serif font-semibold text-ink mb-2"
-            style={{ fontSize: "var(--fs-title-h4)" }}
+        <blockquote className="px-7 py-9 text-center border-b border-border">
+          <p
+            className="font-serif text-ink leading-snug tracking-tight"
+            style={{ fontSize: "var(--fs-title-h2)" }}
           >
-            한 사람의 자리에서
-          </div>
-          <p className="text-meta text-ink-2 leading-relaxed">
-            던지고 사라지는 의견 대신 *남는 기록* 을 쓰길 바랍니다.
-            <br />
-            자기 입장이 어디서 흔들리는지 스스로 마주하길 바랍니다.
-            <br />
-            남의 논리와 출처를 따라가며 자기 시야가 한 뼘씩 넓어지길 바랍니다.
+            토론은 사회를 건강하게 만드는 자양분입니다.
+          </p>
+        </blockquote>
+
+        <div className="px-7 py-6 border-b-[0.5px] border-border-soft text-center space-y-2">
+          <p className="text-base text-ink-2 leading-relaxed">
+            생각이 다르다는 것은 싸울 이유가 아니라, 우리가 더 넓어질 기회입니다.
+          </p>
+          <p className="text-base text-ink-2 leading-relaxed">
+            상대의 목소리에 귀를 기울일 때 비로소 논리는 완성됩니다.
           </p>
         </div>
 
-        <div className="px-6 py-5">
-          <div
-            className="font-serif font-semibold text-ink mb-2"
+        <ul className="px-7 py-6 space-y-3">
+          <li className="text-meta text-ink-2 leading-relaxed">
+            <span className="font-medium text-ink">감정 대신 팩트로</span> · 서로에 대한 모독이 아닌, 객관적 근거로 승부합니다.
+          </li>
+          <li className="text-meta text-ink-2 leading-relaxed">
+            <span className="font-medium text-ink">차이의 인정</span> · 틀린 것이 아니라 다른 것임을 존중합니다.
+          </li>
+          <li className="text-meta text-ink-2 leading-relaxed">
+            <span className="font-medium text-ink">끝까지 가는 토론</span> · 겉핥기식 대화가 아닌, 본질을 꿰뚫는 끝장을 봅니다.
+          </li>
+        </ul>
+
+        <div className="px-7 py-6 border-t border-border bg-soft text-center">
+          <p
+            className="font-serif text-ink leading-relaxed mb-4"
             style={{ fontSize: "var(--fs-title-h4)" }}
           >
-            우리 사회의 자리에서
-          </div>
-          <p className="text-meta text-ink-2 leading-relaxed">
-            잠깐의 분노가 아니라 *오래 남는 토론* 위에 다음 이야기가 얹히길 바랍니다.
-            <br />
-            다수결로 누른 정답 대신, 각자의 출처와 논리가 한 자리에 쌓이길 바랍니다.
-            <br />
-            진영 너머에 합의 가능한 한 줄이 늘어가길 바랍니다.
+            지금, 당신의 논리로 사회를 발전시켜 보세요.
           </p>
+          <div className="flex flex-col sm:flex-row gap-2 sm:justify-center">
+            <Link
+              href="/proposal"
+              className="text-center px-[22px] py-[12px] text-button-large font-medium bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
+            >
+              ＋ 첫 의제 제안하기
+            </Link>
+            <Link
+              href="/login"
+              className="text-center px-[22px] py-[12px] text-button-large font-medium bg-card text-ink border-[0.5px] border-border rounded-md hover:bg-soft transition-colors"
+            >
+              로그인
+            </Link>
+          </div>
         </div>
       </section>
-
-      <div className="flex flex-col sm:flex-row gap-2 sm:justify-center">
-        <Link
-          href="/proposal"
-          className="text-center px-[22px] py-[12px] text-button-large font-medium bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors"
-        >
-          ＋ 첫 의제 제안하기
-        </Link>
-        <Link
-          href="/login"
-          className="text-center px-[22px] py-[12px] text-button-large font-medium bg-card text-ink border-[0.5px] border-border rounded-md hover:bg-soft transition-colors"
-        >
-          로그인
-        </Link>
-      </div>
     </div>
   );
 }
