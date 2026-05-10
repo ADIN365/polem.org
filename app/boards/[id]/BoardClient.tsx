@@ -121,7 +121,7 @@ function Column({
             ].join(" ")}
           />
           <span className="text-meta font-semibold tracking-wide text-ink">
-            {isPro ? "PRO · 찬성" : "CON · 반대"}
+            {isPro ? "찬성" : "반대"}
           </span>
         </div>
         <div className="text-tiny text-ink-3 font-medium">{pins.length}개</div>
