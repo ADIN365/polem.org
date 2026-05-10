@@ -44,7 +44,7 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
       return;
     }
     if (isMine) {
-      toast("자기 의견에는 동조할 수 없어요.");
+      toast("자기 의견에는 옳소를 보낼 수 없어요.");
       return;
     }
     if (busy) return;
@@ -57,12 +57,12 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
         method: next ? "POST" : "DELETE",
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "동조 처리 실패");
+      if (!res.ok) throw new Error(data.error ?? "옳소 처리 실패");
       if (typeof data.endorseCount === "number") setEndorseCount(data.endorseCount);
     } catch (err) {
       setEndorsed(!next);
       setEndorseCount((c) => c + (next ? -1 : 1));
-      toast.error(err instanceof Error ? err.message : "동조 처리 실패");
+      toast.error(err instanceof Error ? err.message : "옳소 처리 실패");
     } finally {
       setBusy(false);
     }
@@ -133,10 +133,10 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
               endorsed ? (isPro ? "text-ink font-semibold" : "text-paper-cream font-semibold") : "",
               isMine ? "opacity-40 cursor-not-allowed" : "hover:opacity-80",
             ].join(" ")}
-            title={isMine ? "자기 의견에는 동조할 수 없어요" : "동조"}
+            title={isMine ? "자기 의견에는 옳소를 보낼 수 없어요" : "옳소 — 이 의견에 동의 표시"}
             aria-pressed={endorsed}
           >
-            {endorsed ? "↑●" : "↑"} {endorseCount}
+            {endorsed ? "↑●" : "↑"} 옳소 {endorseCount}
           </button>
 
           {!isMine ? (

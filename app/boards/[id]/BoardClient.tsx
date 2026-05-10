@@ -84,7 +84,7 @@ export default function BoardClient({
 
       {!currentUserId ? (
         <div className="px-[18px] pt-3 pb-1 text-center text-tiny text-ink-3">
-          의견 작성·동조·인용·반박은 <Link href={`/login?callbackUrl=/boards/${boardId}`} className="underline">로그인</Link> 후 가능해요.
+          의견 작성·옳소·인용·반박은 <Link href={`/login?callbackUrl=/boards/${boardId}`} className="underline">로그인</Link> 후 가능해요.
         </div>
       ) : null}
 

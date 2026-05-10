@@ -33,7 +33,7 @@ export default function MirrorTable({ rows }: { rows: MirrorRow[] }) {
         <Link href="/three" className="underline hover:text-ink">
           오늘의 3문항
         </Link>{" "}
-        · 의견·동조를 더 쌓이면 토론 주제별로 자기 입장 정렬을 비춰드릴게요.
+        · 의견·옳소가 더 쌓이면 토론 주제별로 자기 입장 정렬을 비춰드릴게요.
       </div>
     );
   }

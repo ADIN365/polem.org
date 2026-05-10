@@ -14,7 +14,7 @@ export default function PrivacyPage() {
       <ul>
         <li>OAuth 인증 시: 카카오/네이버 계정 식별자(providerAccountId), 이메일(선택)</li>
         <li>회원 가입 시: 닉네임 (사용자가 직접 입력)</li>
-        <li>이용 기록: 의견·댓글·동조·블라인드 답변·신고 내역, 접속 IP·User-Agent (관리·보안 목적)</li>
+        <li>이용 기록: 의견·옳소·블라인드 답변·신고 내역, 접속 IP·User-Agent (관리·보안 목적)</li>
         <li>가치관 4축 측정: Likert 답변 12개 (본인 외 비공개)</li>
       </ul>
       <p>
