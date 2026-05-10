@@ -94,6 +94,21 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
         <div className="flex gap-[9px] items-center flex-wrap">
           <span>@{pin.authorNickname ?? "익명"}</span>
           <span>{formatRelativeKo(pin.createdAt)}</span>
+          {!isMine ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!currentUserId) return toast("로그인이 필요해요.");
+                setShowReport(true);
+              }}
+              className="inline-flex items-center opacity-50 hover:opacity-100 transition-opacity"
+              title="신고"
+              aria-label="이 의견 신고"
+            >
+              <SirenIcon />
+            </button>
+          ) : null}
         </div>
 
         <div className="flex gap-[9px] items-center">
@@ -158,21 +173,6 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
             <span className="opacity-50">반박 {pin.quoteRebutCount}</span>
           )}
 
-          {!isMine ? (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!currentUserId) return toast("로그인이 필요해요.");
-                setShowReport(true);
-              }}
-              className="hover:opacity-80 transition-colors opacity-70"
-              title="신고"
-              aria-label="이 의견 신고"
-            >
-              ⋯
-            </button>
-          ) : null}
         </div>
       </div>
 
@@ -184,6 +184,29 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
         />
       ) : null}
     </article>
+  );
+}
+
+function SirenIcon() {
+  // 미니멀 흑백 사이렌 (lucide siren 단순화). 12x12.
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M7 18a5 5 0 0 1 10 0" />
+      <path d="M5 21h14" />
+      <path d="M5 21v-3a7 7 0 0 1 14 0v3" />
+      <path d="M12 6V3" />
+      <circle cx="12" cy="6" r="1" />
+    </svg>
   );
 }
 
