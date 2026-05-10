@@ -23,21 +23,17 @@ interface PersonaPin {
   author: string;
 }
 
-interface PersonaComment {
-  boardTitle: string;
-  targetAuthor: string;
-  targetSide: Side;
+interface ChainStep {
+  // 첫 step 은 신규 의견, 그 이후는 직전 step 에 대한 AGREE/REBUT
   author: string;
   body: string;
+  relation: "ROOT" | "AGREE" | "REBUT";
+  initialSide?: Side; // ROOT 일 때만
 }
 
-interface PersonaChallenge {
+interface PersonaChain {
   boardTitle: string;
-  targetAuthor: string;
-  targetSide: Side;
-  author: string;
-  body: string;
-  sourceUrl: string;
+  steps: ChainStep[];
 }
 
 const PERSONA_USERS: PersonaUser[] = [
@@ -176,219 +172,28 @@ const PERSONA_PINS: PersonaPin[] = [
   { boardTitle: "의대 정원 확대에 찬성하십니까?", side: "CON", body: "윤리 교육 없이 사람만 늘리면 직업윤리부터 무너지는 것이지요. 의료는 기술 이전에 사람을 다루는 일입니다.", author: "wonki" },
 ];
 
-// 페르소나 간 논쟁 — 답글에도 각 페르소나 말투 유지
-const PERSONA_COMMENTS: PersonaComment[] = [
-  { boardTitle: "다주택자 보유세 강화에 찬성하십니까?", targetAuthor: "kimsu", targetSide: "PRO", author: "hanmi", body: "가격 신호는 임대료로도 똑같이 작동한다. 결국 세입자가 진다는 게 늘 맹점이다." },
-  { boardTitle: "다주택자 보유세 강화에 찬성하십니까?", targetAuthor: "hanmi", targetSide: "CON", author: "moonki", body: "임대료 전가는 공급 부족 시기에 더 심해지는 거지요. 보유세와 공급 정책은 묶어서 봐야 합니다." },
-  { boardTitle: "다주택자 보유세 강화에 찬성하십니까?", targetAuthor: "chunho", targetSide: "CON", author: "leesh", body: "1주택 은퇴자는 종부세에 이미 보호 장치가 있다. 다주택과는 분명 다른 사안이다." },
-  { boardTitle: "다주택자 보유세 강화에 찬성하십니까?", targetAuthor: "bakhy", targetSide: "PRO", author: "kimje", body: "임차인 부담 전가가 안 일어나려면 어떤 정책이 같이 필요한가요? 진짜 궁금해요." },
-
-  { boardTitle: "의대 정원 확대에 찬성하십니까?", targetAuthor: "leesh", targetSide: "PRO", author: "hanmi", body: "정원만 늘려도 지방엔 안 간다. 수가·지역 의무 복무 설계가 먼저다." },
-  { boardTitle: "의대 정원 확대에 찬성하십니까?", targetAuthor: "hanmi", targetSide: "CON", author: "jionsu", body: "수가 개선 30년째 말로만 함. 일단 사람을 늘려야 협상력이 생기지." },
-  { boardTitle: "의대 정원 확대에 찬성하십니까?", targetAuthor: "ohjs", targetSide: "CON", author: "parksoo", body: "수가가 먼저라는 건 동의해요. 근데 인원도 같이 가야 하는 것 같네요. 둘 중 하나만 들고 30년 끌어왔잖아요." },
-  { boardTitle: "의대 정원 확대에 찬성하십니까?", targetAuthor: "wonki", targetSide: "CON", author: "hwangye", body: "윤리 교육은 정원과 별개로 강화 가능해요. 인원 확대 자체를 막을 이유는 안 되네요." },
-
-  { boardTitle: "모병제 전환에 찬성하십니까?", targetAuthor: "kimsu", targetSide: "PRO", author: "jangik", body: "직업군인이 정예라는 건 평시 기준의 분석이다. 한반도는 여전히 정전 상태다." },
-  { boardTitle: "모병제 전환에 찬성하십니까?", targetAuthor: "jangik", targetSide: "CON", author: "kangye", body: "징병제 유지 명분이 *정치 메시지* 라면 그 비용을 청년이 다 지는 게 부당하잖아요." },
-  { boardTitle: "모병제 전환에 찬성하십니까?", targetAuthor: "moonki", targetSide: "CON", author: "hanseung", body: "가난한 청년만 군에 간다는 명제는 미국 통계의 단순화다. 실제 모병제는 직업·기술 트랙도 포함한다." },
-  { boardTitle: "모병제 전환에 찬성하십니까?", targetAuthor: "chunho", targetSide: "CON", author: "parksoo", body: "그렇게 약속이 만들어진 건 알겠어요. 근데 그 약속을 지금 세대가 다시 동의해야 하는 거 아닐까요." },
-
-  { boardTitle: "사형제 부활(집행 재개)에 찬성하십니까?", targetAuthor: "junga", targetSide: "PRO", author: "kimsu", body: "응보의 정의 감각은 이해된다. 다만 오판 가능성을 0으로 만들 수 없다는 게 더 무겁다." },
-  { boardTitle: "사형제 부활(집행 재개)에 찬성하십니까?", targetAuthor: "kimsu", targetSide: "CON", author: "ohjs", body: "오판 1건과 매년 발생하는 흉악범죄 피해자. 두 무게를 견주는 게 응보의 출발이지." },
-  { boardTitle: "사형제 부활(집행 재개)에 찬성하십니까?", targetAuthor: "bakhy", targetSide: "CON", author: "jangik", body: "계급 처벌이라는 표현은 강한 주장이다. 통계 출처를 같이 적어주면 더 설득력 있을 것이다." },
-  { boardTitle: "사형제 부활(집행 재개)에 찬성하십니까?", targetAuthor: "wonki", targetSide: "CON", author: "junga", body: "생명의 무게라는 관점은 받아들인다. 그런데 피해자의 생명도 같은 무게 아닌가." },
-
-  { boardTitle: "AI 생성물에 저작권을 부여해야 하는가?", targetAuthor: "leesh", targetSide: "PRO", author: "jionsu", body: "프롬프트 보호랑 결과물 저작권은 다른 문제임. 후자에 강한 권리 주면 인간 창작이 묻힘." },
-  { boardTitle: "AI 생성물에 저작권을 부여해야 하는가?", targetAuthor: "junga", targetSide: "CON", author: "kangye", body: "100년 전제를 깬다는 표현이 멋있긴 하네요. 도구가 바뀌면 전제도 바뀌는 거 아닌가요." },
-
-  { boardTitle: "부유세 신설에 찬성하십니까?", targetAuthor: "kimsu", targetSide: "PRO", author: "hanseung", body: "프랑스 사례 한 번만 더 보라. 자본 유출이 누적 세수보다 컸다." },
-  { boardTitle: "부유세 신설에 찬성하십니까?", targetAuthor: "hanseung", targetSide: "CON", author: "bakhy", body: "프랑스는 부유세 설계 실패 사례다. 회피 경로 막은 노르웨이는 다른 결과를 보였다." },
-  { boardTitle: "부유세 신설에 찬성하십니까?", targetAuthor: "chunho", targetSide: "CON", author: "leemy", body: "은퇴 자산 보호 측면은 공감한다. 다만 자산 규모 구간 차등 부과로 균형이 가능한 영역이다." },
-
-  { boardTitle: "선거제도 개편(연동형 비례 강화)에 찬성하십니까?", targetAuthor: "leesh", targetSide: "PRO", author: "junga", body: "위성정당으로 비례 강화 효과가 사실상 무력화된 게 직전 사례다. 제도만 바꾼다고 풀리지 않는다." },
-  { boardTitle: "선거제도 개편(연동형 비례 강화)에 찬성하십니까?", targetAuthor: "hanmi", targetSide: "CON", author: "moonki", body: "독일 5% 봉쇄조항은 한국에도 적용 가능합니다. 비례성과 안정성 사이의 균형은 설계 가능한 영역이지요." },
-
-  { boardTitle: "원전 신규 건설에 찬성하십니까?", targetAuthor: "kimsu", targetSide: "PRO", author: "shinha", body: "재생에너지에 ESS 조합으로도 베이스로드는 짤 수 있다. 원전을 *유일* 선택지로 만드는 건 분석을 좁힌다." },
-  { boardTitle: "원전 신규 건설에 찬성하십니까?", targetAuthor: "shinha", targetSide: "CON", author: "jangik", body: "재생에너지가 베이스로드를 감당하려면 한국 면적의 몇 %가 패널로 덮여야 하는지 같이 봐야 한다." },
-  { boardTitle: "원전 신규 건설에 찬성하십니까?", targetAuthor: "leesh", targetSide: "CON", author: "ohjs", body: "안전 비용은 원전 가격에 이미 반영되고 있지. 가스·석탄 외부비용도 같이 따져야 공정하다." },
-
-  { boardTitle: "주 4일제 도입에 찬성하십니까?", targetAuthor: "leesh", targetSide: "PRO", author: "kimje", body: "OECD 평균 생산성 비교는 산업 구조 차이를 무시한 거예요. 한국 제조업 비중이 큰 거 잊으면 안 돼요." },
-  { boardTitle: "주 4일제 도입에 찬성하십니까?", targetAuthor: "kimje", targetSide: "CON", author: "jionsu", body: "자영업 부담은 보전 정책으로 풀면 됨. 4일제 자체를 막을 이유는 안 됨." },
-  { boardTitle: "주 4일제 도입에 찬성하십니까?", targetAuthor: "hanmi", targetSide: "CON", author: "hwangye", body: "일률 도입이 아니라 공공·대기업부터 시범 도입하는 모델이 있어요. 단계적이면 충분히 가능해요." },
-
-  { boardTitle: "동성결혼 법제화에 찬성하십니까?", targetAuthor: "leesh", targetSide: "PRO", author: "wonki", body: "시민권으로만 보면 단순한 문제이지요. 결혼은 가족 형성의 사회적 단위라는 차원이 함께 있는 것입니다." },
-  { boardTitle: "동성결혼 법제화에 찬성하십니까?", targetAuthor: "wonki", targetSide: "CON", author: "leemy", body: "종교 자유와 시민의 결혼 권리는 분리 가능한 영역이다. 전자가 후자를 막는 근거는 안 된다." },
-  { boardTitle: "동성결혼 법제화에 찬성하십니까?", targetAuthor: "hanmi", targetSide: "CON", author: "kangye", body: "시민결합이 이미 차별이라는 게 평등권 측면에서 인정받는 추세죠." },
-  { boardTitle: "동성결혼 법제화에 찬성하십니까?", targetAuthor: "ohjs", targetSide: "CON", author: "parksoo", body: "사회적 합의는 누가 정의하는 건가요. 법이 먼저 가서 합의를 만든 사례도 많은 것 같아요." },
-
-  { boardTitle: "AI 학습용 데이터 무단 사용 규제에 찬성하십니까?", targetAuthor: "parkje", targetSide: "PRO", author: "kangye", body: "옵트아웃 강제하면 한국 모델만 데이터셋이 빈약해지죠. 글로벌 협의가 먼저라고 봐요." },
-  { boardTitle: "AI 학습용 데이터 무단 사용 규제에 찬성하십니까?", targetAuthor: "leesh", targetSide: "CON", author: "shinha", body: "출력물 유사성 규제는 사후 약방이다. 학습 단계에서 동의 절차가 있는 게 더 윤리적인 구조다." },
-
-  { boardTitle: "기본소득 도입에 찬성하십니까?", targetAuthor: "kimsu", targetSide: "PRO", author: "hanseung", body: "표적 지원 vs 보편 지급은 학계에서도 결론 난 게 아니다. 보편이 행정 단순한 건 맞지만 효율은 별개의 문제다." },
-  { boardTitle: "기본소득 도입에 찬성하십니까?", targetAuthor: "hanmi", targetSide: "CON", author: "bakhy", body: "재원 마련은 부유세·자산세·환경세 묶음으로 가능하다. 모호한 게 아니라 안 짠 거다." },
-  { boardTitle: "기본소득 도입에 찬성하십니까?", targetAuthor: "junga", targetSide: "CON", author: "hwangye", body: "표적 지원이 효율적이라는 가정의 전제가 *돌봄·가사 노동의 비가시화* 라는 점을 같이 봐야 해요." },
-
-  { boardTitle: "한미일 군사협력 강화에 찬성하십니까?", targetAuthor: "parkje", targetSide: "PRO", author: "bakhy", body: "결속의 비용을 누가 무는지가 빠진 분석은 반쪽이다. 무기 구매가 그 비용의 큰 부분이다." },
-  { boardTitle: "한미일 군사협력 강화에 찬성하십니까?", targetAuthor: "hanmi", targetSide: "CON", author: "ohjs", body: "중국 의존이 큰 건 사실이지. 그러나 안보 비용을 외주하면 결국 그 외주처에 더 종속되는 거다." },
-  { boardTitle: "한미일 군사협력 강화에 찬성하십니까?", targetAuthor: "junga", targetSide: "CON", author: "chunho", body: "역사 문제는 한일 양국이 같이 풀어가는 영역이지. 군사협력의 전제 조건은 아닌 게 아닌가." },
-
-  { boardTitle: "탄소세 도입에 찬성하십니까?", targetAuthor: "leesh", targetSide: "PRO", author: "choibo", body: "K-ETS와 중복 부담 우려는 여전하다. 통합 설계가 필수다." },
-  { boardTitle: "탄소세 도입에 찬성하십니까?", targetAuthor: "hanmi", targetSide: "CON", author: "shinha", body: "이중 부담 논리는 K-ETS 만으로 충분하다는 가정 위에 서 있다. 실제 감축 성과는 그 가정을 부정한다." },
-  { boardTitle: "탄소세 도입에 찬성하십니까?", targetAuthor: "choibo", targetSide: "CON", author: "jionsu", body: "단독 도입 우려는 산업 구조 전환 *속도* 문제지 *방향* 문제는 아님." },
-  { boardTitle: "탄소세 도입에 찬성하십니까?", targetAuthor: "kimje", targetSide: "CON", author: "bakhy", body: "중소제조업 보호는 *세수 환원 메커니즘* 으로 같이 풀 수 있다. 도입 자체를 막을 근거는 안 된다." },
-];
-
-// 출처 반박 — 페르소나 말투 유지 + sourceUrl 은 신뢰 가능 도메인
-const PERSONA_CHALLENGES: PersonaChallenge[] = [
+// 5단계 chain 테스트 데이터 — "다주택자 보유세 강화" 게시판에 동의·반박 chain 두 개
+const PERSONA_CHAINS: PersonaChain[] = [
   {
     boardTitle: "다주택자 보유세 강화에 찬성하십니까?",
-    targetAuthor: "kimsu", targetSide: "PRO", author: "hanseung",
-    body: "한국조세재정연구원 분석에 따르면 보유세 강화 시기에 임대료가 동조 상승했다. 가격 신호가 임차인에게 직접 전달된다는 의미다.",
-    sourceUrl: "https://www.kipf.re.kr",
+    steps: [
+      { author: "kimsu", relation: "ROOT", initialSide: "PRO", body: "주거 안정이 시장 자율로 풀린 적이 있는가. 보유세는 가장 직접적인 가격 신호다." },
+      { author: "moonki", relation: "AGREE", body: "정확히 그 지점이지요. 80년대부터 누적된 정책의 한계가 결국 지금의 격차로 굳어진 것입니다." },
+      { author: "hwangye", relation: "AGREE", body: "맞아요. 여성 1인가구 친구들이 그 영향을 가장 먼저 그리고 가장 크게 받고 있어요." },
+      { author: "bakhy", relation: "AGREE", body: "결국 임대료가 보유세를 대신 내는 구조가 그렇게 만들어진 거다. 본질이 거기 있다." },
+      { author: "leesh", relation: "AGREE", body: "OECD 비교에서도 한국 보유세 비중은 평균의 절반 수준이라는 점을 다시 확인할 필요가 있다." },
+    ],
   },
   {
     boardTitle: "다주택자 보유세 강화에 찬성하십니까?",
-    targetAuthor: "hanmi", targetSide: "CON", author: "moonki",
-    body: "통계청 자료를 보면 한국의 보유세 비중은 OECD 평균의 절반 수준입니다. 강화 여지가 객관적으로 존재하지요.",
-    sourceUrl: "https://kostat.go.kr",
-  },
-  {
-    boardTitle: "의대 정원 확대에 찬성하십니까?",
-    targetAuthor: "leesh", targetSide: "PRO", author: "ohjs",
-    body: "보건복지부 의료인력 분포 자료에서 OECD 평균 대비 부족분의 절반은 *지역 편중* 으로 설명되지. 정원만의 문제가 아니다.",
-    sourceUrl: "https://www.mohw.go.kr",
-  },
-  {
-    boardTitle: "의대 정원 확대에 찬성하십니까?",
-    targetAuthor: "hanmi", targetSide: "CON", author: "hwangye",
-    body: "건강보험심사평가원 통계 보면 산부인과 분만 인프라가 매년 줄어요. 수가 인상만으로 1년 안에 만들 수 있는 게 아니에요.",
-    sourceUrl: "https://www.hira.or.kr",
-  },
-  {
-    boardTitle: "모병제 전환에 찬성하십니까?",
-    targetAuthor: "kimsu", targetSide: "PRO", author: "jangik",
-    body: "국방부 병력구조 보고서에 따르면 단기 직업군인 충원만으로 50만 병력 효과를 대체할 수 없다.",
-    sourceUrl: "https://www.mnd.go.kr",
-  },
-  {
-    boardTitle: "모병제 전환에 찬성하십니까?",
-    targetAuthor: "hanmi", targetSide: "CON", author: "kangye",
-    body: "한국국방연구원 분석에서 정예 직업군인 5만의 전투력이 징집 50만의 80% 수준이라는 결과가 나오네요.",
-    sourceUrl: "https://www.kida.re.kr",
-  },
-  {
-    boardTitle: "사형제 부활(집행 재개)에 찬성하십니까?",
-    targetAuthor: "junga", targetSide: "PRO", author: "leemy",
-    body: "법무부 통계상 1990년대 사형 집행 시기와 흉악범죄 발생률 사이에 유의미한 상관관계가 발견되지 않았다.",
-    sourceUrl: "https://www.moj.go.kr",
-  },
-  {
-    boardTitle: "사형제 부활(집행 재개)에 찬성하십니까?",
-    targetAuthor: "kimsu", targetSide: "CON", author: "chunho",
-    body: "대검찰청 강력범죄 동향을 보면 흉악범죄 재범률이 가석방 시점 이후 유의미하게 올라가지 않은가.",
-    sourceUrl: "https://www.spo.go.kr",
-  },
-  {
-    boardTitle: "AI 생성물에 저작권을 부여해야 하는가?",
-    targetAuthor: "leesh", targetSide: "PRO", author: "jionsu",
-    body: "한국저작권위원회 가이드라인이 AI 결과물을 *저작자 없는 산출물* 로 분류함. 기존 법체계 결론은 신중 쪽임.",
-    sourceUrl: "https://www.copyright.or.kr",
-  },
-  {
-    boardTitle: "AI 생성물에 저작권을 부여해야 하는가?",
-    targetAuthor: "junga", targetSide: "CON", author: "kangye",
-    body: "USPTO 최근 결정에서 *충분한 인간 기여* 가 인정되는 AI 결과물에 부분 저작권 인정 사례가 누적되네요.",
-    sourceUrl: "https://www.uspto.gov",
-  },
-  {
-    boardTitle: "부유세 신설에 찬성하십니까?",
-    targetAuthor: "kimsu", targetSide: "PRO", author: "hanseung",
-    body: "프랑스 재정경제부 공식 자료에서 부유세 도입 후 자본 유출이 누적 세수의 1.5배로 보고됐다.",
-    sourceUrl: "https://www.economie.gouv.fr",
-  },
-  {
-    boardTitle: "부유세 신설에 찬성하십니까?",
-    targetAuthor: "hanmi", targetSide: "CON", author: "bakhy",
-    body: "노르웨이는 부유세 유지 중이고 자본 유출이 미미하다. 설계와 회피 방지 메커니즘이 결정적이다.",
-    sourceUrl: "https://www.regjeringen.no",
-  },
-  {
-    boardTitle: "선거제도 개편(연동형 비례 강화)에 찬성하십니까?",
-    targetAuthor: "leesh", targetSide: "PRO", author: "junga",
-    body: "중앙선거관리위원회 직전 총선 분석에 따르면 위성정당으로 인해 비례성 효과가 거의 0이었다.",
-    sourceUrl: "https://www.nec.go.kr",
-  },
-  {
-    boardTitle: "원전 신규 건설에 찬성하십니까?",
-    targetAuthor: "kimsu", targetSide: "PRO", author: "shinha",
-    body: "한국에너지경제연구원 시나리오에서 재생에너지 비중 70% + ESS 조합으로 2040년 베이스로드 가능성이 제시됐다.",
-    sourceUrl: "https://www.keei.re.kr",
-  },
-  {
-    boardTitle: "원전 신규 건설에 찬성하십니까?",
-    targetAuthor: "leesh", targetSide: "CON", author: "jangik",
-    body: "원자력안전위원회 자료상 한국 원전의 안전 비용은 발전단가의 8% 미만으로 흡수되고 있다. *가장 싼 전력* 가정은 무너지지 않는다.",
-    sourceUrl: "https://www.nssc.go.kr",
-  },
-  {
-    boardTitle: "주 4일제 도입에 찬성하십니까?",
-    targetAuthor: "leesh", targetSide: "PRO", author: "kimje",
-    body: "중소기업중앙회 조사에서 4일제 일률 도입 시 영세사업장 70%가 인건비 부담으로 도산 위험이라고 답해요.",
-    sourceUrl: "https://www.kbiz.or.kr",
-  },
-  {
-    boardTitle: "주 4일제 도입에 찬성하십니까?",
-    targetAuthor: "hanmi", targetSide: "CON", author: "shinha",
-    body: "고용노동부 시범사업 결과에서 공공부문 4일제 도입 후 생산성이 평균 7% 상승했다.",
-    sourceUrl: "https://www.moel.go.kr",
-  },
-  {
-    boardTitle: "동성결혼 법제화에 찬성하십니까?",
-    targetAuthor: "leesh", targetSide: "PRO", author: "wonki",
-    body: "한국갤럽 종교 인식 조사에서 동성결혼에 대한 사회적 합의 수준이 여전히 50% 미만으로 보고되는 것이지요.",
-    sourceUrl: "https://www.gallup.co.kr",
-  },
-  {
-    boardTitle: "동성결혼 법제화에 찬성하십니까?",
-    targetAuthor: "junga", targetSide: "CON", author: "leemy",
-    body: "국가인권위원회 결정문에서 *시민결합 별도 제도* 가 결혼 권리의 동등 보장이 아니라는 판단이 누적되고 있다.",
-    sourceUrl: "https://www.humanrights.go.kr",
-  },
-  {
-    boardTitle: "AI 학습용 데이터 무단 사용 규제에 찬성하십니까?",
-    targetAuthor: "leesh", targetSide: "CON", author: "jionsu",
-    body: "EU AI Act 의 학습 데이터 옵트아웃 조항은 산업 위축이 아니라 *권리자 보호* 가 명시 목적임.",
-    sourceUrl: "https://digital-strategy.ec.europa.eu",
-  },
-  {
-    boardTitle: "기본소득 도입에 찬성하십니까?",
-    targetAuthor: "kimsu", targetSide: "PRO", author: "junga",
-    body: "한국개발연구원 표적 지원 vs 보편 지급 시뮬레이션에서 동일 재정 하에 표적 지원이 빈곤율 감소에 더 효과적이었다.",
-    sourceUrl: "https://www.kdi.re.kr",
-  },
-  {
-    boardTitle: "기본소득 도입에 찬성하십니까?",
-    targetAuthor: "hanmi", targetSide: "CON", author: "moonki",
-    body: "핀란드 기본소득 실험 최종 보고서는 노동 유인 감소가 통계적으로 유의미하지 않았다고 결론지은 것이지요.",
-    sourceUrl: "https://stm.fi",
-  },
-  {
-    boardTitle: "한미일 군사협력 강화에 찬성하십니까?",
-    targetAuthor: "parkje", targetSide: "PRO", author: "bakhy",
-    body: "한국개발연구원 분석에서 한미일 협력 강화 시기에 한국의 대중국 무역 적자가 누적 GDP 의 2%까지 확대됐다.",
-    sourceUrl: "https://www.kdi.re.kr",
-  },
-  {
-    boardTitle: "탄소세 도입에 찬성하십니까?",
-    targetAuthor: "leesh", targetSide: "PRO", author: "choibo",
-    body: "산업통상자원부 자료에 따르면 K-ETS 시행 이후 배출량 감소율이 연 2~3%로 안정화됐다. 추가 도입의 한계 효용이 작다.",
-    sourceUrl: "https://www.motie.go.kr",
-  },
-  {
-    boardTitle: "탄소세 도입에 찬성하십니까?",
-    targetAuthor: "kimje", targetSide: "CON", author: "jionsu",
-    body: "OECD 환경세 보고서에 보면 탄소세 도입 국가 대부분이 *세수 환원* 메커니즘으로 중소기업 부담을 흡수했음.",
-    sourceUrl: "https://www.oecd.org",
+    steps: [
+      { author: "kimsu", relation: "ROOT", initialSide: "PRO", body: "주거 안정이 시장 자율로 풀린 적이 있는가. 보유세는 가장 직접적인 가격 신호다." },
+      { author: "hanmi", relation: "REBUT", body: "결국 임대료 전가로 흐르지 않을까. 가격 신호가 임차인에게 가는 게 늘 맹점이다." },
+      { author: "moonki", relation: "REBUT", body: "임대료 전가는 공급 부족 시기에 더 심해지는 거지요. 보유세와 공급 정책은 묶어서 봐야 합니다." },
+      { author: "hanseung", relation: "REBUT", body: "공급 정책의 효과는 시장이 결정한다. 정부가 손대면 결국 왜곡이 더 커진다." },
+      { author: "bakhy", relation: "REBUT", body: "시장 신화는 늘 그렇게 약자에게 손해를 떠넘겨왔다. 본질은 안 바뀐다." },
+      { author: "jangik", relation: "REBUT", body: "그 *늘 그렇다* 는 단순화가 결국 정책 다당화의 출발이다. 한 진영의 본질론으로 정책을 결정할 수는 없다." },
+    ],
   },
 ];
 
@@ -507,44 +312,83 @@ export async function seedPersonas(prisma: PrismaClient) {
     }
   }
 
-  await prisma.comment.deleteMany({});
-  for (const c of PERSONA_COMMENTS) {
-    const authorId = userMap.get(c.author);
-    if (!authorId) continue;
-    const target = pinByKey.get(`${c.boardTitle}::${c.targetAuthor}::${c.targetSide}`);
-    if (!target) {
-      console.warn(`[seed-personas] 댓글 target 없음: ${c.boardTitle} ${c.targetAuthor} ${c.targetSide}`);
+  // 5단계 chain 시드 — 동의·반박 깊이 쌓기
+  let chainPinsCreated = 0;
+  for (const chain of PERSONA_CHAINS) {
+    const boardId = slugify(chain.boardTitle);
+    const board = await prisma.board.findUnique({ where: { id: boardId } });
+    if (!board) {
+      console.warn(`[seed-personas] chain 게시판 없음: ${chain.boardTitle}`);
       continue;
     }
-    await prisma.comment.create({ data: { pinId: target.id, authorId, body: c.body } });
+    let prevPinId: string | null = null;
+    let prevSide: Side | null = null;
+    for (const step of chain.steps) {
+      const authorId = userMap.get(step.author);
+      if (!authorId) continue;
+
+      if (step.relation === "ROOT") {
+        // 기존 의견을 root 로 찾음 (boardTitle + author + initialSide)
+        const root = pinByKey.get(`${chain.boardTitle}::${step.author}::${step.initialSide}`);
+        if (!root) {
+          console.warn(`[seed-personas] chain root 없음: ${chain.boardTitle} ${step.author} ${step.initialSide}`);
+          break;
+        }
+        prevPinId = root.id;
+        prevSide = step.initialSide ?? null;
+        continue;
+      }
+
+      if (!prevPinId || !prevSide) break;
+      const newSide: Side =
+        step.relation === "AGREE" ? prevSide : prevSide === "PRO" ? "CON" : "PRO";
+
+      const created: { id: string } = await prisma.pin.create({
+        data: {
+          boardId,
+          authorId,
+          side: newSide,
+          body: step.body,
+          quotedPinId: prevPinId,
+          quotedRelation: step.relation,
+        },
+        select: { id: true },
+      });
+      // 부모 카운트 캐시 갱신
+      await prisma.pin.update({
+        where: { id: prevPinId },
+        data: step.relation === "AGREE"
+          ? { quoteAgreeCount: { increment: 1 } }
+          : { quoteRebutCount: { increment: 1 } },
+      });
+      prevPinId = created.id;
+      prevSide = newSide;
+      chainPinsCreated++;
+    }
   }
 
-  await prisma.challenge.deleteMany({});
-  for (const ch of PERSONA_CHALLENGES) {
-    const authorId = userMap.get(ch.author);
-    if (!authorId) continue;
-    const target = pinByKey.get(`${ch.boardTitle}::${ch.targetAuthor}::${ch.targetSide}`);
-    if (!target) {
-      console.warn(`[seed-personas] 반박 target 없음: ${ch.boardTitle} ${ch.targetAuthor} ${ch.targetSide}`);
-      continue;
-    }
-    await prisma.challenge.create({
-      data: { pinId: target.id, challengerId: authorId, body: ch.body, sourceUrl: ch.sourceUrl },
+  // chain 으로 추가된 Pin 반영해서 board 카운터 다시
+  for (const b of allBoards) {
+    const [proCount, conCount, pins] = await Promise.all([
+      prisma.pin.count({ where: { boardId: b.id, side: "PRO" } }),
+      prisma.pin.count({ where: { boardId: b.id, side: "CON" } }),
+      prisma.pin.findMany({ where: { boardId: b.id }, select: { authorId: true } }),
+    ]);
+    const participantCount = new Set(pins.map((p) => p.authorId)).size;
+    await prisma.board.update({
+      where: { id: b.id },
+      data: { proCount, conCount, participantCount },
     });
   }
 
-  const [totalUsers, totalPins, totalEndorsements, totalComments, totalChallenges] =
-    await Promise.all([
-      prisma.user.count(),
-      prisma.pin.count(),
-      prisma.endorsement.count(),
-      prisma.comment.count(),
-      prisma.challenge.count(),
-    ]);
+  const [totalUsers, totalPins, totalEndorsements] = await Promise.all([
+    prisma.user.count(),
+    prisma.pin.count(),
+    prisma.endorsement.count(),
+  ]);
   console.log(`[seed-personas] 완료
-  사용자: ${totalUsers}
-  의견:   ${totalPins}
-  동조:   ${totalEndorsements}
-  댓글:   ${totalComments}
-  반박:   ${totalChallenges}`);
+  사용자:   ${totalUsers}
+  의견:     ${totalPins}
+  동조:     ${totalEndorsements}
+  chain:    ${chainPinsCreated} step (root 제외)`);
 }

@@ -16,6 +16,10 @@ interface Props {
   hasNickname: boolean;
 }
 
+type ComposerState =
+  | { mode: "NEW"; side: PinSide }
+  | { mode: "QUOTE"; quoting: QuoteSource; relation: "AGREE" | "REBUT"; side: PinSide };
+
 export default function BoardClient({
   boardId,
   proPins,
@@ -23,57 +27,55 @@ export default function BoardClient({
   currentUserId,
   hasNickname,
 }: Props) {
-  const [composer, setComposer] = useState<{ side: PinSide; quoting: QuoteSource | null } | null>(null);
+  const [composer, setComposer] = useState<ComposerState | null>(null);
 
-  const openCompose = (side: PinSide, quoting: QuoteSource | null = null) => {
+  const guard = () => {
     if (!currentUserId) {
       toast("로그인이 필요해요.");
-      return;
+      return false;
     }
     if (!hasNickname) {
       toast("닉네임을 먼저 설정해주세요.");
-      return;
+      return false;
     }
-    setComposer({ side, quoting });
+    return true;
   };
 
-  const handleQuote = (pin: PinData) => {
-    // 인용 의견는 같은 side 로 가는 게 자연스럽지만 사용자가 변경 가능. 디폴트는 인용된 의견와 같은 side.
-    openCompose(pin.side, {
-      id: pin.id,
-      body: pin.body,
-      authorNickname: pin.authorNickname,
+  const openNew = (side: PinSide) => {
+    if (!guard()) return;
+    setComposer({ mode: "NEW", side });
+  };
+
+  const handleQuote = (pin: PinData, relation: "AGREE" | "REBUT") => {
+    if (!guard()) return;
+    // 인용=같은 side, 반박=반대 side. 자동 결정.
+    const side: PinSide = relation === "AGREE" ? pin.side : pin.side === "PRO" ? "CON" : "PRO";
+    setComposer({
+      mode: "QUOTE",
+      quoting: { id: pin.id, body: pin.body, authorNickname: pin.authorNickname },
+      relation,
+      side,
     });
   };
 
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-[18px] p-[18px] bg-page">
-        <Column
-          side="PRO"
-          pins={proPins}
-          currentUserId={currentUserId}
-          onQuote={handleQuote}
-        />
-        <Column
-          side="CON"
-          pins={conPins}
-          currentUserId={currentUserId}
-          onQuote={handleQuote}
-        />
+        <Column side="PRO" pins={proPins} currentUserId={currentUserId} onQuote={handleQuote} />
+        <Column side="CON" pins={conPins} currentUserId={currentUserId} onQuote={handleQuote} />
       </div>
 
       <div className="px-[18px] py-[14px] border-t border-border bg-card flex gap-2">
         <button
           type="button"
-          onClick={() => openCompose("PRO")}
+          onClick={() => openNew("PRO")}
           className="flex-1 px-[14px] py-[11px] text-pin bg-card text-ink border-[0.5px] border-ink rounded-md hover:bg-soft transition-colors font-medium"
         >
           ＋ 찬성 의견
         </button>
         <button
           type="button"
-          onClick={() => openCompose("CON")}
+          onClick={() => openNew("CON")}
           className="flex-1 px-[14px] py-[11px] text-pin bg-dark text-paper-cream rounded-md hover:bg-deep transition-colors font-medium"
         >
           ＋ 반대 의견
@@ -82,7 +84,7 @@ export default function BoardClient({
 
       {!currentUserId ? (
         <div className="px-[18px] pt-3 pb-1 text-center text-tiny text-ink-3">
-          의견·동조·댓글은 <Link href={`/login?callbackUrl=/boards/${boardId}`} className="underline">로그인</Link> 후 가능해요.
+          의견 작성·동조·인용·반박은 <Link href={`/login?callbackUrl=/boards/${boardId}`} className="underline">로그인</Link> 후 가능해요.
         </div>
       ) : null}
 
@@ -90,7 +92,8 @@ export default function BoardClient({
         <PinFormModal
           boardId={boardId}
           side={composer.side}
-          quoting={composer.quoting}
+          quoting={composer.mode === "QUOTE" ? composer.quoting : null}
+          quotedRelation={composer.mode === "QUOTE" ? composer.relation : null}
           onClose={() => setComposer(null)}
         />
       ) : null}
@@ -107,7 +110,7 @@ function Column({
   side: "PRO" | "CON";
   pins: PinData[];
   currentUserId: string | null;
-  onQuote: (pin: PinData) => void;
+  onQuote: (pin: PinData, relation: "AGREE" | "REBUT") => void;
 }) {
   const isPro = side === "PRO";
   return (

@@ -82,13 +82,9 @@ export async function PATCH(req: Request, { params }: Ctx) {
       },
     });
 
-    // 2) 대상 콘텐츠 숨김 (의견·댓글)
-    if (hideContent) {
-      if (report.targetType === "PIN") {
-        await tx.pin.update({ where: { id: report.targetId }, data: { hidden: true } });
-      } else if (report.targetType === "COMMENT") {
-        await tx.comment.update({ where: { id: report.targetId }, data: { hidden: true } });
-      }
+    // 2) 대상 콘텐츠 숨김 (의견)
+    if (hideContent && report.targetType === "PIN") {
+      await tx.pin.update({ where: { id: report.targetId }, data: { hidden: true } });
     }
 
     // 3) 사용자 차단 단계 적용
@@ -156,7 +152,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
 }
 
 async function findOffenderId(report: {
-  targetType: "PIN" | "COMMENT" | "USER";
+  targetType: "PIN" | "USER";
   targetId: string;
 }): Promise<string | null> {
   if (report.targetType === "USER") return report.targetId;
@@ -166,13 +162,6 @@ async function findOffenderId(report: {
       select: { authorId: true },
     });
     return pin?.authorId ?? null;
-  }
-  if (report.targetType === "COMMENT") {
-    const c = await prisma.comment.findUnique({
-      where: { id: report.targetId },
-      select: { authorId: true },
-    });
-    return c?.authorId ?? null;
   }
   return null;
 }

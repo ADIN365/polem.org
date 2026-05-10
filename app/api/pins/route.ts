@@ -9,13 +9,15 @@ import { getServerSession } from "next-auth";
 
 const Body = z.object({
   boardId: z.string().min(1),
-  side: z.enum(["PRO", "CON"]),
+  // side 는 인용·반박 시 자동 결정. 신규 의견 작성 시에만 직접 받음.
+  side: z.enum(["PRO", "CON"]).optional(),
   body: z
     .string()
     .trim()
     .min(PIN_BODY_MIN, `최소 ${PIN_BODY_MIN}자 이상 작성해주세요.`)
     .max(PIN_BODY_MAX, `${PIN_BODY_MAX}자 이내로 작성해주세요.`),
   quotedPinId: z.string().optional().nullable(),
+  quotedRelation: z.enum(["AGREE", "REBUT"]).optional().nullable(),
 });
 
 export async function POST(req: Request) {
@@ -33,7 +35,37 @@ export async function POST(req: Request) {
     );
   }
 
-  const { boardId, side, body, quotedPinId } = parsed.data;
+  const { boardId, body, quotedPinId, quotedRelation } = parsed.data;
+  let { side } = parsed.data;
+
+  // 인용 의견 검증 + side 자동 결정
+  // - quotedRelation=AGREE → 같은 side
+  // - quotedRelation=REBUT → 반대 side
+  let quotedSide: "PRO" | "CON" | null = null;
+  if (quotedPinId) {
+    if (!quotedRelation) {
+      return NextResponse.json(
+        { error: "인용·반박 관계를 지정해야 해요." },
+        { status: 400 },
+      );
+    }
+    const quoted = await prisma.pin.findUnique({
+      where: { id: quotedPinId },
+      select: { id: true, side: true, hidden: true, deleted: true },
+    });
+    if (!quoted || quoted.hidden || quoted.deleted) {
+      return NextResponse.json({ error: "인용할 의견을 찾을 수 없어요." }, { status: 400 });
+    }
+    quotedSide = quoted.side;
+    side = quotedRelation === "AGREE" ? quoted.side : quoted.side === "PRO" ? "CON" : "PRO";
+  } else {
+    if (!side) {
+      return NextResponse.json(
+        { error: "찬성·반대 입장을 선택해주세요." },
+        { status: 400 },
+      );
+    }
+  }
 
   // 욕설 / 혐오 / 광고 자동 필터
   const prof = checkProfanity(body);
@@ -54,17 +86,8 @@ export async function POST(req: Request) {
   if (!board || board.status !== "ACTIVE") {
     return NextResponse.json({ error: "게시판을 찾을 수 없어요." }, { status: 404 });
   }
-
-  // 인용 의견 검증 — 같은 게시판일 필요는 없지만 존재해야 하고 hidden/deleted 가 아니어야.
-  if (quotedPinId) {
-    const quoted = await prisma.pin.findUnique({
-      where: { id: quotedPinId },
-      select: { id: true, hidden: true, deleted: true },
-    });
-    if (!quoted || quoted.hidden || quoted.deleted) {
-      return NextResponse.json({ error: "인용할 의견을 찾을 수 없어요." }, { status: 400 });
-    }
-  }
+  // quotedSide 미사용 가드 (lint)
+  void quotedSide;
 
   // 같은 게시판에 동일 사용자 의견는 *허용* (헌법 2.2 — 다수결 변질 방지하지만 의견 자체는 의견 표명).
   // 단 동일 본문 + 같은 사용자 + 같은 board 의 빠른 중복은 막음 (5분 이내).
@@ -81,27 +104,37 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "방금 같은 내용으로 의견을 남겼어요." }, { status: 409 });
   }
 
+  const finalSide = side as "PRO" | "CON";
   const pin = await prisma.$transaction(async (tx) => {
     const created = await tx.pin.create({
       data: {
         boardId,
         authorId: session.user.id,
-        side,
+        side: finalSide,
         body,
         quotedPinId: quotedPinId ?? null,
+        quotedRelation: quotedRelation ?? null,
       },
       select: { id: true },
     });
     await tx.board.update({
       where: { id: boardId },
       data: {
-        proCount: side === "PRO" ? { increment: 1 } : undefined,
-        conCount: side === "CON" ? { increment: 1 } : undefined,
+        proCount: finalSide === "PRO" ? { increment: 1 } : undefined,
+        conCount: finalSide === "CON" ? { increment: 1 } : undefined,
         updatedAt: new Date(),
       },
     });
-    // 참여자 수는 distinct 작가 수. 의견 만들 때마다 다시 계산하면 비용 큼.
-    // 단순 휴리스틱: 같은 작가의 의견이 처음일 때만 +1.
+    // 인용·반박 카운트 캐시 갱신
+    if (quotedPinId && quotedRelation) {
+      await tx.pin.update({
+        where: { id: quotedPinId },
+        data: quotedRelation === "AGREE"
+          ? { quoteAgreeCount: { increment: 1 } }
+          : { quoteRebutCount: { increment: 1 } },
+      });
+    }
+    // 참여자 수는 distinct 작가 수. 단순 휴리스틱: 같은 작가의 의견이 처음일 때만 +1.
     const otherPins = await tx.pin.count({
       where: { boardId, authorId: session.user.id, id: { not: created.id } },
     });

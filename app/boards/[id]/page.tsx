@@ -167,6 +167,9 @@ async function fetchPins(
       authorId: true,
       blindAgreeCount: true,
       blindDisagreeCount: true,
+      quoteAgreeCount: true,
+      quoteRebutCount: true,
+      quotedRelation: true,
       author: { select: { nickname: true, name: true } },
       quotedPin: {
         select: {
@@ -175,7 +178,7 @@ async function fetchPins(
         },
       },
       _count: {
-        select: { endorsements: true, comments: true, challenges: true },
+        select: { endorsements: true },
       },
       endorsements: currentUserId
         ? { where: { userId: currentUserId }, select: { id: true } }
@@ -192,17 +195,18 @@ async function fetchPins(
       authorId: r.authorId,
       authorNickname: r.author.nickname ?? r.author.name,
       endorseCount: r._count.endorsements,
-      commentCount: r._count.comments,
-      challengeCount: r._count.challenges,
+      quoteAgreeCount: r.quoteAgreeCount,
+      quoteRebutCount: r.quoteRebutCount,
       blindAgreeRatio:
         blindTotal >= 5
           ? Math.round((r.blindAgreeCount / blindTotal) * 100)
           : null,
-      quoted: r.quotedPin
+      quoted: r.quotedPin && r.quotedRelation
         ? {
             body: r.quotedPin.body,
             authorNickname:
               r.quotedPin.author.nickname ?? r.quotedPin.author.name,
+            relation: r.quotedRelation,
           }
         : null,
       isEndorsedByMe:

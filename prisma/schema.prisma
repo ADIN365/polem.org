@@ -86,9 +86,7 @@ model User {
 
   // relations — 끝장토론
   pins              Pin[]
-  comments          Comment[]
   endorsements      Endorsement[]
-  challenges        Challenge[]
   reports           Report[]       @relation("Reporter")
   proposals         Proposal[]
   blindAnswers      BlindAnswer[]
@@ -169,10 +167,15 @@ model Pin {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // 인용 의견 (다른 의견 인용)
-  quotedPinId String?
-  quotedPin   Pin?    @relation("Quotation", fields: [quotedPinId], references: [id])
-  quotingPins Pin[]   @relation("Quotation")
+  // 인용 의견 (다른 의견 인용). 인용=동의(같은 side), 반박=반대(반대 side).
+  quotedPinId     String?
+  quotedRelation  QuotedRelation?
+  quotedPin       Pin?    @relation("Quotation", fields: [quotedPinId], references: [id])
+  quotingPins     Pin[]   @relation("Quotation")
+
+  // 인용·반박 카운트 (캐시)
+  quoteAgreeCount Int @default(0)
+  quoteRebutCount Int @default(0)
 
   // 블라인드 질문 변환 (배치 작업 결과, 옵션)
   blindQuestion      String?
@@ -184,9 +187,7 @@ model Pin {
   hidden  Boolean @default(false) // 신고 후 임시조치
   deleted Boolean @default(false)
 
-  comments     Comment[]
   endorsements Endorsement[]
-  challenges   Challenge[]
   reports      Report[]
   blindAnswers BlindAnswer[]
 
@@ -199,27 +200,9 @@ enum PinSide {
   CON // 반대
 }
 
-model Comment {
-  id String @id @default(cuid())
-
-  pinId String
-  pin   Pin    @relation(fields: [pinId], references: [id])
-
-  authorId String
-  author   User   @relation(fields: [authorId], references: [id])
-
-  parentId String?
-  parent   Comment?  @relation("CommentTree", fields: [parentId], references: [id])
-  children Comment[] @relation("CommentTree")
-
-  body      String
-  createdAt DateTime @default(now())
-
-  hidden  Boolean @default(false)
-  deleted Boolean @default(false)
-
-  @@index([pinId, createdAt])
-  @@index([parentId])
+enum QuotedRelation {
+  AGREE // 동의 — 같은 side 의견
+  REBUT // 반박 — 반대 side 의견
 }
 
 model Endorsement {
@@ -235,22 +218,6 @@ model Endorsement {
 
   @@unique([pinId, userId])
   @@index([userId])
-}
-
-model Challenge {
-  id String @id @default(cuid())
-
-  pinId String
-  pin   Pin    @relation(fields: [pinId], references: [id])
-
-  challengerId String
-  challenger   User   @relation(fields: [challengerId], references: [id])
-
-  body      String // 반박 내용
-  sourceUrl String // 반박자도 출처 첨부 필수
-  createdAt DateTime @default(now())
-
-  @@index([pinId])
 }
 
 model Report {
@@ -280,7 +247,6 @@ model Report {
 
 enum ReportTargetType {
   PIN
-  COMMENT
   USER
 }
 

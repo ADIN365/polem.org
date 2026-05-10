@@ -4,8 +4,6 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 import { formatRelativeKo } from "@/lib/format";
-import ChallengeModal from "./ChallengeModal";
-import CommentTree from "./CommentTree";
 import ReportModal from "./ReportModal";
 
 export interface PinData {
@@ -16,10 +14,10 @@ export interface PinData {
   authorId: string;
   createdAt: Date;
   endorseCount: number;
-  commentCount: number;
-  challengeCount: number;
+  quoteAgreeCount: number;
+  quoteRebutCount: number;
   blindAgreeRatio: number | null; // 0-100, 데이터 부족 시 null
-  quoted: { authorNickname: string | null; body: string } | null;
+  quoted: { authorNickname: string | null; body: string; relation: "AGREE" | "REBUT" } | null;
   // 현재 사용자에 대한 상태 (없으면 비로그인)
   isEndorsedByMe: boolean;
 }
@@ -27,7 +25,7 @@ export interface PinData {
 interface Props {
   pin: PinData;
   currentUserId: string | null;
-  onQuote?: (pin: PinData) => void;
+  onQuote?: (pin: PinData, relation: "AGREE" | "REBUT") => void;
 }
 
 export function Pin({ pin, currentUserId, onQuote }: Props) {
@@ -36,11 +34,7 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
 
   const [endorsed, setEndorsed] = useState(pin.isEndorsedByMe);
   const [endorseCount, setEndorseCount] = useState(pin.endorseCount);
-  const [commentCount, setCommentCount] = useState(pin.commentCount);
-  const [challengeCount, setChallengeCount] = useState(pin.challengeCount);
-  const [expanded, setExpanded] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [showChallenge, setShowChallenge] = useState(false);
   const [showReport, setShowReport] = useState(false);
 
   const onEndorse = async (e: React.MouseEvent) => {
@@ -66,7 +60,6 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
       if (!res.ok) throw new Error(data.error ?? "동조 처리 실패");
       if (typeof data.endorseCount === "number") setEndorseCount(data.endorseCount);
     } catch (err) {
-      // 롤백
       setEndorsed(!next);
       setEndorseCount((c) => c + (next ? -1 : 1));
       toast.error(err instanceof Error ? err.message : "동조 처리 실패");
@@ -81,16 +74,16 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
 
   return (
     <article className={`px-4 py-[14px] mb-2 last:mb-0 rounded-md transition-colors ${baseClasses}`}>
-      {pin.quoted ? <PinQuote isPro={isPro} authorNickname={pin.quoted.authorNickname} body={pin.quoted.body} /> : null}
+      {pin.quoted ? (
+        <PinQuote
+          isPro={isPro}
+          authorNickname={pin.quoted.authorNickname}
+          body={pin.quoted.body}
+          relation={pin.quoted.relation}
+        />
+      ) : null}
 
-      <div
-        className="text-pin leading-relaxed mb-2 cursor-pointer select-text"
-        onClick={() => setExpanded((v) => !v)}
-        role="button"
-        aria-expanded={expanded}
-      >
-        {pin.body}
-      </div>
+      <div className="text-pin leading-relaxed mb-2 select-text">{pin.body}</div>
 
       <div
         className={[
@@ -101,18 +94,6 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
         <div className="flex gap-[9px] items-center flex-wrap">
           <span>@{pin.authorNickname ?? "익명"}</span>
           <span>{formatRelativeKo(pin.createdAt)}</span>
-          {challengeCount > 0 ? (
-            <span
-              className={
-                isPro
-                  ? "border-[0.5px] border-ink-3 px-1 text-ink font-medium"
-                  : "bg-[var(--paper-cream)] text-ink px-1 font-medium"
-              }
-              title="출처 반박"
-            >
-              ⚠ {challengeCount}
-            </span>
-          ) : null}
         </div>
 
         <div className="flex gap-[9px] items-center">
@@ -143,17 +124,22 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
             {endorsed ? "↑●" : "↑"} {endorseCount}
           </button>
 
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setExpanded((v) => !v);
-            }}
-            className="hover:opacity-80 transition-colors"
-            title="댓글"
-          >
-            댓 {commentCount}
-          </button>
+          {!isMine ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!currentUserId) return toast("로그인이 필요해요.");
+                onQuote?.(pin, "AGREE");
+              }}
+              className="hover:opacity-80 transition-colors"
+              title="이 의견에 동의하는 의견 남기기"
+            >
+              인용 {pin.quoteAgreeCount}
+            </button>
+          ) : (
+            <span className="opacity-50">인용 {pin.quoteAgreeCount}</span>
+          )}
 
           {!isMine ? (
             <button
@@ -161,29 +147,16 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
               onClick={(e) => {
                 e.stopPropagation();
                 if (!currentUserId) return toast("로그인이 필요해요.");
-                onQuote?.(pin);
+                onQuote?.(pin, "REBUT");
               }}
               className="hover:opacity-80 transition-colors"
-              title="이 의견을 인용해서 의견 남기기"
+              title="이 의견에 반박하는 의견 남기기"
             >
-              인용
+              반박 {pin.quoteRebutCount}
             </button>
-          ) : null}
-
-          {!isMine ? (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!currentUserId) return toast("로그인이 필요해요.");
-                setShowChallenge(true);
-              }}
-              className="hover:opacity-80 transition-colors"
-              title="출처 반박"
-            >
-              반박
-            </button>
-          ) : null}
+          ) : (
+            <span className="opacity-50">반박 {pin.quoteRebutCount}</span>
+          )}
 
           {!isMine ? (
             <button
@@ -203,29 +176,6 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
         </div>
       </div>
 
-      {expanded ? (
-        <div className={`mt-3 pt-3 border-t-[0.5px] ${isPro ? "border-border-soft" : "border-[#3E342B]"}`}>
-          <CommentTree
-            pinId={pin.id}
-            isPro={isPro}
-            currentUserId={currentUserId}
-            onCommentAdded={() => setCommentCount((c) => c + 1)}
-          />
-        </div>
-      ) : null}
-
-      {showChallenge ? (
-        <ChallengeModal
-          pinId={pin.id}
-          onClose={() => setShowChallenge(false)}
-          onSuccess={(count) => {
-            setChallengeCount(count);
-            setShowChallenge(false);
-            toast.success("반박이 등록되었어요.");
-          }}
-        />
-      ) : null}
-
       {showReport ? (
         <ReportModal
           targetType="PIN"
@@ -237,7 +187,18 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
   );
 }
 
-function PinQuote({ isPro, authorNickname, body }: { isPro: boolean; authorNickname: string | null; body: string }) {
+function PinQuote({
+  isPro,
+  authorNickname,
+  body,
+  relation,
+}: {
+  isPro: boolean;
+  authorNickname: string | null;
+  body: string;
+  relation: "AGREE" | "REBUT";
+}) {
+  const label = relation === "AGREE" ? "동의" : "반박";
   return (
     <div
       className={[
@@ -253,7 +214,7 @@ function PinQuote({ isPro, authorNickname, body }: { isPro: boolean; authorNickn
           isPro ? "text-ink-3" : "text-[var(--paper-cream-dim)]",
         ].join(" ")}
       >
-        인용 ─
+        {label} ─
       </span>
       @{authorNickname ?? "익명"} · &ldquo;{body}&rdquo;
     </div>

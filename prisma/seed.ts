@@ -200,10 +200,10 @@ async function main() {
   // 0) 활동 데이터 사전 청소 — Pin 삭제 시 FK 위반 방지.
   // 활성화 전 시드 전제. 진짜 사용자 활동 누적 시점부터는 db:seed 호출 금지 (메모리 노트 참조).
   await prisma.endorsement.deleteMany({});
-  await prisma.comment.deleteMany({});
-  await prisma.challenge.deleteMany({});
   await prisma.report.deleteMany({});
   await prisma.blindAnswer.deleteMany({});
+  // Pin self-FK (quotedPinId) 깨기 — 아래 board pin deleteMany 가 안전하게 돌도록
+  await prisma.pin.updateMany({ data: { quotedPinId: null, quotedRelation: null } });
 
   // 1) 시스템 시드 사용자 (proposer 표시용). 카카오 OAuth 로 만들어진 게 아닌 BOT 계정.
   const seedUserMap = new Map<string, string>();
