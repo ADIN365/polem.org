@@ -190,7 +190,6 @@ app/
       route.ts                  # POST 의견 생성
       [id]/
         endorse/route.ts        # POST/DELETE 동조
-        comments/route.ts       # GET 목록, POST 댓글
         challenge/route.ts      # POST 출처 반박
         report/route.ts         # POST 신고
         quote/route.ts          # POST 인용 의견
@@ -227,7 +226,6 @@ components/
     BoardSummary.tsx            # AI 50:50 요약 박스
     Pin.tsx                     # 의견 카드 (pin-pro / pin-con variants)
     PinForm.tsx                 # 의견 작성 모달
-    PinComments.tsx             # 댓글 트리 (깊이 무한)
     QuoteBlock.tsx              # 인용 의견 표시
     ChallengeBadge.tsx          # 출처 반박 배지
   proposal/
@@ -278,7 +276,6 @@ interface PinProps {
   time: string;
   blindAgree?: number;   // 블라인드 동의율 (옵션)
   endorseCount: number;
-  commentCount: number;
   challengeCount?: number;
   quote?: { author: string; body: string }; // 인용 의견 시
 }
@@ -348,7 +345,6 @@ model User {
 
   // relations
   pins             Pin[]
-  comments         Comment[]
   endorsements     Endorsement[]
   challenges       Challenge[]
   reports          Report[]
@@ -435,7 +431,6 @@ model Pin {
   hidden     Boolean  @default(false) // 신고 후 임시조치
   deleted    Boolean  @default(false)
 
-  comments     Comment[]
   endorsements Endorsement[]
   challenges   Challenge[]
   reports      Report[]
@@ -450,24 +445,7 @@ enum PinSide {
   CON  // 반대
 }
 
-model Comment {
-  id        String   @id @default(cuid())
-  pinId     String
-  pin       Pin      @relation(fields: [pinId], references: [id])
-  authorId  String
-  author    User     @relation(fields: [authorId], references: [id])
-  parentId  String?  // 무한 깊이 (자기참조)
-  parent    Comment? @relation("CommentTree", fields: [parentId], references: [id])
-  children  Comment[] @relation("CommentTree")
-  body      String
-  createdAt DateTime @default(now())
-
-  hidden    Boolean  @default(false)
-  deleted   Boolean  @default(false)
-
-  @@index([pinId, createdAt])
-  @@index([parentId])
-}
+// Comment 모델은 v1.0 명세에서 폐기됨 (2026-05-09 이후). DB·API·UI 모두 제거.
 
 model Endorsement {
   id        String   @id @default(cuid())
@@ -696,7 +674,6 @@ enum NotificationType {
 | `/boards/[id]` | `GET /api/boards/[id]` | Board, Pin (relations) |
 | `/boards/[id]` 의견 작성 | `POST /api/pins` | Pin (create) + Board (counter ++) |
 | 의견 동조 | `POST /api/pins/[id]/endorse` | Endorsement |
-| 의견 댓글 | `GET/POST /api/pins/[id]/comments` | Comment |
 | 의견 인용 | `POST /api/pins/[id]/quote` | Pin (with quotedPinId) |
 | 의견 반박 | `POST /api/pins/[id]/challenge` | Challenge |
 | 의견 신고 | `POST /api/pins/[id]/report` | Report |
@@ -800,7 +777,7 @@ MEILISEARCH_API_KEY=
 ### 8.3 NLP 자동 보정 (v2.5, 가치관 프리즘 v2)
 
 추가할 것:
-- `lib/ai/nlp-prism-update.ts` — 사용자 글·댓글 분석해서 PrismScore 보정
+- `lib/ai/nlp-prism-update.ts` — 사용자 의견 분석해서 PrismScore 보정
 - Cron: `/api/cron/prism-update`
 
 영향 X:

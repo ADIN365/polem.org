@@ -3,17 +3,18 @@ import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 
 import BoardClient from "./BoardClient";
-import type { PinData } from "@/components/board/Pin";
 import { BoardBigGauge } from "@/components/ui/Gauge";
 import { authOptions } from "@/lib/auth";
 import { CATEGORY_LABEL } from "@/lib/constants";
 import { formatCount } from "@/lib/format";
+import { ROOT_PAGE_SIZE, fetchRootPins } from "@/lib/pins";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 interface Props {
   params: { id: string };
+  searchParams: { proPage?: string; conPage?: string };
 }
 
 export async function generateMetadata({ params }: Props) {
@@ -38,12 +39,16 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-export default async function BoardPage({ params }: Props) {
+function parsePage(raw: string | undefined): number {
+  const n = Number.parseInt(raw ?? "1", 10);
+  return Number.isFinite(n) && n >= 1 ? n : 1;
+}
+
+export default async function BoardPage({ params, searchParams }: Props) {
   const session = await getServerSession(authOptions);
   const currentUserId = session?.user?.id ?? null;
   const hasNickname = !!session?.user?.nickname;
 
-  // Next.js 14.2 가 한글 dynamic param 을 자동 decode 안 해서 명시적 처리.
   const id = decodeURIComponent(params.id);
   const board = await prisma.board.findUnique({
     where: { id },
@@ -64,12 +69,13 @@ export default async function BoardPage({ params }: Props) {
   });
   if (!board || board.status === "HIDDEN") notFound();
 
-  const [proPins, conPins] = await Promise.all([
-    fetchPins(board.id, "PRO", currentUserId),
-    fetchPins(board.id, "CON", currentUserId),
+  const proPage = parsePage(searchParams.proPage);
+  const conPage = parsePage(searchParams.conPage);
+  const [pro, con] = await Promise.all([
+    fetchRootPins({ boardId: board.id, side: "PRO", page: proPage, currentUserId }),
+    fetchRootPins({ boardId: board.id, side: "CON", page: conPage, currentUserId }),
   ]);
 
-  // 조회수 +1 — 단순. Phase 13 에서 봇·자기조회 필터링.
   prisma.board
     .update({ where: { id: board.id }, data: { viewCount: { increment: 1 } } })
     .catch(() => {});
@@ -117,13 +123,17 @@ export default async function BoardPage({ params }: Props) {
 
         <BoardClient
           boardId={board.id}
-          proPins={proPins}
-          conPins={conPins}
+          proPins={pro.pins}
+          conPins={con.pins}
+          proPage={pro.page}
+          conPage={con.page}
+          proTotal={pro.total}
+          conTotal={con.total}
+          pageSize={ROOT_PAGE_SIZE}
           currentUserId={currentUserId}
           hasNickname={hasNickname}
         />
       </article>
-
     </div>
   );
 }
@@ -148,72 +158,6 @@ function BoardSummary({
       찬성: {pro} / 반대: {con}
     </div>
   );
-}
-
-async function fetchPins(
-  boardId: string,
-  side: "PRO" | "CON",
-  currentUserId: string | null,
-): Promise<PinData[]> {
-  const rows = await prisma.pin.findMany({
-    where: { boardId, side, hidden: false, deleted: false },
-    orderBy: [{ createdAt: "desc" }],
-    take: 30,
-    select: {
-      id: true,
-      side: true,
-      body: true,
-      createdAt: true,
-      authorId: true,
-      blindAgreeCount: true,
-      blindDisagreeCount: true,
-      quoteAgreeCount: true,
-      quoteRebutCount: true,
-      quotedRelation: true,
-      author: { select: { nickname: true, name: true } },
-      quotedPin: {
-        select: {
-          body: true,
-          author: { select: { nickname: true, name: true } },
-        },
-      },
-      _count: {
-        select: { endorsements: true },
-      },
-      endorsements: currentUserId
-        ? { where: { userId: currentUserId }, select: { id: true } }
-        : false,
-    },
-  });
-  return rows.map((r) => {
-    const blindTotal = r.blindAgreeCount + r.blindDisagreeCount;
-    return {
-      id: r.id,
-      side: r.side,
-      body: r.body,
-      createdAt: r.createdAt,
-      authorId: r.authorId,
-      authorNickname: r.author.nickname ?? r.author.name,
-      endorseCount: r._count.endorsements,
-      quoteAgreeCount: r.quoteAgreeCount,
-      quoteRebutCount: r.quoteRebutCount,
-      blindAgreeRatio:
-        blindTotal >= 5
-          ? Math.round((r.blindAgreeCount / blindTotal) * 100)
-          : null,
-      quoted: r.quotedPin && r.quotedRelation
-        ? {
-            body: r.quotedPin.body,
-            authorNickname:
-              r.quotedPin.author.nickname ?? r.quotedPin.author.name,
-            relation: r.quotedRelation,
-          }
-        : null,
-      isEndorsedByMe:
-        Array.isArray((r as { endorsements?: unknown }).endorsements) &&
-        (r as { endorsements: unknown[] }).endorsements.length > 0,
-    };
-  });
 }
 
 function formatDate(d: Date) {

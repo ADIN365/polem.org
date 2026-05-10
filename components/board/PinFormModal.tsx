@@ -20,12 +20,14 @@ export default function PinFormModal({
   quoting,
   quotedRelation,
   onClose,
+  onSuccess,
 }: {
   boardId: string;
   side: PinSide;
   quoting: QuoteSource | null;
   quotedRelation: "AGREE" | "REBUT" | null;
   onClose: () => void;
+  onSuccess?: (newPinId: string) => void;
 }) {
   const router = useRouter();
   const [body, setBody] = useState("");
@@ -54,7 +56,11 @@ export default function PinFormModal({
       if (!res.ok) throw new Error(data.error ?? "의견 등록 실패");
       toast.success("의견이 등록됐어요.");
       onClose();
-      router.refresh();
+      if (onSuccess && typeof data.id === "string") {
+        onSuccess(data.id);
+      } else {
+        router.refresh();
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "의견 등록 실패");
     } finally {

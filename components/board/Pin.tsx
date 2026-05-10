@@ -26,9 +26,12 @@ interface Props {
   pin: PinData;
   currentUserId: string | null;
   onQuote?: (pin: PinData, relation: "AGREE" | "REBUT") => void;
+  onCardClick?: (pin: PinData) => void;
+  selected?: boolean;
+  expanded?: boolean;
 }
 
-export function Pin({ pin, currentUserId, onQuote }: Props) {
+export function Pin({ pin, currentUserId, onQuote, onCardClick, selected = false, expanded = false }: Props) {
   const isPro = pin.side === "PRO";
   const isMine = currentUserId === pin.authorId;
 
@@ -44,7 +47,7 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
       return;
     }
     if (isMine) {
-      toast("자기 의견에는 옳소를 보낼 수 없어요.");
+      toast("자기 의견에는 동조할 수 없어요.");
       return;
     }
     if (busy) return;
@@ -57,12 +60,12 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
         method: next ? "POST" : "DELETE",
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "옳소 처리 실패");
+      if (!res.ok) throw new Error(data.error ?? "동조 처리 실패");
       if (typeof data.endorseCount === "number") setEndorseCount(data.endorseCount);
     } catch (err) {
       setEndorsed(!next);
       setEndorseCount((c) => c + (next ? -1 : 1));
-      toast.error(err instanceof Error ? err.message : "옳소 처리 실패");
+      toast.error(err instanceof Error ? err.message : "동조 처리 실패");
     } finally {
       setBusy(false);
     }
@@ -71,9 +74,72 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
   const baseClasses = isPro
     ? "bg-card text-ink border-[0.5px] border-ink"
     : "bg-dark text-[var(--paper-cream)]";
+  const selectedRing = selected
+    ? isPro
+      ? "ring-2 ring-ink ring-offset-1 ring-offset-bg"
+      : "ring-2 ring-paper-cream ring-offset-1 ring-offset-bg"
+    : "";
+  const clickable = !!onCardClick;
 
   return (
-    <article className={`px-4 py-[14px] mb-2 last:mb-0 rounded-md transition-colors ${baseClasses}`}>
+    <article
+      className={`relative px-4 py-[14px] mb-2 last:mb-0 rounded-md transition-colors ${baseClasses} ${selectedRing} ${clickable ? "cursor-pointer hover:opacity-95" : ""}`}
+      onClick={clickable ? () => onCardClick!(pin) : undefined}
+      role={clickable ? "button" : undefined}
+      tabIndex={clickable ? 0 : undefined}
+      onKeyDown={
+        clickable
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onCardClick!(pin);
+              }
+            }
+          : undefined
+      }
+    >
+      <button
+        type="button"
+        onClick={onEndorse}
+        disabled={busy || isMine}
+        className={[
+          "absolute top-3 right-3 flex flex-col items-center gap-0.5 transition-opacity",
+          isMine ? "opacity-40 cursor-not-allowed" : "hover:opacity-80",
+        ].join(" ")}
+        title={isMine ? "자기 의견에는 동조할 수 없어요" : "이 의견에 동조"}
+        aria-pressed={endorsed}
+        aria-label={`동조 ${endorseCount}`}
+      >
+        <span
+          className={[
+            "w-5 h-5 rounded-full flex items-center justify-center transition-colors",
+            isPro
+              ? endorsed
+                ? "bg-ink text-card"
+                : "bg-paper-cream text-ink"
+              : endorsed
+                ? "bg-paper-cream text-dark"
+                : "bg-deep text-paper-cream",
+          ].join(" ")}
+        >
+          <ThumbsUpIcon />
+        </span>
+        <span
+          className={[
+            "text-[9px] leading-none font-medium tabular-nums",
+            endorsed
+              ? isPro
+                ? "text-ink"
+                : "text-paper-cream"
+              : isPro
+                ? "text-ink-3"
+                : "text-[var(--paper-cream-dim)]",
+          ].join(" ")}
+        >
+          {endorseCount}
+        </span>
+      </button>
+
       {pin.quoted ? (
         <PinQuote
           isPro={isPro}
@@ -83,7 +149,7 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
         />
       ) : null}
 
-      <div className="text-pin leading-relaxed mb-2 select-text">{pin.body}</div>
+      <div className={`text-pin leading-relaxed mb-2 select-text pr-12 ${expanded || selected ? "" : "line-clamp-5"}`}>{pin.body}</div>
 
       <div
         className={[
@@ -123,21 +189,6 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
               블라인드 {pin.blindAgreeRatio}%
             </span>
           ) : null}
-
-          <button
-            type="button"
-            onClick={onEndorse}
-            disabled={busy || isMine}
-            className={[
-              "transition-colors",
-              endorsed ? (isPro ? "text-ink font-semibold" : "text-paper-cream font-semibold") : "",
-              isMine ? "opacity-40 cursor-not-allowed" : "hover:opacity-80",
-            ].join(" ")}
-            title={isMine ? "자기 의견에는 옳소를 보낼 수 없어요" : "옳소 — 이 의견에 동의 표시"}
-            aria-pressed={endorsed}
-          >
-            {endorsed ? "↑●" : "↑"} 옳소 {endorseCount}
-          </button>
 
           {!isMine ? (
             <button
@@ -184,6 +235,21 @@ export function Pin({ pin, currentUserId, onQuote }: Props) {
         />
       ) : null}
     </article>
+  );
+}
+
+function ThumbsUpIcon() {
+  // Material Symbols thumb_up (filled) — YouTube 계열
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z" />
+    </svg>
   );
 }
 

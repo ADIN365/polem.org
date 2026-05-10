@@ -26,7 +26,7 @@ export async function POST(_req: Request, { params }: Ctx) {
     return NextResponse.json({ error: "의견을 찾을 수 없어요." }, { status: 404 });
   }
   if (pin.authorId === session.user.id) {
-    return NextResponse.json({ error: "자기 의견에는 옳소를 보낼 수 없어요." }, { status: 400 });
+    return NextResponse.json({ error: "자기 의견에는 동조할 수 없어요." }, { status: 400 });
   }
 
   try {

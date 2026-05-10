@@ -192,6 +192,8 @@ model Pin {
   blindAnswers BlindAnswer[]
 
   @@index([boardId, side, createdAt])
+  @@index([boardId, side, quotedPinId, createdAt])
+  @@index([quotedPinId])
   @@index([authorId])
 }
 
