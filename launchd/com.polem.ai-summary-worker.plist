@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.polem.ai-summary-worker</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>-c</string>
+        <string>cd /Users/ddgeet/polem &amp;&amp; /opt/homebrew/bin/npx tsx scripts/ai-summary-worker.ts</string>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <key>CLAUDE_BIN</key>
+        <string>/opt/homebrew/bin/claude</string>
+    </dict>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/ddgeet/polem</string>
+
+    <key>StartInterval</key>
+    <integer>300</integer>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/Users/ddgeet/polem/launchd/ai-summary-worker.out.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/ddgeet/polem/launchd/ai-summary-worker.err.log</string>
+</dict>
+</plist>

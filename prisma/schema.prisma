@@ -77,6 +77,9 @@ model User {
   suspendedUntil DateTime?
   banned         Boolean   @default(false)
 
+  // AI 요약 인용 카운트 (전체 게시판 누적, 캐시)
+  aiCitationCount Int @default(0)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -96,6 +99,7 @@ model User {
   reviewedProposals Proposal[]     @relation("Reviewer")
   resolvedReports   Report[]       @relation("Resolver")
   proposedBoards    Board[]        @relation("BoardProposer")
+  aiSummaryRequests AISummaryRequest[]
 
   @@index([nickname])
 }
@@ -130,8 +134,10 @@ model Board {
   aiSummaryCon String?
   aiSummaryAt  DateTime?
 
-  pins     Pin[]
-  proposal Proposal?
+  pins                Pin[]
+  proposal            Proposal?
+  aiSummaryCitations  AISummaryCitation[]
+  aiSummaryRequests   AISummaryRequest[]
 
   @@index([category, updatedAt])
   @@index([status])
@@ -187,9 +193,10 @@ model Pin {
   hidden  Boolean @default(false) // 신고 후 임시조치
   deleted Boolean @default(false)
 
-  endorsements Endorsement[]
-  reports      Report[]
-  blindAnswers BlindAnswer[]
+  endorsements       Endorsement[]
+  reports            Report[]
+  blindAnswers       BlindAnswer[]
+  aiSummaryCitations AISummaryCitation[]
 
   @@index([boardId, side, createdAt])
   @@index([boardId, side, quotedPinId, createdAt])
@@ -390,6 +397,54 @@ enum NotificationType {
   PIN_CHALLENGED
   WARNING
   SUSPENSION
+}
+
+// AI 50:50 요약이 인용한 핀. 새 요약 생성 시 게시판 기준 DELETE → INSERT.
+model AISummaryCitation {
+  id String @id @default(cuid())
+
+  boardId String
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  side PinSide // PRO 요약 인용인지 CON 요약 인용인지
+
+  pinId String
+  pin   Pin    @relation(fields: [pinId], references: [id], onDelete: Cascade)
+
+  order Int // 표시 순서 (0..N-1)
+
+  createdAt DateTime @default(now())
+
+  @@unique([boardId, side, pinId])
+  @@index([pinId])
+  @@index([boardId, side, order])
+}
+
+// 관리자 수동 갱신 요청. 로컬 워커가 polling.
+model AISummaryRequest {
+  id String @id @default(cuid())
+
+  boardId String
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  requestedById String
+  requestedBy   User   @relation(fields: [requestedById], references: [id])
+
+  status AISummaryRequestStatus @default(PENDING)
+  error  String?
+
+  createdAt   DateTime  @default(now())
+  processedAt DateTime?
+
+  @@index([status, createdAt])
+  @@index([boardId, status])
+}
+
+enum AISummaryRequestStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
 }
 
 // =========================================================

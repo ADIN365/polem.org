@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 
 import BoardClient from "./BoardClient";
+import SummaryCards from "@/components/board/SummaryCards";
 import { BoardBigGauge } from "@/components/ui/Gauge";
+import { fetchActiveSummaryRequest, fetchSummaryCitations } from "@/lib/ai-summary";
 import { authOptions } from "@/lib/auth";
 import { CATEGORY_LABEL } from "@/lib/constants";
 import { formatCount } from "@/lib/format";
@@ -71,9 +73,12 @@ export default async function BoardPage({ params, searchParams }: Props) {
 
   const proPage = parsePage(searchParams.proPage);
   const conPage = parsePage(searchParams.conPage);
-  const [pro, con] = await Promise.all([
+  const isAdmin = session?.user?.role === "ADMIN";
+  const [pro, con, citations, activeRequest] = await Promise.all([
     fetchRootPins({ boardId: board.id, side: "PRO", page: proPage, currentUserId }),
     fetchRootPins({ boardId: board.id, side: "CON", page: conPage, currentUserId }),
+    fetchSummaryCitations(board.id),
+    fetchActiveSummaryRequest(board.id),
   ]);
 
   prisma.board
@@ -115,10 +120,15 @@ export default async function BoardPage({ params, searchParams }: Props) {
           <BoardBigGauge proCount={board.proCount} conCount={board.conCount} />
         </header>
 
-        <BoardSummary
+        <SummaryCards
+          boardId={board.id}
           pro={board.aiSummaryPro}
           con={board.aiSummaryCon}
           at={board.aiSummaryAt}
+          citationsPro={citations.pro}
+          citationsCon={citations.con}
+          isAdmin={isAdmin}
+          hasActiveRequest={!!activeRequest}
         />
 
         <BoardClient
@@ -138,33 +148,3 @@ export default async function BoardPage({ params, searchParams }: Props) {
   );
 }
 
-function BoardSummary({
-  pro,
-  con,
-  at,
-}: {
-  pro: string | null;
-  con: string | null;
-  at: Date | null;
-}) {
-  if (!pro || !con) return null;
-  return (
-    <div className="px-[22px] py-[14px] border-b-[0.5px] border-border-soft text-meta text-ink-2 leading-loose bg-soft">
-      {at ? (
-        <span className="text-eyebrow-tight tracking-wider uppercase mr-[10px] text-ink-3">
-          요약 {formatDate(at)}
-        </span>
-      ) : null}
-      찬성: {pro} / 반대: {con}
-    </div>
-  );
-}
-
-function formatDate(d: Date) {
-  return new Intl.DateTimeFormat("ko", {
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(d);
-}

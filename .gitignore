@@ -41,3 +41,4 @@ refine.log
 blind.log
 summary.log
 
+launchd/*.log

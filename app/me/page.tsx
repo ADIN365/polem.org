@@ -21,7 +21,7 @@ export default async function MePage() {
   const session = await requireOnboarded("/me");
   const { user } = session;
 
-  const [proposals, notifications, prismScore, mirrorRows] = await Promise.all([
+  const [proposals, notifications, prismScore, mirrorRows, citationStat, recentCitations] = await Promise.all([
     prisma.proposal.findMany({
       where: { proposerId: user.id },
       orderBy: { createdAt: "desc" },
@@ -62,6 +62,21 @@ export default async function MePage() {
       },
     }),
     getMirrorRows(user.id),
+    prisma.user.findUnique({
+      where: { id: user.id },
+      select: { aiCitationCount: true },
+    }),
+    prisma.aISummaryCitation.findMany({
+      where: { pin: { authorId: user.id } },
+      orderBy: { createdAt: "desc" },
+      take: 8,
+      select: {
+        side: true,
+        boardId: true,
+        board: { select: { title: true } },
+        pin: { select: { body: true } },
+      },
+    }),
   ]);
 
   return (
@@ -120,6 +135,48 @@ export default async function MePage() {
                     →
                   </Link>
                 ) : null}
+              </li>
+            ))}
+          </ul>
+        )}
+      </Section>
+
+      <Section
+        title="AI 요약 인용"
+        subtitle={
+          citationStat?.aiCitationCount
+            ? `내 의견이 AI 50:50 요약에 ${citationStat.aiCitationCount}회 인용됐어요`
+            : undefined
+        }
+      >
+        {!citationStat?.aiCitationCount ? (
+          <Empty>아직 AI 요약에 인용된 적이 없어요.</Empty>
+        ) : (
+          <ul>
+            {recentCitations.map((c, i) => (
+              <li
+                key={i}
+                className="px-5 py-3 border-b-[0.5px] border-border-soft last:border-b-0"
+              >
+                <div className="flex justify-between items-start gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-eyebrow-tight tracking-wider uppercase text-ink-3 mb-1">
+                      {c.side === "PRO" ? "찬성 요약" : "반대 요약"}
+                    </div>
+                    <div className="text-meta text-ink truncate">
+                      {c.board.title}
+                    </div>
+                    <div className="text-tiny text-ink-3 mt-1 line-clamp-2">
+                      “{c.pin.body}”
+                    </div>
+                  </div>
+                  <Link
+                    href={`/boards/${c.boardId}`}
+                    className="text-tiny text-ink underline shrink-0"
+                  >
+                    게시판 →
+                  </Link>
+                </div>
               </li>
             ))}
           </ul>
