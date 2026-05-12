@@ -1,7 +1,13 @@
 import { requireOnboarded } from "@/lib/session";
 import ProposalForm from "./ProposalForm";
 
-export const metadata = { title: "토론 주제 만들기" };
+export const metadata = {
+  title: "토론 주제 만들기",
+  description: "끝장토론에 새로운 토론 주제를 제안하세요. AI가 형식을 정제하고 관리자 승인 후 게시됩니다.",
+  alternates: { canonical: "/proposal" },
+  openGraph: { title: "토론 주제 만들기", type: "website" },
+  twitter: { card: "summary" as const, title: "토론 주제 만들기" },
+};
 
 export default async function ProposalPage() {
   await requireOnboarded("/proposal");

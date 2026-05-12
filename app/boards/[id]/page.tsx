@@ -7,7 +7,7 @@ import SummaryCards from "@/components/board/SummaryCards";
 import { BoardBigGauge } from "@/components/ui/Gauge";
 import { fetchActiveSummaryRequest, fetchSummaryCitations } from "@/lib/ai-summary";
 import { authOptions } from "@/lib/auth";
-import { CATEGORY_LABEL } from "@/lib/constants";
+import { CATEGORY_LABEL, SITE_NAME, SITE_URL } from "@/lib/constants";
 import { formatCount } from "@/lib/format";
 import { ROOT_PAGE_SIZE, fetchRootPins } from "@/lib/pins";
 import { prisma } from "@/lib/prisma";
@@ -23,20 +23,39 @@ export async function generateMetadata({ params }: Props) {
   const id = decodeURIComponent(params.id);
   const board = await prisma.board.findUnique({
     where: { id },
-    select: { title: true, body: true, aiSummaryPro: true, aiSummaryCon: true },
+    select: {
+      title: true,
+      body: true,
+      aiSummaryPro: true,
+      aiSummaryCon: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
   if (!board) return { title: "게시판" };
   const description =
     board.aiSummaryPro && board.aiSummaryCon
       ? `찬: ${board.aiSummaryPro} / 반: ${board.aiSummaryCon}`
       : board.body ?? "찬·반 영구 보관 토론 주제";
+  const path = `/boards/${encodeURIComponent(id)}`;
   return {
     title: board.title,
     description,
+    alternates: { canonical: path },
     openGraph: {
       title: board.title,
       description,
+      url: `${SITE_URL}${path}`,
+      siteName: SITE_NAME,
+      locale: "ko_KR",
       type: "article",
+      publishedTime: board.createdAt.toISOString(),
+      modifiedTime: board.updatedAt.toISOString(),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: board.title,
+      description,
     },
   };
 }
@@ -85,8 +104,40 @@ export default async function BoardPage({ params, searchParams }: Props) {
     .update({ where: { id: board.id }, data: { viewCount: { increment: 1 } } })
     .catch(() => {});
 
+  const boardUrl = `${SITE_URL}/boards/${encodeURIComponent(board.id)}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "DiscussionForumPosting",
+    headline: board.title,
+    url: boardUrl,
+    inLanguage: "ko-KR",
+    isAccessibleForFree: true,
+    interactionStatistic: [
+      {
+        "@type": "InteractionCounter",
+        interactionType: "https://schema.org/CommentAction",
+        userInteractionCount: board.proCount + board.conCount,
+      },
+      {
+        "@type": "InteractionCounter",
+        interactionType: "https://schema.org/ViewAction",
+        userInteractionCount: board.viewCount,
+      },
+    ],
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+  };
+
   return (
     <div className="max-w-site mx-auto px-6 pt-8 pb-20">
+      <script
+        type="application/ld+json"
+        // JSON-LD payload is server-rendered; safe object literal stringify
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <nav className="flex items-center gap-2 mb-4 text-meta text-ink-3">
         <Link href="/" className="hover:text-ink transition-colors">
           토론 주제
