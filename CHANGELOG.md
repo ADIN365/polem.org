@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-05-13 — POL-43 공개 boards 검색 API
+
+- `GET /api/boards/search?q=&limit=` — 인증 불필요 read-only 공개 엔드포인트.
+  POL-39 의 `docs/polem-backlink/matcher.ts` 가 호출하는 데이터소스.
+- 응답 `{ boards: [{ id, title, category, updatedAt, proCount, conCount }] }`.
+  `status=ACTIVE` 만, `title`/`body` ILIKE 매칭, `updatedAt desc`, limit 1~50 (기본 20).
+- 빈 `q` → `{ boards: [] }` (전체 노출 방지).
+- `Cache-Control: public, max-age=300, s-maxage=600` (Vercel CDN 캐시).
+- `scripts/smoke-boards-search.sh` — 매칭 / 빈쿼리 / limit clamp / 캐시 헤더 검증.
+
 ## 2026-05-09 — Phase 8~13 (Sprint 3, Phase 12 보류)
 
 ### Phase 8 모더레이션 + 신고

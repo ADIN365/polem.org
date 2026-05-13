@@ -15,6 +15,7 @@ export const metadata: Metadata = {
     template: `%s · ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
   openGraph: {
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
@@ -22,6 +23,11 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     locale: "ko_KR",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
   },
   // 정치 콘텐츠 — 색인은 허용하되 광고 X (헌법 2.5)
   robots: { index: true, follow: true },
