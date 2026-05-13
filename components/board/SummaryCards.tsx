@@ -31,7 +31,7 @@ export default function SummaryCards({
     <section className="px-[18px] py-[14px] border-b-[0.5px] border-border-soft bg-soft">
       <div className="flex justify-between items-center mb-2 px-1">
         <div className="text-eyebrow-tight tracking-wider uppercase text-ink-3">
-          {at ? `AI 요약 ${formatDate(at)}` : "AI 요약"}
+          {at ? `AI 내용정리 ${formatDate(at)}` : "AI 내용정리"}
         </div>
         {isAdmin ? (
           <SummaryRefreshButton boardId={boardId} hasActiveRequest={hasActiveRequest} />
@@ -41,13 +41,13 @@ export default function SummaryCards({
       {hasSummary ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <SummaryCard
-            label="찬성 요약"
+            label="찬성 내용정리"
             body={pro}
             isPro
             citations={citationsPro}
           />
           <SummaryCard
-            label="반대 요약"
+            label="반대 내용정리"
             body={con}
             isPro={false}
             citations={citationsCon}
@@ -55,7 +55,7 @@ export default function SummaryCards({
         </div>
       ) : (
         <div className="text-tiny text-ink-3 py-3 text-center">
-          {hasActiveRequest ? "AI 요약 생성 중…" : "아직 AI 요약이 없어요."}
+          {hasActiveRequest ? "AI 내용정리 생성 중…" : "아직 AI 내용정리가 없어요."}
         </div>
       )}
     </section>
