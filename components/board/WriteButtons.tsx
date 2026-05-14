@@ -46,19 +46,19 @@ export default function WriteButtons({
         <button
           type="button"
           onClick={() => open("PRO")}
-          className="flex items-center justify-center gap-2 py-3 rounded-md bg-card text-ink border-[0.5px] border-ink text-button font-semibold hover:bg-paper-cream transition-colors"
+          className="flex items-center justify-center gap-2 py-3 rounded-md bg-ink text-card text-button font-semibold hover:opacity-90 transition-opacity"
           aria-label="찬성 의견 남기기"
         >
-          <span aria-hidden="true" className="inline-block w-[9px] h-[9px] rounded-full bg-paper-cream border-[1.5px] border-ink" />
+          <span aria-hidden="true" className="inline-block w-[9px] h-[9px] rounded-full bg-card" />
           찬성 의견 남기기
         </button>
         <button
           type="button"
           onClick={() => open("CON")}
-          className="flex items-center justify-center gap-2 py-3 rounded-md bg-paper-cream text-ink border-[0.5px] border-ink text-button font-semibold hover:bg-card transition-colors"
+          className="flex items-center justify-center gap-2 py-3 rounded-md bg-ink text-paper-cream text-button font-semibold hover:opacity-90 transition-opacity"
           aria-label="반대 의견 남기기"
         >
-          <span aria-hidden="true" className="inline-block w-[9px] h-[9px] rounded-full bg-ink" />
+          <span aria-hidden="true" className="inline-block w-[9px] h-[9px] rounded-full bg-paper-cream" />
           반대 의견 남기기
         </button>
       </div>
