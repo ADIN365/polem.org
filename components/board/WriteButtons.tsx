@@ -55,10 +55,10 @@ export default function WriteButtons({
         <button
           type="button"
           onClick={() => open("CON")}
-          className="flex items-center justify-center gap-2 py-3 rounded-md bg-ink text-paper-cream text-button font-semibold hover:opacity-90 transition-opacity"
+          className="flex items-center justify-center gap-2 py-3 rounded-md bg-ink text-[var(--accent-warm-light)] text-button font-semibold hover:opacity-90 transition-opacity"
           aria-label="반대 의견 남기기"
         >
-          <span aria-hidden="true" className="inline-block w-[9px] h-[9px] rounded-full bg-paper-cream" />
+          <span aria-hidden="true" className="inline-block w-[9px] h-[9px] rounded-full bg-[var(--accent-warm-light)]" />
           반대 의견 남기기
         </button>
       </div>
