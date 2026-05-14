@@ -25,6 +25,10 @@ export async function POST(req: Request) {
 
   const { targetType, targetId, reason, body } = parsed.data;
 
+  if (reason === ReportReason.MISCLASSIFIED_SIDE && targetType !== ReportTargetType.PIN) {
+    return NextResponse.json({ error: "진영 분류 오류는 의견에만 신고 가능해요." }, { status: 400 });
+  }
+
   // 대상 존재 확인 — Pin / Comment / User
   let pinId: string | null = null;
   if (targetType === "PIN") {

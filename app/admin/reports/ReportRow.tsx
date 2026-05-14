@@ -37,6 +37,7 @@ export default function ReportRow({
   const action = async (
     payload:
       | { action: "resolve"; sanction: "WARN" | "SUSPEND_7D" | "BAN"; hideContent: boolean }
+      | { action: "flip_side" }
       | { action: "dismiss" },
   ) => {
     if (busy) return;
@@ -96,6 +97,16 @@ export default function ReportRow({
       ) : null}
 
       <div className="flex flex-wrap gap-2 justify-end">
+        {targetType === "PIN" && reason === "MISCLASSIFIED_SIDE" ? (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => action({ action: "flip_side" })}
+            className="px-3 py-[7px] text-button bg-ink text-card rounded-md hover:opacity-90 transition-opacity disabled:opacity-50"
+          >
+            진영 뒤집기
+          </button>
+        ) : null}
         <button
           type="button"
           disabled={busy}

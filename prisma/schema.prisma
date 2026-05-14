@@ -264,6 +264,7 @@ enum ReportReason {
   HATE_SPEECH // 혐오
   AD_SPAM // 광고·스팸
   FALSE_INFO // 허위사실
+  MISCLASSIFIED_SIDE // 진영 분류 오류 (찬성에 반대 의견·반대에 찬성 의견)
   OTHER
 }
 
