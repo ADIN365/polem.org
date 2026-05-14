@@ -28,7 +28,7 @@ export default function SummaryCards({
   const hasSummary = !!(pro || con);
 
   return (
-    <section className="px-[18px] py-[14px] border-b-[0.5px] border-border-soft bg-dark">
+    <section className="px-[18px] py-[14px] border-b-[0.5px] border-border-soft bg-deep">
       <div className="flex justify-between items-center mb-2 px-1">
         <div className="text-eyebrow-tight tracking-wider uppercase text-[var(--paper-cream-dim)]">
           {at ? `AI 의견정리 ${formatDate(at)}` : "AI 의견정리"}
