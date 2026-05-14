@@ -75,14 +75,14 @@ function SummaryCard({
 }) {
   const cardClasses = isPro
     ? "bg-card text-ink border-[0.5px] border-ink"
-    : "bg-dark text-paper-cream";
+    : "bg-paper-cream text-ink border-[0.5px] border-ink";
   return (
     <article className={`px-4 py-3 rounded-md ${cardClasses}`}>
       <div className="flex items-center gap-2 mb-2">
         <span
           className={[
             "inline-block w-[8px] h-[8px] rounded-full",
-            isPro ? "bg-paper-cream border-[1.5px] border-ink" : "bg-paper-cream",
+            isPro ? "bg-paper-cream border-[1.5px] border-ink" : "bg-ink",
           ].join(" ")}
           aria-hidden="true"
         />
@@ -91,10 +91,7 @@ function SummaryCard({
       <p className="text-meta leading-relaxed mb-3 select-text">{body ?? "—"}</p>
       {citations.length > 0 ? (
         <div
-          className={[
-            "text-tiny pt-2 border-t",
-            isPro ? "border-border-soft text-ink-3" : "border-paper-cream/20 text-[var(--paper-cream-dim)]",
-          ].join(" ")}
+          className="text-tiny pt-2 border-t border-border-soft text-ink-3"
         >
           <span className="mr-2">인용</span>
           {citations.map((c, i) => (

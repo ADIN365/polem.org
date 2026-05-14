@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-05-14 — 반대 카드 배경 라이트 톤 통일
+
+- 어두운 `bg-dark` 배경이 반대 의견을 부정적으로 보이게 하고 가독성을 떨어뜨려, 찬·반 카드 모두 종이톤으로 통일.
+- 찬성: `bg-card`(#fff) / 반대: `bg-paper-cream`(#F5F1E8) — 둘 다 `text-ink` + 검정 보더.
+- 진영 구분은 도트(찬성=베이지+검정보더, 반대=검정 채움)·보더·라벨로 유지. 헌법 2.4(흑백, 진영색 회피) 준수.
+- 영향 파일: `components/board/Pin.tsx`, `components/board/SummaryCards.tsx`, `app/boards/[id]/BoardClient.tsx` (Connector).
+- OG 이미지 비율 막대는 데이터 시각화이므로 그대로 둠.
+
 ## 2026-05-09 — Phase 8~13 (Sprint 3, Phase 12 보류)
 
 ### Phase 8 모더레이션 + 신고

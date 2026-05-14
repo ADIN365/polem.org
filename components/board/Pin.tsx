@@ -73,11 +73,9 @@ export function Pin({ pin, currentUserId, onQuote, onCardClick, selected = false
 
   const baseClasses = isPro
     ? "bg-card text-ink border-[0.5px] border-ink"
-    : "bg-dark text-[var(--paper-cream)]";
+    : "bg-paper-cream text-ink border-[0.5px] border-ink";
   const selectedRing = selected
-    ? isPro
-      ? "ring-2 ring-ink ring-offset-1 ring-offset-bg"
-      : "ring-2 ring-paper-cream ring-offset-1 ring-offset-bg"
+    ? "ring-2 ring-ink ring-offset-1 ring-offset-bg"
     : "";
   const clickable = !!onCardClick;
 
@@ -113,13 +111,11 @@ export function Pin({ pin, currentUserId, onQuote, onCardClick, selected = false
         <span
           className={[
             "w-5 h-5 rounded-full flex items-center justify-center transition-colors",
-            isPro
-              ? endorsed
-                ? "bg-ink text-card"
-                : "bg-paper-cream text-ink"
-              : endorsed
-                ? "bg-paper-cream text-dark"
-                : "bg-deep text-paper-cream",
+            endorsed
+              ? "bg-ink text-card"
+              : isPro
+                ? "bg-paper-cream text-ink"
+                : "bg-card text-ink",
           ].join(" ")}
         >
           <ThumbsUpIcon />
@@ -127,13 +123,7 @@ export function Pin({ pin, currentUserId, onQuote, onCardClick, selected = false
         <span
           className={[
             "text-[9px] leading-none font-medium tabular-nums",
-            endorsed
-              ? isPro
-                ? "text-ink"
-                : "text-paper-cream"
-              : isPro
-                ? "text-ink-3"
-                : "text-[var(--paper-cream-dim)]",
+            endorsed ? "text-ink" : "text-ink-3",
           ].join(" ")}
         >
           {endorseCount}
@@ -142,7 +132,6 @@ export function Pin({ pin, currentUserId, onQuote, onCardClick, selected = false
 
       {pin.quoted ? (
         <PinQuote
-          isPro={isPro}
           authorNickname={pin.quoted.authorNickname}
           body={pin.quoted.body}
           relation={pin.quoted.relation}
@@ -152,10 +141,7 @@ export function Pin({ pin, currentUserId, onQuote, onCardClick, selected = false
       <div className={`text-pin leading-relaxed mb-2 select-text pr-12 ${expanded || selected ? "" : "line-clamp-5"}`}>{pin.body}</div>
 
       <div
-        className={[
-          "flex justify-between items-center text-eyebrow-tight gap-2 flex-wrap",
-          isPro ? "text-ink-3" : "text-[var(--paper-cream-dim)]",
-        ].join(" ")}
+        className="flex justify-between items-center text-eyebrow-tight gap-2 flex-wrap text-ink-3"
       >
         <div className="flex gap-[9px] items-center flex-wrap">
           <span>@{pin.authorNickname ?? "익명"}</span>
@@ -180,10 +166,7 @@ export function Pin({ pin, currentUserId, onQuote, onCardClick, selected = false
         <div className="flex gap-[9px] items-center">
           {pin.blindAgreeRatio != null ? (
             <span
-              className={[
-                "font-medium",
-                isPro ? "text-[var(--accent-warm)]" : "text-[var(--accent-warm-light)]",
-              ].join(" ")}
+              className="font-medium text-[var(--accent-warm)]"
               title="블라인드 답변 동의율"
             >
               블라인드 {pin.blindAgreeRatio}%
@@ -277,12 +260,10 @@ function SirenIcon() {
 }
 
 function PinQuote({
-  isPro,
   authorNickname,
   body,
   relation,
 }: {
-  isPro: boolean;
   authorNickname: string | null;
   body: string;
   relation: "AGREE" | "REBUT";
@@ -290,18 +271,10 @@ function PinQuote({
   const label = relation === "AGREE" ? "동의" : "반박";
   return (
     <div
-      className={[
-        "px-3 py-2 mb-2 text-tiny leading-relaxed border-l-2",
-        isPro
-          ? "bg-soft text-ink-2 border-[var(--accent-warm)]"
-          : "bg-[#3E342B] text-[var(--ink-soft)] border-[var(--accent-warm-light)]",
-      ].join(" ")}
+      className="px-3 py-2 mb-2 text-tiny leading-relaxed border-l-2 bg-soft text-ink-2 border-[var(--accent-warm)]"
     >
       <span
-        className={[
-          "text-eyebrow-tight tracking-wider uppercase mr-1",
-          isPro ? "text-ink-3" : "text-[var(--paper-cream-dim)]",
-        ].join(" ")}
+        className="text-eyebrow-tight tracking-wider uppercase mr-1 text-ink-3"
       >
         {label} ─
       </span>

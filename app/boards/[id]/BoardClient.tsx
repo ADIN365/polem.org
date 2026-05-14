@@ -302,7 +302,7 @@ function Column({
       {renderedCards.length > 0 ? (
         renderedCards.map((p, i) => (
           <div key={p.id} className="mb-2 last:mb-0">
-            {treeMode && i > 0 ? <Connector isPro={isPro} /> : null}
+            {treeMode && i > 0 ? <Connector /> : null}
             <Pin
               pin={p}
               currentUserId={currentUserId}
@@ -339,11 +339,11 @@ function Column({
   );
 }
 
-function Connector({ isPro }: { isPro: boolean }) {
+function Connector() {
   return (
     <div
       aria-hidden="true"
-      className={`mx-auto w-px h-3 -mt-2 mb-0 ${isPro ? "bg-ink/40" : "bg-paper-cream/50"}`}
+      className="mx-auto w-px h-3 -mt-2 mb-0 bg-ink/40"
     />
   );
 }
