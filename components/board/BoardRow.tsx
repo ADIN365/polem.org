@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { CATEGORY_LABEL } from "@/lib/constants";
-import { formatCount, formatRelativeKo } from "@/lib/format";
+import { formatCount } from "@/lib/format";
 import { Gauge } from "@/components/ui/Gauge";
 
 export interface BoardRowData {
@@ -27,7 +27,7 @@ export function BoardRow({ board }: { board: BoardRowData }) {
   return (
     <Link
       href={`/boards/${board.id}`}
-      className="grid grid-cols-[1fr_64px] md:grid-cols-[60px_1fr_180px_110px_70px] gap-2 md:gap-3 px-4 md:px-6 py-3 md:py-[14px] border-b-[0.5px] border-border-soft items-center hover:bg-soft transition-colors"
+      className="grid grid-cols-[1fr] md:grid-cols-[60px_1fr_180px_110px] gap-2 md:gap-3 px-4 md:px-6 py-3 md:py-[14px] border-b-[0.5px] border-border-soft items-center hover:bg-soft transition-colors"
       style={{ opacity: dimmed ? 0.7 : 1 }}
     >
       <div className="hidden md:block font-mono text-tiny text-ink-3">
@@ -59,8 +59,6 @@ export function BoardRow({ board }: { board: BoardRowData }) {
         <div className="text-meta text-ink-2">{formatCount(board.participantCount)}</div>
         <div className="text-eyebrow-tight text-ink-3">관람 {formatCount(board.viewCount)}</div>
       </div>
-
-      <div className="text-right text-tiny text-ink-3">{formatRelativeKo(board.updatedAt)}</div>
     </Link>
   );
 }
