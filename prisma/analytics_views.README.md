@@ -103,5 +103,4 @@ The salt is **not** committed to git, so this file does not leak it. The initial
 - §2.1 AI 사서: views are descriptive only, no judgement. ✅
 - §2.2 점수 합산 거부: no "score" or "ranking" view; `ai_citation_count` is exposed as-is per the 2026-05-12 exception. ✅
 - §2.3 Private-by-Design: 4축 prism only when `prismPublic = true`; blind answers aggregate-only; PII columns SQL-revoked. ✅
-- §2.4 진영 색 회피: pure data, no party-coloured derived columns. ✅
-- §2.5 4대 함정: no personalization signal, no gamification leaderboard table. ✅
+- §2.4 4대 함정: no personalization signal, no gamification leaderboard table. ✅

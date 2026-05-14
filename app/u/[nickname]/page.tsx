@@ -64,10 +64,10 @@ export default async function PublicProfilePage({ params }: Props) {
 
       <div className="grid grid-cols-2 gap-3">
         <Stat label="작성한 의견" value={pinCount} unit="개" />
-        <Stat label="AI 요약 인용" value={user.aiCitationCount} unit="회" highlight />
+        <Stat label="AI 의견정리 인용" value={user.aiCitationCount} unit="회" highlight />
       </div>
 
-      <Section title="AI 요약에 인용된 의견" subtitle={recentCitations.length === 0 ? "아직 인용된 의견이 없어요." : undefined}>
+      <Section title="AI 의견정리에 인용된 의견" subtitle={recentCitations.length === 0 ? "아직 인용된 의견이 없어요." : undefined}>
         {recentCitations.length > 0 ? (
           <ul>
             {recentCitations.map((c, i) => (

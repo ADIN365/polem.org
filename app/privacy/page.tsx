@@ -46,7 +46,7 @@ export default function PrivacyPage() {
         <li>호스팅: Vercel Inc. (미국)</li>
         <li>데이터베이스: Neon (Singapore region)</li>
         <li>OAuth: Kakao Corp., Naver Cloud Corp.</li>
-        <li>AI 요약·정제: Anthropic / OpenAI / Google (사용자 본문이 모델에 전송됩니다)</li>
+        <li>AI 의견정리·정제: Anthropic / OpenAI / Google (사용자 본문이 모델에 전송됩니다)</li>
       </ul>
       <p>
         AI 모델 호출 시 *의견 본문·토론 주제 제목* 등이 처리 위탁됩니다. 개인 식별 정보는 전송되지 않습니다.

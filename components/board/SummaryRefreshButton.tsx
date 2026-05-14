@@ -43,8 +43,8 @@ export default function SummaryRefreshButton({
       onClick={onClick}
       disabled={busy || hasActiveRequest}
       className="inline-flex items-center gap-1 px-2 py-1 -my-1 text-tiny text-ink-3 hover:text-ink hover:bg-card rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      title={hasActiveRequest ? "갱신 처리 중" : "AI 요약 갱신 (관리자)"}
-      aria-label="AI 요약 갱신"
+      title={hasActiveRequest ? "갱신 처리 중" : "AI 의견정리 갱신 (관리자)"}
+      aria-label="AI 의견정리 갱신"
     >
       <span aria-hidden="true">🔄</span>
       <span>{hasActiveRequest ? "갱신 중…" : busy ? "요청 중…" : "갱신"}</span>

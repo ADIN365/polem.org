@@ -142,15 +142,15 @@ export default async function MePage() {
       </Section>
 
       <Section
-        title="AI 요약 인용"
+        title="AI 의견정리 인용"
         subtitle={
           citationStat?.aiCitationCount
-            ? `내 의견이 AI 50:50 요약에 ${citationStat.aiCitationCount}회 인용됐어요`
+            ? `내 의견이 AI 의견정리에 ${citationStat.aiCitationCount}회 인용됐어요`
             : undefined
         }
       >
         {!citationStat?.aiCitationCount ? (
-          <Empty>아직 AI 요약에 인용된 적이 없어요.</Empty>
+          <Empty>아직 AI 의견정리에 인용된 적이 없어요.</Empty>
         ) : (
           <ul>
             {recentCitations.map((c, i) => (
