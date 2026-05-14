@@ -28,9 +28,9 @@ export default function SummaryCards({
   const hasSummary = !!(pro || con);
 
   return (
-    <section className="px-[18px] py-[14px] border-b-[0.5px] border-border-soft bg-deep">
+    <section className="px-[18px] py-[14px] border-b-[0.5px] border-border-soft bg-[#cdcdcd]">
       <div className="flex justify-between items-center mb-2 px-1">
-        <div className="text-eyebrow-tight tracking-wider uppercase text-[var(--paper-cream-dim)]">
+        <div className="text-eyebrow-tight tracking-wider uppercase text-ink-2">
           {at ? `AI 의견정리 ${formatDate(at)}` : "AI 의견정리"}
         </div>
         {isAdmin ? (
@@ -54,7 +54,7 @@ export default function SummaryCards({
           />
         </div>
       ) : (
-        <div className="text-tiny text-[var(--paper-cream-dim)] py-3 text-center">
+        <div className="text-tiny text-ink-3 py-3 text-center">
           {hasActiveRequest ? "AI 의견정리 생성 중…" : "아직 AI 의견정리가 없어요."}
         </div>
       )}
