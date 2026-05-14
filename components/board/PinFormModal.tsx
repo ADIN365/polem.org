@@ -97,11 +97,11 @@ export default function PinFormModal({
         {quoting ? (
           <div
             className={[
-              "mx-7 mb-3 px-3 py-2 rounded-md border-[0.5px] border-ink text-tiny text-ink leading-relaxed",
+              "mx-7 mb-3 px-4 py-3 rounded-md border-[0.5px] border-ink text-pin text-ink leading-relaxed",
               quoting.side === "PRO" ? "bg-card" : "bg-paper-cream",
             ].join(" ")}
           >
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-2">
               <span
                 aria-hidden="true"
                 className={[
