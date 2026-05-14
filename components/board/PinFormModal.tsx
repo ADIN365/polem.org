@@ -85,25 +85,13 @@ export default function PinFormModal({
         onClick={(e) => e.stopPropagation()}
         className="bg-card border-[0.5px] border-border rounded-lg max-w-[560px] w-full overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.18)]"
       >
-        <div className="px-7 pt-7 pb-3 text-center">
-          <div className="text-eyebrow-tight tracking-wider uppercase text-ink-3 mb-2">
+        <div className="px-7 pt-7 pb-4 text-center">
+          <div
+            className="font-serif font-semibold tracking-tight text-ink"
+            style={{ fontSize: "var(--fs-title-h2)" }}
+          >
             {boardTitle}
           </div>
-          <div
-            className="font-serif font-semibold tracking-tight text-ink mb-2"
-            style={{ fontSize: "var(--fs-title-h3)" }}
-          >
-            {quoting
-              ? `${quoting.side === "PRO" ? "찬성" : "반대"} 의견에 ${quotedRelation === "AGREE" ? "동의" : "반박"}`
-              : isPro
-                ? "찬성 의견 남기기"
-                : "반대 의견 남기기"}
-          </div>
-          <p className="text-meta text-ink-3 leading-relaxed">
-            {quoting
-              ? `내 의견은 ${isPro ? "찬성" : "반대"} 입장으로 등록됩니다.`
-              : "등록 후 수정·삭제는 모더레이션 대상에 한해 가능합니다."}
-          </p>
         </div>
 
         {quoting ? (
@@ -141,9 +129,7 @@ export default function PinFormModal({
             autoFocus
             placeholder={
               quoting
-                ? quotedRelation === "AGREE"
-                  ? "이 의견에 동의하는 이유와 근거를 적어주세요."
-                  : "이 의견에 반박하는 이유와 근거를 적어주세요."
+                ? `위 ${quoting.side === "PRO" ? "찬성" : "반대"} 의견에 ${quotedRelation === "AGREE" ? "동의" : "반박"}하는 이유를 적어주세요.`
                 : isPro
                   ? "찬성하는 입장과 근거를 적어주세요."
                   : "반대하는 입장과 근거를 적어주세요."
@@ -168,14 +154,9 @@ export default function PinFormModal({
           <button
             type="submit"
             disabled={submitting || body.trim().length < PIN_BODY_MIN}
-            className={[
-              "px-5 py-[9px] text-button rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium",
-              isPro
-                ? "bg-card text-ink border-[0.5px] border-ink hover:bg-soft"
-                : "bg-dark text-paper-cream hover:bg-deep",
-            ].join(" ")}
+            className="px-5 py-[9px] text-button rounded-md bg-ink text-card hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed font-medium"
           >
-            {submitting ? "등록 중…" : isPro ? "＋ 찬성 의견" : "＋ 반대 의견"}
+            {submitting ? "등록 중…" : "등록"}
           </button>
         </div>
       </form>
