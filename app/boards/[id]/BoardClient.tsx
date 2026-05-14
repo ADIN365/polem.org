@@ -177,7 +177,8 @@ export default function BoardClient({
         </div>
       ) : null}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-[18px] p-[18px] bg-page">
+      {/* Desktop / 트리모드 — 좌우 2분할 */}
+      <div className={`${treeMode ? "grid" : "hidden md:grid"} grid-cols-1 md:grid-cols-2 gap-[18px] p-[18px] bg-page`}>
         <Column
           side="PRO"
           pins={proPins}
@@ -215,6 +216,28 @@ export default function BoardClient({
           expandedPinIds={expandedPinIds}
         />
       </div>
+
+      {/* Mobile (통상 모드) — 시간순 통합 단일 컬럼 */}
+      {!treeMode ? (
+        <div className="md:hidden p-[18px] bg-page">
+          <MobileMergedList
+            proPins={proPins}
+            conPins={conPins}
+            proTotal={proTotal}
+            conTotal={conTotal}
+            proPage={proPage}
+            conPage={conPage}
+            pageSize={pageSize}
+            boardId={boardId}
+            currentUserId={currentUserId}
+            onQuote={handleQuote}
+            onAddPro={() => openNew("PRO")}
+            onAddCon={() => openNew("CON")}
+            onCardClick={openTree}
+            expandedPinIds={expandedPinIds}
+          />
+        </div>
+      ) : null}
 
       {composer ? (
         <PinFormModal
@@ -345,6 +368,134 @@ function Connector() {
       aria-hidden="true"
       className="mx-auto w-px h-3 -mt-2 mb-0 bg-ink/40"
     />
+  );
+}
+
+function MobileMergedList({
+  proPins,
+  conPins,
+  proTotal,
+  conTotal,
+  proPage,
+  conPage,
+  pageSize,
+  boardId,
+  currentUserId,
+  onQuote,
+  onAddPro,
+  onAddCon,
+  onCardClick,
+  expandedPinIds,
+}: {
+  proPins: PinData[];
+  conPins: PinData[];
+  proTotal: number;
+  conTotal: number;
+  proPage: number;
+  conPage: number;
+  pageSize: number;
+  boardId: string;
+  currentUserId: string | null;
+  onQuote: (pin: PinData, relation: "AGREE" | "REBUT") => void;
+  onAddPro: () => void;
+  onAddCon: () => void;
+  onCardClick: (pin: PinData) => void;
+  expandedPinIds: Set<string>;
+}) {
+  const merged = useMemo(
+    () =>
+      [...proPins, ...conPins].sort(
+        (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+      ),
+    [proPins, conPins],
+  );
+
+  const proTotalPages = Math.max(1, Math.ceil(proTotal / pageSize));
+  const conTotalPages = Math.max(1, Math.ceil(conTotal / pageSize));
+
+  return (
+    <div className="min-h-[380px]">
+      <div className="flex justify-between items-center mb-[14px] px-1 gap-2">
+        <div className="flex items-center gap-3 text-meta font-semibold tracking-wide text-ink">
+          <span className="flex items-center gap-1">
+            <span
+              aria-hidden="true"
+              className="inline-block w-[9px] h-[9px] rounded-full bg-paper-cream border-[1.5px] border-ink"
+            />
+            찬성 <span className="text-tiny text-ink-3 font-medium">{proTotal}</span>
+          </span>
+          <span className="flex items-center gap-1">
+            <span
+              aria-hidden="true"
+              className="inline-block w-[9px] h-[9px] rounded-full bg-ink"
+            />
+            반대 <span className="text-tiny text-ink-3 font-medium">{conTotal}</span>
+          </span>
+        </div>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={onAddPro}
+            className="inline-flex items-center gap-1 px-2 py-1 -my-1 text-tiny font-medium text-ink-3 hover:text-ink hover:bg-soft rounded transition-colors"
+            aria-label="찬성 의견 추가"
+            title="찬성 의견 추가"
+          >
+            <span aria-hidden="true">＋</span>찬성
+          </button>
+          <button
+            type="button"
+            onClick={onAddCon}
+            className="inline-flex items-center gap-1 px-2 py-1 -my-1 text-tiny font-medium text-ink-3 hover:text-ink hover:bg-soft rounded transition-colors"
+            aria-label="반대 의견 추가"
+            title="반대 의견 추가"
+          >
+            <span aria-hidden="true">＋</span>반대
+          </button>
+        </div>
+      </div>
+
+      {merged.length > 0 ? (
+        merged.map((p) => (
+          <div key={p.id} className="mb-2 last:mb-0">
+            <Pin
+              pin={p}
+              currentUserId={currentUserId}
+              onQuote={onQuote}
+              onCardClick={onCardClick}
+              expanded={expandedPinIds.has(p.id)}
+            />
+          </div>
+        ))
+      ) : (
+        <div className="text-tiny text-ink-3 px-1 py-8 text-center leading-relaxed">
+          아직 의견이 없어요.
+          <br />위 ＋ 버튼으로 첫 의견을 남겨보세요.
+        </div>
+      )}
+
+      {(proTotalPages > 1 || conTotalPages > 1) ? (
+        <div className="flex flex-col gap-1 mt-2">
+          {proTotalPages > 1 ? (
+            <Pagination
+              boardId={boardId}
+              side="PRO"
+              page={proPage}
+              otherPage={conPage}
+              totalPages={proTotalPages}
+            />
+          ) : null}
+          {conTotalPages > 1 ? (
+            <Pagination
+              boardId={boardId}
+              side="CON"
+              page={conPage}
+              otherPage={proPage}
+              totalPages={conTotalPages}
+            />
+          ) : null}
+        </div>
+      ) : null}
+    </div>
   );
 }
 
