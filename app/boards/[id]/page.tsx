@@ -119,13 +119,14 @@ export default async function BoardPage({ params, searchParams }: Props) {
             {board.title}
           </h1>
           <BoardBigGauge proCount={board.proCount} conCount={board.conCount} />
+          <div className="mt-5">
+            <WriteButtons
+              boardId={board.id}
+              currentUserId={currentUserId}
+              hasNickname={hasNickname}
+            />
+          </div>
         </header>
-
-        <WriteButtons
-          boardId={board.id}
-          currentUserId={currentUserId}
-          hasNickname={hasNickname}
-        />
 
         <SummaryCards
           boardId={board.id}

@@ -88,7 +88,7 @@ function SummaryCard({
         />
         <span className="text-eyebrow-tight tracking-wider uppercase">{label}</span>
       </div>
-      <p className="text-meta leading-relaxed mb-3 select-text">{body ?? "—"}</p>
+      <p className="text-pin leading-relaxed mb-3 select-text">{body ?? "—"}</p>
       {citations.length > 0 ? (
         <div
           className="text-tiny pt-2 border-t border-border-soft text-ink-3"
