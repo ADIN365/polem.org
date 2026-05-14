@@ -67,11 +67,6 @@ export default function TermsPage() {
         본 약관은 사전 공지 후 변경될 수 있으며, 변경 후 7일 이상 이의 없이 서비스를 계속 이용할 경우 동의한 것으로 간주됩니다.
       </p>
 
-      <h2>제10조 (분쟁 해결)</h2>
-      <p>
-        서비스 이용과 관련한 분쟁은 대한민국 법령에 따르며, 관할 법원은 서울중앙지방법원으로 합니다.
-      </p>
-
       <p className="legal-note">문의: contact@polem.org</p>
     </LegalLayout>
   );
