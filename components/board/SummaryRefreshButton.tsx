@@ -42,7 +42,7 @@ export default function SummaryRefreshButton({
       type="button"
       onClick={onClick}
       disabled={busy || hasActiveRequest}
-      className="inline-flex items-center gap-1 px-2 py-1 -my-1 text-tiny text-ink-3 hover:text-ink hover:bg-card rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      className="inline-flex items-center gap-1 px-2 py-1 -my-1 text-tiny text-[var(--paper-cream-dim)] hover:text-paper-cream hover:bg-deep rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       title={hasActiveRequest ? "갱신 처리 중" : "AI 의견정리 갱신 (관리자)"}
       aria-label="AI 의견정리 갱신"
     >
