@@ -8,10 +8,12 @@ import PinFormModal, { type PinSide } from "./PinFormModal";
 
 export default function WriteButtons({
   boardId,
+  boardTitle,
   currentUserId,
   hasNickname,
 }: {
   boardId: string;
+  boardTitle: string;
   currentUserId: string | null;
   hasNickname: boolean;
 }) {
@@ -66,6 +68,7 @@ export default function WriteButtons({
       {openSide ? (
         <PinFormModal
           boardId={boardId}
+          boardTitle={boardTitle}
           side={openSide}
           quoting={null}
           quotedRelation={null}

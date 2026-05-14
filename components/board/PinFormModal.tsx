@@ -17,6 +17,7 @@ export interface QuoteSource {
 
 export default function PinFormModal({
   boardId,
+  boardTitle,
   side,
   quoting,
   quotedRelation,
@@ -24,6 +25,7 @@ export default function PinFormModal({
   onSuccess,
 }: {
   boardId: string;
+  boardTitle: string;
   side: PinSide;
   quoting: QuoteSource | null;
   quotedRelation: "AGREE" | "REBUT" | null;
@@ -84,6 +86,9 @@ export default function PinFormModal({
         className="bg-card border-[0.5px] border-border rounded-lg max-w-[560px] w-full overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.18)]"
       >
         <div className="px-7 pt-7 pb-3 text-center">
+          <div className="text-eyebrow-tight tracking-wider uppercase text-ink-3 mb-2">
+            {boardTitle}
+          </div>
           <div
             className="font-serif font-semibold tracking-tight text-ink mb-2"
             style={{ fontSize: "var(--fs-title-h3)" }}
@@ -135,9 +140,13 @@ export default function PinFormModal({
             required
             autoFocus
             placeholder={
-              isPro
-                ? "찬성하는 입장과 근거를 적어주세요."
-                : "반대하는 입장과 근거를 적어주세요."
+              quoting
+                ? quotedRelation === "AGREE"
+                  ? "이 의견에 동의하는 이유와 근거를 적어주세요."
+                  : "이 의견에 반박하는 이유와 근거를 적어주세요."
+                : isPro
+                  ? "찬성하는 입장과 근거를 적어주세요."
+                  : "반대하는 입장과 근거를 적어주세요."
             }
             className="w-full px-3 py-[10px] border-[0.5px] border-border bg-card text-input text-ink rounded-md outline-none focus:border-ink resize-none"
           />

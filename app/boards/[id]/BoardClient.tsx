@@ -10,6 +10,7 @@ import PinFormModal, { type PinSide, type QuoteSource } from "@/components/board
 
 interface Props {
   boardId: string;
+  boardTitle: string;
   proPins: PinData[];
   conPins: PinData[];
   proPage: number;
@@ -38,6 +39,7 @@ function reviveDates<T extends { createdAt: Date | string }>(p: T): T {
 
 export default function BoardClient({
   boardId,
+  boardTitle,
   proPins,
   conPins,
   proPage,
@@ -242,6 +244,7 @@ export default function BoardClient({
       {composer ? (
         <PinFormModal
           boardId={boardId}
+          boardTitle={boardTitle}
           side={composer.side}
           quoting={composer.mode === "QUOTE" ? composer.quoting : null}
           quotedRelation={composer.mode === "QUOTE" ? composer.relation : null}

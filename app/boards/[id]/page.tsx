@@ -122,6 +122,7 @@ export default async function BoardPage({ params, searchParams }: Props) {
           <div className="mt-5">
             <WriteButtons
               boardId={board.id}
+              boardTitle={board.title}
               currentUserId={currentUserId}
               hasNickname={hasNickname}
             />
@@ -141,6 +142,7 @@ export default async function BoardPage({ params, searchParams }: Props) {
 
         <BoardClient
           boardId={board.id}
+          boardTitle={board.title}
           proPins={pro.pins}
           conPins={con.pins}
           proPage={pro.page}
