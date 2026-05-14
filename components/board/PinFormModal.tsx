@@ -12,6 +12,7 @@ export interface QuoteSource {
   id: string;
   body: string;
   authorNickname: string | null;
+  side: PinSide;
 }
 
 export default function PinFormModal({
@@ -88,28 +89,40 @@ export default function PinFormModal({
             style={{ fontSize: "var(--fs-title-h3)" }}
           >
             {quoting
-              ? quotedRelation === "AGREE"
-                ? "동의 의견 남기기"
-                : "반박 의견 남기기"
+              ? `${quoting.side === "PRO" ? "찬성" : "반대"} 의견에 ${quotedRelation === "AGREE" ? "동의" : "반박"}`
               : isPro
                 ? "찬성 의견 남기기"
                 : "반대 의견 남기기"}
           </div>
           <p className="text-meta text-ink-3 leading-relaxed">
             {quoting
-              ? quotedRelation === "AGREE"
-                ? `이 의견과 같은 ${isPro ? "찬성" : "반대"} 입장으로 등록됩니다.`
-                : `이 의견과 반대 ${isPro ? "찬성" : "반대"} 입장으로 등록됩니다.`
+              ? `내 의견은 ${isPro ? "찬성" : "반대"} 입장으로 등록됩니다.`
               : "등록 후 수정·삭제는 모더레이션 대상에 한해 가능합니다."}
           </p>
         </div>
 
         {quoting ? (
-          <div className="mx-7 mb-3 px-3 py-2 bg-soft border-l-2 border-[var(--accent-warm)] text-tiny text-ink-2 leading-relaxed">
-            <span className="text-eyebrow-tight tracking-wider uppercase mr-1 text-ink-3">
-              {quotedRelation === "AGREE" ? "동의" : "반박"} ─
-            </span>
-            @{quoting.authorNickname ?? "익명"} · &ldquo;{quoting.body}&rdquo;
+          <div
+            className={[
+              "mx-7 mb-3 px-3 py-2 rounded-md border-[0.5px] border-ink text-tiny text-ink leading-relaxed",
+              quoting.side === "PRO" ? "bg-card" : "bg-paper-cream",
+            ].join(" ")}
+          >
+            <div className="flex items-center gap-2 mb-1">
+              <span
+                aria-hidden="true"
+                className={[
+                  "inline-block w-[8px] h-[8px] rounded-full",
+                  quoting.side === "PRO"
+                    ? "bg-paper-cream border-[1.5px] border-ink"
+                    : "bg-ink",
+                ].join(" ")}
+              />
+              <span className="text-eyebrow-tight tracking-wider uppercase text-ink-3">
+                {quoting.side === "PRO" ? "찬성" : "반대"} 의견 · @{quoting.authorNickname ?? "익명"}
+              </span>
+            </div>
+            &ldquo;{quoting.body}&rdquo;
           </div>
         ) : null}
 

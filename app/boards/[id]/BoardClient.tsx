@@ -124,7 +124,7 @@ export default function BoardClient({
     const side: PinSide = relation === "AGREE" ? pin.side : pin.side === "PRO" ? "CON" : "PRO";
     setComposer({
       mode: "QUOTE",
-      quoting: { id: pin.id, body: pin.body, authorNickname: pin.authorNickname },
+      quoting: { id: pin.id, body: pin.body, authorNickname: pin.authorNickname, side: pin.side },
       relation,
       side,
     });
