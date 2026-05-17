@@ -9,6 +9,11 @@ export const dynamic = "force-dynamic";
 
 const SINCE_MS = 5 * 60 * 1000; // 최근 5분 안 답변
 
+type MirrorTag = "match" | "diverge" | null;
+
+/** 한 의제 안에서 사용자가 PRO·CON 중 어느 쪽 의견을 썼는지 (양쪽 다 있으면 MIXED). */
+type UserStance = "PRO" | "CON" | "MIXED" | "NONE";
+
 export default async function RevealPage() {
   const session = await requireOnboarded("/three/reveal");
 
@@ -33,6 +38,26 @@ export default async function RevealPage() {
       },
     },
   });
+
+  // 해당 의제들에 대해 사용자가 작성한 의견의 진영을 조회 → 자기 거울 비교용
+  const boardIds = Array.from(new Set(recent.map((r) => r.pin.board.id)));
+  const myPins = boardIds.length
+    ? await prisma.pin.findMany({
+        where: {
+          authorId: session.user.id,
+          boardId: { in: boardIds },
+          hidden: false,
+          deleted: false,
+        },
+        select: { boardId: true, side: true },
+      })
+    : [];
+  const stanceByBoard = new Map<string, UserStance>();
+  for (const p of myPins) {
+    const cur = stanceByBoard.get(p.boardId) ?? "NONE";
+    if (cur === "NONE") stanceByBoard.set(p.boardId, p.side);
+    else if (cur !== p.side) stanceByBoard.set(p.boardId, "MIXED");
+  }
 
   return (
     <div className="max-w-narrow mx-auto px-6 pt-10 pb-20">
@@ -59,7 +84,8 @@ export default async function RevealPage() {
         ) : (
           <ul>
             {recent.map((r, i) => {
-              const aligned = isAligned(r.answer, r.pin.side);
+              const myStance = stanceByBoard.get(r.pin.board.id) ?? "NONE";
+              const tag = mirrorTag(r.answer, r.pin.side, myStance);
               return (
                 <li
                   key={r.pin.id + i}
@@ -82,10 +108,10 @@ export default async function RevealPage() {
                     {r.pin.body}
                   </div>
 
-                  <div className="flex gap-2 items-baseline text-tiny">
+                  <div className="flex gap-2 items-baseline text-tiny flex-wrap">
                     <span className="text-ink-3">블라인드 질문에 내 답변:</span>
                     <span className="font-medium text-ink">{labelAnswer(r.answer)}</span>
-                    <StatusTag aligned={aligned} unsure={r.answer === "UNSURE"} />
+                    <MirrorTagView tag={tag} myStance={myStance} />
                   </div>
                 </li>
               );
@@ -122,22 +148,42 @@ function labelAnswer(a: "AGREE" | "DISAGREE" | "UNSURE") {
   return "잘 모름";
 }
 
-function isAligned(answer: "AGREE" | "DISAGREE" | "UNSURE", side: "PRO" | "CON") {
-  if (answer === "AGREE") return side === "PRO";
-  if (answer === "DISAGREE") return side === "CON";
-  return null;
+/**
+ * 자기 거울 태그.
+ * - 사용자가 그 의제에 한쪽 의견(PRO 또는 CON)을 썼고
+ * - 블라인드 답변의 *효과적 입장* 이 그 진영과 일치 → match
+ * - 어긋남 → diverge
+ * - 의견을 안 썼거나(MIXED·NONE), UNSURE 답변 → null (태그 없음)
+ */
+function mirrorTag(
+  answer: "AGREE" | "DISAGREE" | "UNSURE",
+  pinSide: "PRO" | "CON",
+  myStance: UserStance,
+): MirrorTag {
+  if (answer === "UNSURE") return null;
+  if (myStance !== "PRO" && myStance !== "CON") return null;
+  const effective: "PRO" | "CON" =
+    answer === "AGREE" ? pinSide : pinSide === "PRO" ? "CON" : "PRO";
+  return effective === myStance ? "match" : "diverge";
 }
 
-function StatusTag({ aligned, unsure }: { aligned: boolean | null; unsure: boolean }) {
-  if (unsure) return null;
-  if (aligned)
+function MirrorTagView({ tag, myStance }: { tag: MirrorTag; myStance: UserStance }) {
+  if (tag === null) return null;
+  const myLabel = myStance === "PRO" ? "찬성" : "반대";
+  if (tag === "match")
     return (
-      <span className="ml-1 px-[6px] py-[1px] text-eyebrow-tight tracking-wide bg-ink text-paper-cream">
-        입장 일치
+      <span
+        className="ml-1 px-[6px] py-[1px] text-eyebrow-tight tracking-wide bg-ink text-paper-cream"
+        title={`내가 이 의제에 쓴 ${myLabel} 의견과 블라인드 본심이 같은 방향`}
+      >
+        내 입장과 일치
       </span>
     );
   return (
-    <span className="ml-1 px-[6px] py-[1px] text-eyebrow-tight tracking-wide border-[0.5px] border-[var(--accent-warn)] text-[var(--accent-warn)]">
+    <span
+      className="ml-1 px-[6px] py-[1px] text-eyebrow-tight tracking-wide border-[0.5px] border-[var(--accent-warn)] text-[var(--accent-warn)]"
+      title={`내가 이 의제에 쓴 ${myLabel} 의견과 블라인드 본심이 어긋남`}
+    >
       살펴볼 만함
     </span>
   );
