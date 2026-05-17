@@ -1,5 +1,5 @@
 import { AXIS_LABEL, type Axis } from "@/lib/likert/questions";
-import { scoreToPercent } from "@/lib/likert/score";
+import { scoreToPercent, summarizeScores } from "@/lib/likert/score";
 
 interface PrismChartProps {
   scores: {
@@ -26,8 +26,15 @@ const AXIS_ROWS: {
  * 4축 가치관 프리즘 표시. 본인만 조회 (헌법 §2.3).
  */
 export default function PrismChart({ scores }: PrismChartProps) {
+  const summary = summarizeScores(scores);
   return (
     <div className="px-5 py-5 space-y-3">
+      <div className="px-4 py-3 bg-soft border-[0.5px] border-border-soft rounded-md">
+        <div className="text-eyebrow-tight tracking-wider uppercase text-ink-3 mb-1">
+          종합
+        </div>
+        <p className="text-pin leading-relaxed text-ink">{summary}</p>
+      </div>
       {AXIS_ROWS.map(({ axis, field, category }) => (
         <PrismAxisRow
           key={axis}
