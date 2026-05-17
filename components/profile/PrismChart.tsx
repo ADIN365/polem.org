@@ -1,5 +1,5 @@
 import { AXIS_LABEL, type Axis } from "@/lib/likert/questions";
-import { scoreToPercent, summarizeScores } from "@/lib/likert/score";
+import { axisBriefs, scoreToPercent, summarizeScores } from "@/lib/likert/score";
 
 interface PrismChartProps {
   scores: {
@@ -27,13 +27,39 @@ const AXIS_ROWS: {
  */
 export default function PrismChart({ scores }: PrismChartProps) {
   const summary = summarizeScores(scores);
+  const briefs = axisBriefs(scores);
+
   return (
     <div className="px-5 py-5 space-y-3">
-      <div className="px-4 py-3 bg-soft border-[0.5px] border-border-soft rounded-md">
-        <div className="text-eyebrow-tight tracking-wider uppercase text-ink-3 mb-1">
+      <div className="px-4 py-4 bg-soft border-[0.5px] border-border-soft rounded-md">
+        <div className="text-eyebrow-tight tracking-wider uppercase text-ink-3 mb-2">
           종합
         </div>
-        <p className="text-pin leading-relaxed text-ink">{summary}</p>
+        <p className="text-pin leading-relaxed text-ink mb-3">{summary}</p>
+        {briefs.length > 0 ? (
+          <ul className="space-y-[6px] border-t-[0.5px] border-border-soft pt-3">
+            {briefs.map((b) => (
+              <li
+                key={b.category}
+                className="text-meta text-ink-2 leading-relaxed flex gap-2"
+              >
+                <span className="text-ink-3 shrink-0">·</span>
+                <span>
+                  <span className="font-semibold text-ink">{b.category}</span>
+                  <span className="text-ink-3"> — </span>
+                  <span>
+                    {b.strength} {b.leanLabel} 쪽.
+                  </span>{" "}
+                  <span className="text-ink-3">{b.brief}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-meta text-ink-3 leading-relaxed border-t-[0.5px] border-border-soft pt-3">
+            네 축 모두 한쪽 강도가 약해, 사안마다 다르게 판단하는 유연한 입장으로 읽힙니다.
+          </p>
+        )}
       </div>
       {AXIS_ROWS.map(({ axis, field, category }) => (
         <PrismAxisRow
