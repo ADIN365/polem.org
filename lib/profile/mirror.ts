@@ -100,7 +100,9 @@ function defaults() {
 
 function effectiveSide(answer: BlindAnswerValue, side: "PRO" | "CON"): "PRO" | "CON" | "UNSURE" {
   if (answer === "UNSURE") return "UNSURE";
-  if (answer === "AGREE") return side;
+  const agreeing =
+    answer === "STRONGLY_AGREE" || answer === "AGREE" || answer === "SLIGHTLY_AGREE";
+  if (agreeing) return side;
   return side === "PRO" ? "CON" : "PRO";
 }
 

@@ -366,9 +366,13 @@ model BlindAnswer {
 }
 
 enum BlindAnswerValue {
+  STRONGLY_AGREE
   AGREE
+  SLIGHTLY_AGREE
+  SLIGHTLY_DISAGREE
   DISAGREE
-  UNSURE
+  STRONGLY_DISAGREE
+  UNSURE // legacy — 기존 데이터 보존. 새 답변에선 사용 X
 }
 
 // =========================================================

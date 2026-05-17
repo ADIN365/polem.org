@@ -142,10 +142,40 @@ export default async function RevealPage() {
   );
 }
 
-function labelAnswer(a: "AGREE" | "DISAGREE" | "UNSURE") {
-  if (a === "AGREE") return "동의";
-  if (a === "DISAGREE") return "반대";
-  return "잘 모름";
+type AnswerValue =
+  | "STRONGLY_AGREE"
+  | "AGREE"
+  | "SLIGHTLY_AGREE"
+  | "SLIGHTLY_DISAGREE"
+  | "DISAGREE"
+  | "STRONGLY_DISAGREE"
+  | "UNSURE";
+
+function labelAnswer(a: AnswerValue) {
+  switch (a) {
+    case "STRONGLY_AGREE":
+      return "매우 동의";
+    case "AGREE":
+      return "동의";
+    case "SLIGHTLY_AGREE":
+      return "약간 동의";
+    case "SLIGHTLY_DISAGREE":
+      return "약간 반대";
+    case "DISAGREE":
+      return "반대";
+    case "STRONGLY_DISAGREE":
+      return "매우 반대";
+    default:
+      return "잘 모름";
+  }
+}
+
+function isAgreeFamily(a: AnswerValue): boolean {
+  return a === "STRONGLY_AGREE" || a === "AGREE" || a === "SLIGHTLY_AGREE";
+}
+
+function isDisagreeFamily(a: AnswerValue): boolean {
+  return a === "STRONGLY_DISAGREE" || a === "DISAGREE" || a === "SLIGHTLY_DISAGREE";
 }
 
 /**
@@ -156,14 +186,18 @@ function labelAnswer(a: "AGREE" | "DISAGREE" | "UNSURE") {
  * - 의견을 안 썼거나(MIXED·NONE), UNSURE 답변 → null (태그 없음)
  */
 function mirrorTag(
-  answer: "AGREE" | "DISAGREE" | "UNSURE",
+  answer: AnswerValue,
   pinSide: "PRO" | "CON",
   myStance: UserStance,
 ): MirrorTag {
   if (answer === "UNSURE") return null;
   if (myStance !== "PRO" && myStance !== "CON") return null;
-  const effective: "PRO" | "CON" =
-    answer === "AGREE" ? pinSide : pinSide === "PRO" ? "CON" : "PRO";
+  const agreeing = isAgreeFamily(answer);
+  const effective: "PRO" | "CON" = agreeing
+    ? pinSide
+    : pinSide === "PRO"
+      ? "CON"
+      : "PRO";
   return effective === myStance ? "match" : "diverge";
 }
 

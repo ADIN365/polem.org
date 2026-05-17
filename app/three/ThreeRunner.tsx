@@ -4,17 +4,26 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-type Answer = "AGREE" | "DISAGREE" | "UNSURE";
+type Answer =
+  | "STRONGLY_DISAGREE"
+  | "DISAGREE"
+  | "SLIGHTLY_DISAGREE"
+  | "SLIGHTLY_AGREE"
+  | "AGREE"
+  | "STRONGLY_AGREE";
 
 interface Pin {
   id: string;
   question: string;
 }
 
-const CHOICES: { value: Answer; label: string }[] = [
-  { value: "DISAGREE", label: "반대" },
-  { value: "UNSURE", label: "잘 모름" },
-  { value: "AGREE", label: "동의" },
+const CHOICES: { value: Answer; label: string; tone: "con" | "pro" }[] = [
+  { value: "STRONGLY_DISAGREE", label: "매우 반대", tone: "con" },
+  { value: "DISAGREE", label: "반대", tone: "con" },
+  { value: "SLIGHTLY_DISAGREE", label: "약간 반대", tone: "con" },
+  { value: "SLIGHTLY_AGREE", label: "약간 동의", tone: "pro" },
+  { value: "AGREE", label: "동의", tone: "pro" },
+  { value: "STRONGLY_AGREE", label: "매우 동의", tone: "pro" },
 ];
 
 export default function ThreeRunner({ pins }: { pins: Pin[] }) {
@@ -87,14 +96,19 @@ export default function ThreeRunner({ pins }: { pins: Pin[] }) {
           </p>
         </div>
 
-        <div className="px-7 pb-7 grid grid-cols-3 gap-2">
+        <div className="px-7 pb-7 grid grid-cols-3 md:grid-cols-6 gap-2">
           {CHOICES.map((c) => (
             <button
               key={c.value}
               type="button"
               onClick={() => onAnswer(c.value)}
               disabled={submitting}
-              className="py-[18px] text-pin tracking-wide rounded-md transition-colors disabled:opacity-50 bg-card text-ink border-[0.5px] border-border hover:bg-soft"
+              className={[
+                "py-[14px] px-1 text-meta md:text-pin tracking-wide rounded-md transition-colors disabled:opacity-50 border-[0.5px] border-border",
+                c.tone === "con"
+                  ? "bg-paper-cream text-ink hover:bg-card"
+                  : "bg-card text-ink hover:bg-paper-cream",
+              ].join(" ")}
             >
               {c.label}
             </button>
