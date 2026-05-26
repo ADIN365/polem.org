@@ -174,10 +174,6 @@ function isAgreeFamily(a: AnswerValue): boolean {
   return a === "STRONGLY_AGREE" || a === "AGREE" || a === "SLIGHTLY_AGREE";
 }
 
-function isDisagreeFamily(a: AnswerValue): boolean {
-  return a === "STRONGLY_DISAGREE" || a === "DISAGREE" || a === "SLIGHTLY_DISAGREE";
-}
-
 /**
  * 자기 거울 태그.
  * - 사용자가 그 의제에 한쪽 의견(PRO 또는 CON)을 썼고
