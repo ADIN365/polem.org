@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-05-27 — 헬스체크 routine-down 폴백 (launchd dead-man's-switch) [POL-209]
+
+시간별 헬스체크 routine 이 11일간(2026-05-16~05-27) 조용히 멈췄던 사건(POL-194)의 재발 방지.
+Paperclip 스케줄러/어댑터가 죽어도 **독립적으로** polem.org 상태를 확인하는 백스톱.
+
+### 추가
+- `scripts/healthcheck-fallback.ts` — routine 과 동일한 4대 점검: ①prod `curl`(200) ②Neon `SELECT 1` ③`launchd/*.log` 최근 1시간 fatal/error ④최신 Vercel prod 배포 상태. **degradation 시에만** P0 인시던트 이슈를 1건 연다(green 이면 완전 무음). 로컬 state + API 검색으로 중복 인시던트 방지(다중 시간 장애 = 인시던트 1건 + 후속 코멘트).
+- `launchd/com.polem.healthcheck-fallback.plist` — KST `0 * * * *`(매시 정각, StartCalendarInterval Minute=0). `RunAtLoad=false`(백스톱은 로드 시 발화 안 함). `~/Library/LaunchAgents/` 에 복사·`launchctl load` 완료 → **가동 중**.
+
+### 심각도 정책 (오탐 최소화)
+- HARD(P0 발생): prod curl ≠ 200, DB `SELECT 1` 실패 — "사이트가 실제로 살아있나"의 권위 신호.
+- WARN(단독으로는 P0 안 띄움): 최신 Vercel prod 배포가 **최근(≤6h)** ERROR/CANCELED, `launchd` 로그 최근 에러. 승격 환경변수: `HEALTHCHECK_VERCEL_IS_HARD=1`, `HEALTHCHECK_LOG_ERRORS_ARE_HARD=1`.
+
+### 자격증명 / 보안
+- prod/DB/Vercel 점검은 기존 시크릿(`~/polem/.env`, `~/.secrets/vercel.env`)만 사용 — 신규 시크릿 0.
+- 인시던트 발행에만 durable Paperclip 키 필요 → `~/.secrets/polem-healthcheck.env`(600, repo 외부, 절대 커밋 안 함). 비밀-로테이션 렌즈상 키의 **유일한** 위치. **CEO 승인 대기 중(POL-209)** — 미설정 상태에서도 degradation 시 로컬 경보(`launchd/healthcheck-fallback.log` + 비정상 종료)는 동작.
+- 로그 로테이션: 스크립트가 자체 로그를 ~1MB 에서 회전(`.1` 1세대). `launchd/*.log` 는 gitignore.
+
+### 검증
+- green 무음(exit 0), 강제 DB/prod 실패 → HARD 탐지 + 정확한 P0 페이로드(dry-run), 라이브 인시던트 생성·중복방지 경로(run-JWT 로 POL-228 생성→검증), launchd 경유 1회 실행 무음 확인, `tsc --noEmit` clean.
+
 ## 2026-05-14 — 헌법 정리 + "AI 의견정리" 명칭 통일 + 모바일 시간순 단일 컬럼
 
 ### 헌법 (CLAUDE.md §2)

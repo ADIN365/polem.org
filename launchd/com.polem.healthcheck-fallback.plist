@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.polem.healthcheck-fallback</string>
+
+    <!--
+      ROUTINE-DOWN FALLBACK (dead-man's-switch) for the hourly Paperclip
+      health-check routine (12b5362b / POL-194). Runs scripts/healthcheck-fallback.ts,
+      which opens a P0 incident ONLY on degradation and stays silent on green.
+      See POL-209 and AGENTS.md → "Routine-down fallback".
+    -->
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>-c</string>
+        <string>cd /Users/ddgeet/polem &amp;&amp; /opt/homebrew/bin/npx tsx scripts/healthcheck-fallback.ts</string>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/ddgeet/polem</string>
+
+    <!-- KST 0 * * * * — top of every hour (Mac mini runs in KST). plan §4 schedule. -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <!--
+      RunAtLoad is false on purpose: this is a backstop, not a heartbeat. We don't
+      want it firing (and possibly opening a P0 on a transient load-time blip) every
+      time the plist is (re)loaded. Hourly is sufficient for a dead-man's-switch.
+    -->
+    <key>RunAtLoad</key>
+    <false/>
+
+    <!--
+      Log rotation: the script writes its durable trail to launchd/healthcheck-fallback.log
+      and self-rotates that at ~1 MB (one .1 generation). These StandardOut/Err paths
+      capture crashes/launchd-level output only; output per run is a few lines. All of
+      launchd/*.log is gitignored. Operator may add the file to any periodic rotation.
+    -->
+    <key>StandardOutPath</key>
+    <string>/Users/ddgeet/polem/launchd/healthcheck-fallback.out.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/ddgeet/polem/launchd/healthcheck-fallback.err.log</string>
+</dict>
+</plist>
