@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-05-28 — POL-18 SEO 메타 (A.1/A.2) main 머지
+
+- `feat/seo-meta-pol18` 브랜치를 15일 stale 상태에서 main 으로 머지 (POL-279).
+- **메타 보강 (§A.1):** `app/layout.tsx` 사이트 전역 `alternates.canonical: "/"` (metadataBase=apex) + `twitter: summary_large_image`. `app/boards/[id]` per-board canonical·og.url·publishedTime·modifiedTime·twitter card + `DiscussionForumPosting` JSON-LD (`interactionStatistic`). `app/about`·`app/proposal` description/canonical/og/twitter.
+- **sitemap freshness (§A.2):** `app/sitemap.ts` `lastModified = MAX(board.updatedAt, 최신 Pin.createdAt)`. 1h ISR·top-5000 ACTIVE cap 유지.
+- **머지 정리:** 브랜치의 stale "AI 요약→AI 내용정리" 라벨 변경은 main 의 "AI 의견정리" 통일(2026-05-14)으로 폐기 (main 쪽 채택).
+- **apex TTFB 분리:** apex(polem.org) cold-start 1.5–2s vs www 0.4s 의 성능 수정(도메인 레벨 301)은 NextAuth 콜백·Vercel 도메인 설정 변경이라 Board 승인 별도 자식 이슈로 분리. 앱 레벨 canonical(metadataBase=apex)만 이 PR 에 포함.
+
+## 2026-05-13 — POL-43 공개 boards 검색 API
+
+- `GET /api/boards/search?q=&limit=` — 인증 불필요 read-only 공개 엔드포인트.
+  POL-39 의 `docs/polem-backlink/matcher.ts` 가 호출하는 데이터소스.
+- 응답 `{ boards: [{ id, title, category, updatedAt, proCount, conCount }] }`.
+  `status=ACTIVE` 만, `title`/`body` ILIKE 매칭, `updatedAt desc`, limit 1~50 (기본 20).
+- 빈 `q` → `{ boards: [] }` (전체 노출 방지).
+- `Cache-Control: public, max-age=300, s-maxage=600` (Vercel CDN 캐시).
+- `scripts/smoke-boards-search.sh` — 매칭 / 빈쿼리 / limit clamp / 캐시 헤더 검증.
+
 ## 2026-05-14 — 헌법 정리 + "AI 의견정리" 명칭 통일 + 모바일 시간순 단일 컬럼
 
 ### 헌법 (CLAUDE.md §2)
