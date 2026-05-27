@@ -1,6 +1,6 @@
 /**
- * 찬·반 비율 막대. 흰색 = PRO, 잉크 = CON. 헌법 2.4 진영색 회피.
- * proCount/conCount 가 0/0 일 때는 빈 막대 (50:50 표시 안 함, 헌법 2.1 AI 50:50 와 혼동 방지).
+ * 찬·반 비율 막대. 흰색 = PRO, 잉크 = CON.
+ * proCount/conCount 가 0/0 일 때는 빈 막대 (실제 비율 없을 때 임의 비율 그리지 않음).
  */
 export function Gauge({
   proCount,

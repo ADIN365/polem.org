@@ -19,6 +19,11 @@ const Body = z.discriminatedUnion("action", [
     hideContent: z.boolean().default(true),
     note: z.string().trim().max(500).optional(),
   }),
+  // 진영 뒤집기 — 의견 한정. 처벌 없이 side 교체 + 카운트 보정 + 작성자 알림
+  z.object({
+    action: z.literal("flip_side"),
+    note: z.string().trim().max(500).optional(),
+  }),
   // 신고 기각
   z.object({
     action: z.literal("dismiss"),
@@ -61,6 +66,62 @@ export async function PATCH(req: Request, { params }: Ctx) {
         resolvedAt: new Date(),
       },
     });
+    return NextResponse.json({ ok: true });
+  }
+
+  if (parsed.data.action === "flip_side") {
+    if (report.targetType !== "PIN") {
+      return NextResponse.json(
+        { error: "진영 뒤집기는 의견 신고에만 적용 가능해요." },
+        { status: 400 },
+      );
+    }
+    const pin = await prisma.pin.findUnique({
+      where: { id: report.targetId },
+      select: { id: true, side: true, boardId: true, authorId: true },
+    });
+    if (!pin) {
+      return NextResponse.json({ error: "의견을 찾을 수 없어요." }, { status: 404 });
+    }
+    const nextSide = pin.side === "PRO" ? "CON" : "PRO";
+
+    await prisma.$transaction(async (tx) => {
+      await tx.pin.update({ where: { id: pin.id }, data: { side: nextSide } });
+      await tx.board.update({
+        where: { id: pin.boardId },
+        data:
+          pin.side === "PRO"
+            ? { proCount: { decrement: 1 }, conCount: { increment: 1 } }
+            : { conCount: { decrement: 1 }, proCount: { increment: 1 } },
+      });
+      await tx.report.update({
+        where: { id: report.id },
+        data: {
+          status: "RESOLVED",
+          resolvedById: session.user.id,
+          resolvedAt: new Date(),
+        },
+      });
+      await tx.notification.create({
+        data: {
+          userId: pin.authorId,
+          type: "WARNING",
+          body: `모더레이터 검토로 의견 진영이 ${pin.side === "PRO" ? "찬성→반대" : "반대→찬성"}으로 수정됐어요.`,
+        },
+      });
+      const reporterId = (await tx.report.findUnique({
+        where: { id: report.id },
+        select: { reporterId: true },
+      }))!.reporterId;
+      await tx.notification.create({
+        data: {
+          userId: reporterId,
+          type: "REPORT_RESOLVED",
+          body: "신고하신 진영 분류 오류가 처리됐어요. 검토해 주셔서 감사합니다.",
+        },
+      });
+    });
+
     return NextResponse.json({ ok: true });
   }
 

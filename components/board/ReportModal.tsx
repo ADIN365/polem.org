@@ -3,15 +3,27 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-const REASONS = [
+const BASE_REASONS = [
   { value: "PERSONAL_ATTACK", label: "인신공격", hint: "사람 자체를 비하 (주장 비판은 OK)" },
   { value: "HATE_SPEECH", label: "혐오·차별 표현" },
   { value: "AD_SPAM", label: "광고·스팸" },
   { value: "FALSE_INFO", label: "허위사실" },
-  { value: "OTHER", label: "기타" },
 ] as const;
 
-type Reason = (typeof REASONS)[number]["value"];
+const PIN_ONLY_REASONS = [
+  {
+    value: "MISCLASSIFIED_SIDE",
+    label: "진영 분류 오류",
+    hint: "찬성에 반대 의견·반대에 찬성 의견으로 등록됨",
+  },
+] as const;
+
+const OTHER_REASON = [{ value: "OTHER", label: "기타" }] as const;
+
+type Reason =
+  | (typeof BASE_REASONS)[number]["value"]
+  | (typeof PIN_ONLY_REASONS)[number]["value"]
+  | (typeof OTHER_REASON)[number]["value"];
 
 export default function ReportModal({
   targetType,
@@ -25,6 +37,12 @@ export default function ReportModal({
   const [reason, setReason] = useState<Reason | null>(null);
   const [body, setBody] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const reasons = [
+    ...BASE_REASONS,
+    ...(targetType === "PIN" ? PIN_ONLY_REASONS : []),
+    ...OTHER_REASON,
+  ];
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,7 +94,7 @@ export default function ReportModal({
         </div>
 
         <div className="px-7 pb-3 space-y-1">
-          {REASONS.map((r) => (
+          {reasons.map((r) => (
             <label
               key={r.value}
               className={[

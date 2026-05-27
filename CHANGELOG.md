@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-05-28 — POL-18 SEO 메타 (A.1/A.2) main 머지
+
+- `feat/seo-meta-pol18` 브랜치를 15일 stale 상태에서 main 으로 머지 (POL-279).
+- **메타 보강 (§A.1):** `app/layout.tsx` 사이트 전역 `alternates.canonical: "/"` (metadataBase=apex) + `twitter: summary_large_image`. `app/boards/[id]` per-board canonical·og.url·publishedTime·modifiedTime·twitter card + `DiscussionForumPosting` JSON-LD (`interactionStatistic`). `app/about`·`app/proposal` description/canonical/og/twitter.
+- **sitemap freshness (§A.2):** `app/sitemap.ts` `lastModified = MAX(board.updatedAt, 최신 Pin.createdAt)`. 1h ISR·top-5000 ACTIVE cap 유지.
+- **머지 정리:** 브랜치의 stale "AI 요약→AI 내용정리" 라벨 변경은 main 의 "AI 의견정리" 통일(2026-05-14)으로 폐기 (main 쪽 채택).
+- **apex TTFB 분리:** apex(polem.org) cold-start 1.5–2s vs www 0.4s 의 성능 수정(도메인 레벨 301)은 NextAuth 콜백·Vercel 도메인 설정 변경이라 Board 승인 별도 자식 이슈로 분리. 앱 레벨 canonical(metadataBase=apex)만 이 PR 에 포함.
+
 ## 2026-05-13 — POL-43 공개 boards 검색 API
 
 - `GET /api/boards/search?q=&limit=` — 인증 불필요 read-only 공개 엔드포인트.
@@ -9,6 +17,39 @@
 - 빈 `q` → `{ boards: [] }` (전체 노출 방지).
 - `Cache-Control: public, max-age=300, s-maxage=600` (Vercel CDN 캐시).
 - `scripts/smoke-boards-search.sh` — 매칭 / 빈쿼리 / limit clamp / 캐시 헤더 검증.
+
+## 2026-05-14 — 헌법 정리 + "AI 의견정리" 명칭 통일 + 모바일 시간순 단일 컬럼
+
+### 헌법 (CLAUDE.md §2)
+- §2.1 "AI 양측 요약은 *반드시 50:50 비율로 동등하게*" 조항 폐기. AI 는 *게시판에 있는 그대로* 정리 (다수쪽이 많으면 많은 대로, 적으면 적은 대로)
+- §2.4 "진영 색 회피" 절 전체 삭제. 흑백 디자인은 컴포넌트 결정으로만 유지, 헌법에서 광고하지 않음
+- §2.2 예외 (`aiCitationCount`) 의 "50:50 균형" 표현 정리 — "한 작가당 1개 + 서로 다른 논점" 만 남김
+- §2.5 4 대 함정 회피 → §2.4 로 번호 재정렬
+
+### AI 동작 변경
+- `lib/ai/prompts.ts` `BOARD_SUMMARY_SYSTEM` 프롬프트 재작성 — 50:50 강제 X, 있는 그대로 요약. 한쪽이 비면 빈 문자열
+- `scripts/ai-summary-worker.ts` `buildPrompt` 동일하게 갱신. 다음 cron 부터 새 동작 (09:00 / 21:00 KST)
+
+### UI 명칭 통일 — "AI 의견정리"
+- "AI 요약" / "AI 내용정리" / "AI 50:50 요약" / "찬성·반대 요약" → 전부 "AI 의견정리" / "찬성 의견정리" / "반대 의견정리"
+- 영향: `components/board/SummaryCards.tsx`, `SummaryRefreshButton.tsx`, `app/me/page.tsx`, `app/u/[nickname]/page.tsx`, `app/privacy/page.tsx`, `app/terms/page.tsx`, `app/policy/page.tsx`
+- DB 컬럼(`aiSummaryPro/Con/At`), API 경로(`/cron/ai-summary`), import 경로(`@/lib/ai-summary`) 는 그대로 유지
+
+### 주석·문서 정리
+- `components/ui/Gauge.tsx`, `prisma/seed.ts`, `lib/moderation/profanity.ts`, `lib/ai/providers/claude-cli.ts`, `prisma/analytics_views.README.md` — 헌법 §2.4 / 50:50 참조 제거
+- `README.md`, `MAPPING.md` — 헌법 요약 5→4, "50:50 요약" → "AI 의견정리"
+
+### 모바일 레이아웃
+- `BoardClient.tsx` 통상 모드 모바일에서 찬/반 위·아래 스택 대신 *시간순 단일 컬럼* 으로 머지 (`MobileMergedList`). 카드 배경(흰/베이지)·도트로 진영 구분은 유지
+- 데스크탑(md+) 과 트리 모드는 기존 좌우 2분할 유지
+
+## 2026-05-14 — 반대 카드 배경 라이트 톤 통일
+
+- 어두운 `bg-dark` 배경이 반대 의견을 부정적으로 보이게 하고 가독성을 떨어뜨려, 찬·반 카드 모두 종이톤으로 통일.
+- 찬성: `bg-card`(#fff) / 반대: `bg-paper-cream`(#F5F1E8) — 둘 다 `text-ink` + 검정 보더.
+- 진영 구분은 도트(찬성=베이지+검정보더, 반대=검정 채움)·보더·라벨로 유지. 헌법 2.4(흑백, 진영색 회피) 준수.
+- 영향 파일: `components/board/Pin.tsx`, `components/board/SummaryCards.tsx`, `app/boards/[id]/BoardClient.tsx` (Connector).
+- OG 이미지 비율 막대는 데이터 시각화이므로 그대로 둠.
 
 ## 2026-05-09 — Phase 8~13 (Sprint 3, Phase 12 보류)
 

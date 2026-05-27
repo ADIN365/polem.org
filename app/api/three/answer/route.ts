@@ -34,15 +34,27 @@ export async function POST(req: Request) {
   }
 
   const { answer } = parsed.data;
+  // 새 답변에선 UNSURE 받지 않음 — 강제 선택
+  if (answer === "UNSURE") {
+    return NextResponse.json({ error: "잘 모름은 더 이상 선택할 수 없어요." }, { status: 400 });
+  }
+  const isAgreeFamily =
+    answer === "STRONGLY_AGREE" || answer === "AGREE" || answer === "SLIGHTLY_AGREE";
+  const isDisagreeFamily =
+    answer === "STRONGLY_DISAGREE" || answer === "DISAGREE" || answer === "SLIGHTLY_DISAGREE";
+
   try {
     await prisma.$transaction(async (tx) => {
       await tx.blindAnswer.create({
         data: { userId: session.user.id, pinId: pin.id, answer },
       });
-      if (answer === "AGREE") {
+      if (isAgreeFamily) {
         await tx.pin.update({ where: { id: pin.id }, data: { blindAgreeCount: { increment: 1 } } });
-      } else if (answer === "DISAGREE") {
-        await tx.pin.update({ where: { id: pin.id }, data: { blindDisagreeCount: { increment: 1 } } });
+      } else if (isDisagreeFamily) {
+        await tx.pin.update({
+          where: { id: pin.id },
+          data: { blindDisagreeCount: { increment: 1 } },
+        });
       }
       // PrismScore.blindCount 도 증분 (Phase 7 자기 거울에서 측정 출처 표시)
       await tx.prismScore.update({

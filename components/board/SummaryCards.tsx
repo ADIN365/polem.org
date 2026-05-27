@@ -28,10 +28,10 @@ export default function SummaryCards({
   const hasSummary = !!(pro || con);
 
   return (
-    <section className="px-[18px] py-[14px] border-b-[0.5px] border-border-soft bg-soft">
+    <section className="px-[18px] pt-[14px] pb-[20px] border-b-[0.5px] border-border-soft bg-[#cdcdcd]">
       <div className="flex justify-between items-center mb-2 px-1">
-        <div className="text-eyebrow-tight tracking-wider uppercase text-ink-3">
-          {at ? `AI 내용정리 ${formatDate(at)}` : "AI 내용정리"}
+        <div className="text-eyebrow-tight tracking-wider uppercase text-ink-2">
+          {at ? `AI 의견정리 ${formatDate(at)}` : "AI 의견정리"}
         </div>
         {isAdmin ? (
           <SummaryRefreshButton boardId={boardId} hasActiveRequest={hasActiveRequest} />
@@ -41,13 +41,13 @@ export default function SummaryCards({
       {hasSummary ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <SummaryCard
-            label="찬성 내용정리"
+            label="찬성 의견정리"
             body={pro}
             isPro
             citations={citationsPro}
           />
           <SummaryCard
-            label="반대 내용정리"
+            label="반대 의견정리"
             body={con}
             isPro={false}
             citations={citationsCon}
@@ -55,7 +55,7 @@ export default function SummaryCards({
         </div>
       ) : (
         <div className="text-tiny text-ink-3 py-3 text-center">
-          {hasActiveRequest ? "AI 내용정리 생성 중…" : "아직 AI 내용정리가 없어요."}
+          {hasActiveRequest ? "AI 의견정리 생성 중…" : "아직 AI 의견정리가 없어요."}
         </div>
       )}
     </section>
@@ -75,26 +75,23 @@ function SummaryCard({
 }) {
   const cardClasses = isPro
     ? "bg-card text-ink border-[0.5px] border-ink"
-    : "bg-dark text-paper-cream";
+    : "bg-paper-cream text-ink border-[0.5px] border-ink";
   return (
     <article className={`px-4 py-3 rounded-md ${cardClasses}`}>
       <div className="flex items-center gap-2 mb-2">
         <span
           className={[
             "inline-block w-[8px] h-[8px] rounded-full",
-            isPro ? "bg-paper-cream border-[1.5px] border-ink" : "bg-paper-cream",
+            isPro ? "bg-paper-cream border-[1.5px] border-ink" : "bg-ink",
           ].join(" ")}
           aria-hidden="true"
         />
         <span className="text-eyebrow-tight tracking-wider uppercase">{label}</span>
       </div>
-      <p className="text-meta leading-relaxed mb-3 select-text">{body ?? "—"}</p>
+      <p className="text-pin leading-relaxed mb-3 select-text">{body ?? "—"}</p>
       {citations.length > 0 ? (
         <div
-          className={[
-            "text-tiny pt-2 border-t",
-            isPro ? "border-border-soft text-ink-3" : "border-paper-cream/20 text-[var(--paper-cream-dim)]",
-          ].join(" ")}
+          className="text-tiny pt-2 border-t border-border-soft text-ink-3"
         >
           <span className="mr-2">인용</span>
           {citations.map((c, i) => (

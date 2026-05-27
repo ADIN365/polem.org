@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 
 import BoardClient from "./BoardClient";
 import SummaryCards from "@/components/board/SummaryCards";
+import WriteButtons from "@/components/board/WriteButtons";
 import { BoardBigGauge } from "@/components/ui/Gauge";
 import { fetchActiveSummaryRequest, fetchSummaryCitations } from "@/lib/ai-summary";
 import { authOptions } from "@/lib/auth";
@@ -169,6 +170,14 @@ export default async function BoardPage({ params, searchParams }: Props) {
             {board.title}
           </h1>
           <BoardBigGauge proCount={board.proCount} conCount={board.conCount} />
+          <div className="mt-5">
+            <WriteButtons
+              boardId={board.id}
+              boardTitle={board.title}
+              currentUserId={currentUserId}
+              hasNickname={hasNickname}
+            />
+          </div>
         </header>
 
         <SummaryCards
@@ -184,6 +193,7 @@ export default async function BoardPage({ params, searchParams }: Props) {
 
         <BoardClient
           boardId={board.id}
+          boardTitle={board.title}
           proPins={pro.pins}
           conPins={con.pins}
           proPage={pro.page}

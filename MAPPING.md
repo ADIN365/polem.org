@@ -210,7 +210,7 @@ app/
       reports/[id]/route.ts     # PATCH 신고 처리
       users/[id]/ban/route.ts   # POST 차단
     cron/
-      ai-summary/route.ts       # 50:50 요약 (배치)
+      ai-summary/route.ts       # AI 의견정리 (배치)
       blind-questions/route.ts  # 의견 → 블라인드 변환 (배치)
 
 components/
@@ -223,7 +223,7 @@ components/
     BoardCard.tsx               # 토론 주제 색인의 row
     BoardIndex.tsx              # 토론 주제 색인 표
     BoardHeader.tsx             # 게시판 상단 (제목·비율 막대)
-    BoardSummary.tsx            # AI 50:50 요약 박스
+    BoardSummary.tsx            # AI 의견정리 박스
     Pin.tsx                     # 의견 카드 (pin-pro / pin-con variants)
     PinForm.tsx                 # 의견 작성 모달
     QuoteBlock.tsx              # 인용 의견 표시
@@ -378,7 +378,7 @@ model Board {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  // AI 50:50 요약 (배치 갱신)
+  // AI 의견정리 (배치 갱신)
   aiSummaryPro  String?
   aiSummaryCon  String?
   aiSummaryAt   DateTime?
@@ -695,20 +695,20 @@ enum NotificationType {
 | 작업 | 시점 | LLM | 입력 | 출력 |
 |---|---|---|---|---|
 | 토론 주제 정제 | 사용자 제안 시 (실시간) | gpt-4o-mini | 자유 입력 텍스트 | 정제된 제목·카테고리·중복 후보·필터 결과 |
-| 50:50 요약 | 매일 1-2회 (Cron) | gpt-4o-mini | 게시판 의견 100-300개 | PRO 한 줄·CON 한 줄 (50:50) |
+| AI 의견정리 | 매일 1-2회 (Cron) | gpt-4o-mini | 게시판 의견 100-300개 | PRO 한 줄·CON 한 줄 (있는 그대로) |
 | 블라인드 질문 변환 | 의견 생성 후 (Cron, 비동기) | gpt-4o-mini | Pin.body | 토론 주제명·고유명사 가린 질문 형태 |
 | 부적절성 필터 | 모든 사용자 글 작성 시 | 한국어 비속어 사전 + 정규식 (LLM 아님) | 텍스트 | 차단/허용 |
 
 **모든 AI 결과는 *수정 가능*하게:**
 - 토론 주제 정제 결과 → 사용자가 *틀렸어요* 신고 가능
-- 50:50 요약 → 모더레이터가 수동 편집 가능
+- AI 의견정리 → 모더레이터가 수동 편집 가능
 - 블라인드 질문 → 모더레이터가 수동 편집 가능
 
 **LLM 호출 코드 위치:**
 ```
 lib/ai/
   proposal-refine.ts      # 토론 주제 정제
-  summary-batch.ts         # 50:50 요약
+  summary-batch.ts         # AI 의견정리
   blind-convert.ts         # 블라인드 질문 변환
   prompts.ts               # 시스템 프롬프트 모음
 ```

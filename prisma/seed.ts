@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
  * 실행: `npm run db:seed` (DATABASE_URL 필요)
  *
  * 토론 주제 데이터는 한국 사회에서 *실제로 찬반이 갈리는* 사안 위주로,
- * 헌법 2.4(진영색 회피)에 따라 진영을 한쪽으로 몰지 않게 다양화.
+ * 진영을 한쪽으로 몰지 않게 다양화한 시드 데이터.
  */
 
 type Side = "PRO" | "CON";

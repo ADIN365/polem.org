@@ -1,0 +1,5 @@
+-- AlterEnum — add 4 strength levels around AGREE / DISAGREE
+ALTER TYPE "BlindAnswerValue" ADD VALUE 'STRONGLY_AGREE';
+ALTER TYPE "BlindAnswerValue" ADD VALUE 'SLIGHTLY_AGREE';
+ALTER TYPE "BlindAnswerValue" ADD VALUE 'SLIGHTLY_DISAGREE';
+ALTER TYPE "BlindAnswerValue" ADD VALUE 'STRONGLY_DISAGREE';

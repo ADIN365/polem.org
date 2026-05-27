@@ -12,10 +12,12 @@ export interface QuoteSource {
   id: string;
   body: string;
   authorNickname: string | null;
+  side: PinSide;
 }
 
 export default function PinFormModal({
   boardId,
+  boardTitle,
   side,
   quoting,
   quotedRelation,
@@ -23,6 +25,7 @@ export default function PinFormModal({
   onSuccess,
 }: {
   boardId: string;
+  boardTitle: string;
   side: PinSide;
   quoting: QuoteSource | null;
   quotedRelation: "AGREE" | "REBUT" | null;
@@ -82,34 +85,37 @@ export default function PinFormModal({
         onClick={(e) => e.stopPropagation()}
         className="bg-card border-[0.5px] border-border rounded-lg max-w-[560px] w-full overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.18)]"
       >
-        <div className="px-7 pt-7 pb-3 text-center">
+        <div className="px-7 pt-7 pb-4 text-center">
           <div
-            className="font-serif font-semibold tracking-tight text-ink mb-2"
-            style={{ fontSize: "var(--fs-title-h3)" }}
+            className="font-serif font-semibold tracking-tight text-ink"
+            style={{ fontSize: "var(--fs-title-h2)" }}
           >
-            {quoting
-              ? quotedRelation === "AGREE"
-                ? "동의 의견 남기기"
-                : "반박 의견 남기기"
-              : isPro
-                ? "찬성 의견 남기기"
-                : "반대 의견 남기기"}
+            {boardTitle}
           </div>
-          <p className="text-meta text-ink-3 leading-relaxed">
-            {quoting
-              ? quotedRelation === "AGREE"
-                ? `이 의견과 같은 ${isPro ? "찬성" : "반대"} 입장으로 등록됩니다.`
-                : `이 의견과 반대 ${isPro ? "찬성" : "반대"} 입장으로 등록됩니다.`
-              : "등록 후 수정·삭제는 모더레이션 대상에 한해 가능합니다."}
-          </p>
         </div>
 
         {quoting ? (
-          <div className="mx-7 mb-3 px-3 py-2 bg-soft border-l-2 border-[var(--accent-warm)] text-tiny text-ink-2 leading-relaxed">
-            <span className="text-eyebrow-tight tracking-wider uppercase mr-1 text-ink-3">
-              {quotedRelation === "AGREE" ? "동의" : "반박"} ─
-            </span>
-            @{quoting.authorNickname ?? "익명"} · &ldquo;{quoting.body}&rdquo;
+          <div
+            className={[
+              "mx-7 mb-3 px-4 py-3 rounded-md border-[0.5px] border-ink text-pin text-ink leading-relaxed",
+              quoting.side === "PRO" ? "bg-card" : "bg-paper-cream",
+            ].join(" ")}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <span
+                aria-hidden="true"
+                className={[
+                  "inline-block w-[8px] h-[8px] rounded-full",
+                  quoting.side === "PRO"
+                    ? "bg-paper-cream border-[1.5px] border-ink"
+                    : "bg-ink",
+                ].join(" ")}
+              />
+              <span className="text-eyebrow-tight tracking-wider uppercase text-ink-3">
+                {quoting.side === "PRO" ? "찬성" : "반대"} 의견 · @{quoting.authorNickname ?? "익명"}
+              </span>
+            </div>
+            &ldquo;{quoting.body}&rdquo;
           </div>
         ) : null}
 
@@ -122,9 +128,11 @@ export default function PinFormModal({
             required
             autoFocus
             placeholder={
-              isPro
-                ? "찬성하는 입장과 근거를 적어주세요."
-                : "반대하는 입장과 근거를 적어주세요."
+              quoting
+                ? `위 ${quoting.side === "PRO" ? "찬성" : "반대"} 의견에 ${quotedRelation === "AGREE" ? "동의" : "반박"}하는 이유를 적어주세요.`
+                : isPro
+                  ? "찬성하는 입장과 근거를 적어주세요."
+                  : "반대하는 입장과 근거를 적어주세요."
             }
             className="w-full px-3 py-[10px] border-[0.5px] border-border bg-card text-input text-ink rounded-md outline-none focus:border-ink resize-none"
           />
@@ -146,14 +154,9 @@ export default function PinFormModal({
           <button
             type="submit"
             disabled={submitting || body.trim().length < PIN_BODY_MIN}
-            className={[
-              "px-5 py-[9px] text-button rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium",
-              isPro
-                ? "bg-card text-ink border-[0.5px] border-ink hover:bg-soft"
-                : "bg-dark text-paper-cream hover:bg-deep",
-            ].join(" ")}
+            className="px-5 py-[9px] text-button rounded-md bg-ink text-card hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed font-medium"
           >
-            {submitting ? "등록 중…" : isPro ? "＋ 찬성 의견" : "＋ 반대 의견"}
+            {submitting ? "등록 중…" : "등록"}
           </button>
         </div>
       </form>
