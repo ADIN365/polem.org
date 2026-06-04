@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-05-28 — apex cold-start 해소: www→apex 301 (Vercel 도메인 레벨) [POL-280]
+
+Board 승인 `280cc7e3` 후 적용. apex(polem.org) prod TTFB 가 cold function alias 때문에 ~0.96s 였던 문제(www 는 ~0.39s)를 도메인 레벨 301 로 트래픽 집중해서 해소.
+
+### 변경
+- Vercel 프로젝트 `polem` 의 `www.polem.org` 도메인에 `redirect=polem.org`, `redirectStatusCode=301` 설정. 앱 코드 변경 0. Cloudflare DNS 변경 0.
+- 결정 방향 (A) www→apex: `NEXTAUTH_URL`·Kakao 콜백·`metadataBase` 가 이미 apex 기준이라 auth 변경 없음.
+
+### 검증
+- `curl https://www.polem.org` → 301, `Location: https://polem.org/`, `num_redirects=1` (무한 루프 없음).
+- apex TTFB 0.96s → **0.36s** (목표 <0.6s 달성).
+- `/api/auth/providers`·`/api/auth/csrf` apex 200, TTFB 65–79ms.
+- 헬스체크 probe 기본 대상은 그대로 apex (`scripts/healthcheck-fallback.ts:85`) — 이제 warm.
+
 ## 2026-05-27 — 헬스체크 routine-down 폴백 (launchd dead-man's-switch) [POL-209]
 
 시간별 헬스체크 routine 이 11일간(2026-05-16~05-27) 조용히 멈췄던 사건(POL-194)의 재발 방지.
