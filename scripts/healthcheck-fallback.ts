@@ -353,6 +353,19 @@ async function commentOnIncident(cfg: PaperclipCfg, issueId: string, body: strin
 
 // ─── Slack out-of-band fallback (only when Paperclip API is unreachable) ────────
 async function slackAlert(text: string): Promise<boolean> {
+  // 텔레그램 동시 발송 (~/.secrets/telegram.env). 미설정 시 조용히 skip.
+  try {
+    const tg = loadEnvFile(`${process.env.HOME}/.secrets/telegram.env`);
+    const tok = tg.TELEGRAM_BOT_TOKEN, chat = tg.TELEGRAM_CHAT_ID;
+    if (tok && chat) {
+      await fetch(`https://api.telegram.org/bot${tok}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chat, text }),
+        signal: AbortSignal.timeout(HTTP_TIMEOUT_MS),
+      });
+    }
+  } catch { /* ignore */ }
   const url = loadEnvFile(SECRETS_FILE).HEALTHCHECK_SLACK_WEBHOOK_URL || process.env.HEALTHCHECK_SLACK_WEBHOOK_URL;
   if (!url) return false;
   try {
