@@ -43,3 +43,7 @@ summary.log
 
 launchd/*.log
 backups/
+
+scripts/_batch-*
+scripts/_batch-publish.log
+launchd-disabled/
