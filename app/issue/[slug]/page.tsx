@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { argList, getIssueBySlug } from "@/lib/issues";
+import { argList, getIssueBySlug, getVisibleComments } from "@/lib/issues";
 import { categoryMeta } from "@/lib/categories";
 import { currentVoterHash } from "@/lib/anon";
 import VoteBox from "@/components/VoteBox";
+import Comments from "@/components/Comments";
 
 export const revalidate = 60;
 
@@ -31,6 +32,7 @@ export default async function IssuePage({ params }: { params: { slug: string } }
   const cat = categoryMeta(issue.category);
   const proArgs = argList(issue.proArgs);
   const conArgs = argList(issue.conArgs);
+  const comments = await getVisibleComments(issue.id);
 
   // 조회수 증가 (fire-and-forget, 렌더 블로킹 안 함)
   prisma.issue
@@ -117,6 +119,13 @@ export default async function IssuePage({ params }: { params: { slug: string } }
       <p className="text-tiny text-ink-4 text-center">
         근거 정리는 참고용이며 특정 입장을 지지하지 않습니다.
       </p>
+
+      <Comments
+        slug={issue.slug}
+        proLabel={issue.proLabel}
+        conLabel={issue.conLabel}
+        initial={comments}
+      />
     </article>
   );
 }

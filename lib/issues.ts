@@ -69,3 +69,20 @@ export function argList(v: unknown): string[] {
   if (Array.isArray(v)) return v.filter((x): x is string => typeof x === "string");
   return [];
 }
+
+export interface CommentView {
+  id: string;
+  body: string;
+  side: string | null;
+  createdAt: string;
+}
+
+export async function getVisibleComments(issueId: string, limit = 100): Promise<CommentView[]> {
+  const rows = await prisma.comment.findMany({
+    where: { issueId, status: "VISIBLE" },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+    select: { id: true, body: true, side: true, createdAt: true },
+  });
+  return rows.map((r) => ({ ...r, createdAt: r.createdAt.toISOString() }));
+}

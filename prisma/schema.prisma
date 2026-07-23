@@ -25,6 +25,11 @@ enum IssueStatus {
   ARCHIVED
 }
 
+enum CommentStatus {
+  VISIBLE
+  HIDDEN
+}
+
 model Issue {
   id       String   @id @default(cuid())
   slug     String   @unique
@@ -54,10 +59,26 @@ model Issue {
   publishedAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  votes Vote[]
+  votes    Vote[]
+  comments Comment[]
 
   @@index([category, publishedAt])
   @@index([status, publishedAt])
+}
+
+model Comment {
+  id        String        @id @default(cuid())
+  issueId   String
+  issue     Issue         @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  side      String? // "PRO" | "CON" | null — 작성 시점 투표 측(정렬 표시용)
+  body      String // 한 줄 의견 (최대 140자)
+  voterHash String // 익명 (1인 1글·레이트리밋용, 개인식별 아님)
+  reports   Int           @default(0)
+  status    CommentStatus @default(VISIBLE)
+  createdAt DateTime      @default(now())
+
+  @@unique([issueId, voterHash]) // 쟁점당 1인 1글
+  @@index([issueId, status, createdAt])
 }
 
 model Vote {

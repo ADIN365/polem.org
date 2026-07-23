@@ -19,15 +19,24 @@ const VALID_CATEGORIES: Category[] = ["SOCIETY", "MONEY", "WORK", "LOVE", "LIFE"
 
 const BANNED = ["멍청", "빨갱이", "수구", "틀딱", "좌빨", "극우", "극좌"]; // 인신·진영 비방 게이트
 
-function slugify(topic: string): string {
-  // 한글 주제는 로마자 변환이 어려워 타임스탬프 기반 슬러그로.
-  const base = topic
+function baseSlug(topic: string): string {
+  // 한글을 유지한다 — 한국어 검색 URL에 유리하고, "vs" 밸런스 주제도 고유해짐.
+  const s = topic
     .toLowerCase()
     .replace(/[^a-z0-9가-힣]+/g, "-")
     .replace(/^-+|-+$/g, "")
-    .slice(0, 40);
-  const ascii = base.replace(/[^a-z0-9-]/g, "");
-  return ascii.length >= 4 ? ascii : `issue-${Date.now().toString(36)}`;
+    .slice(0, 60);
+  return s.length >= 2 ? s : `issue-${Date.now().toString(36)}`;
+}
+
+// 충돌 시 -2, -3… 접미사로 고유 슬러그 확보.
+async function uniqueSlug(topic: string): Promise<string> {
+  const base = baseSlug(topic);
+  for (let n = 1; ; n++) {
+    const slug = n === 1 ? base : `${base}-${n}`;
+    const hit = await prisma.issue.findUnique({ where: { slug }, select: { id: true } });
+    if (!hit) return slug;
+  }
 }
 
 function buildPrompt(topic: string, category: string): string {
@@ -105,11 +114,9 @@ async function main() {
   const question = String(data.question ?? "").trim();
   if (!title || !question) throw new Error("title/question 누락");
 
-  const slug = slugify(topic);
-  const issue = await prisma.issue.upsert({
-    where: { slug },
-    update: {},
-    create: {
+  const slug = await uniqueSlug(topic);
+  const issue = await prisma.issue.create({
+    data: {
       slug,
       title,
       question,
