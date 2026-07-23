@@ -1,6 +1,20 @@
 # Changelog
 
-## 2026-05-28 — apex cold-start 해소: www→apex 301 (Vercel 도메인 레벨) [POL-280]
+## 2026-07-24 — 피벗: 찬반 아카이브 + 익명 투표 (v2)
+
+로그인 기반 정치 토론 UGC 플랫폼 "끝장토론" → 무인 운영 콘텐츠 사이트 "폴렘"으로 전환.
+(사유: 트래픽 콜드스타트·모더레이션 부담·수익화 난이도. 배경은 메모리 polem-rebuild-balance-archive)
+
+- **스키마 교체**: 유저 중심(User/Board/Pin/BlindAnswer 등) → 익명 중심(Issue/Vote 2모델).
+  옛 테이블 16개·enum 13개 드롭 전 전체 백업(backups/pre-rebuild-*.json, 로컬).
+- **앱 재작성**: 홈/카테고리(/c/[cat])/쟁점상세(/issue/[slug]) + 투표 API. NextAuth·카카오 로그인 제거.
+- **익명 투표**: 쿠키(polem_vid)+VOTE_SALT 해시로 1인 1표 dedup, IP 미저장, 변경 불가.
+- **콘텐츠**: 시드 8개(사형제·기본소득·정년/전세vs월세·워라밸vs연봉·저축vs투자·파인애플피자·장거리연애).
+  AI 발행기 scripts/generate-issue.ts (claude 헤드리스 무과금, 진영 비방 게이트).
+- **SEO**: sitemap/robots/OG 메타. 옛 토론 플랫폼 문서는 docs/legacy-debate-platform/로 이관.
+- 브랜치 rebuild-balance-archive. 광고 붙일 때 Vercel→CF Pages 이전 필요(Hobby 광고 금지).
+
+
 
 Board 승인 `280cc7e3` 후 적용. apex(polem.org) prod TTFB 가 cold function alias 때문에 ~0.96s 였던 문제(www 는 ~0.39s)를 도메인 레벨 301 로 트래픽 집중해서 해소.
 

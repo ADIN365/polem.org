@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "끝장토론 · polem.org";
+export const alt = "폴렘 · polem.org";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -36,15 +36,14 @@ export default async function OG() {
             fontSize: 28,
             color: "#6F665C",
             letterSpacing: "0.16em",
-            textTransform: "uppercase",
           }}
         >
-          끝장토론 · polem.org
+          폴렘 · polem.org
         </div>
 
         <div
           style={{
-            fontSize: 88,
+            fontSize: 84,
             color: "#2B2620",
             lineHeight: 1.25,
             fontWeight: 600,
@@ -53,8 +52,8 @@ export default async function OG() {
             flexDirection: "column",
           }}
         >
-          <span>토론은 사회를</span>
-          <span>건강하게 만드는 자양분입니다.</span>
+          <span>찬성과 반대,</span>
+          <span>양쪽을 다 보고 한 표.</span>
         </div>
 
         <div
@@ -64,7 +63,7 @@ export default async function OG() {
             lineHeight: 1.5,
           }}
         >
-          한국어 정치·사회 토론 주제 · 좌·우 영구 보관 토론
+          찬반 근거 정리 · 익명 투표 · 전체 분포 공개
         </div>
       </div>
     ),

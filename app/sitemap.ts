@@ -1,34 +1,28 @@
 import type { MetadataRoute } from "next";
-
 import { SITE_URL } from "@/lib/constants";
-import { prisma } from "@/lib/prisma";
+import { CATEGORIES } from "@/lib/categories";
+import { getAllPublishedSlugs } from "@/lib/issues";
 
 export const revalidate = 3600; // 1시간 캐시
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const boards = await prisma.board.findMany({
-    where: { status: "ACTIVE" },
-    select: { id: true, updatedAt: true },
-    orderBy: { updatedAt: "desc" },
-    take: 5000,
-  });
+  const issues = await getAllPublishedSlugs();
 
-  const base: MetadataRoute.Sitemap = [
-    { url: `${SITE_URL}/`, changeFrequency: "hourly", priority: 1.0 },
-    { url: `${SITE_URL}/about`, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${SITE_URL}/proposal`, changeFrequency: "monthly", priority: 0.5 },
-    { url: `${SITE_URL}/login`, changeFrequency: "yearly", priority: 0.3 },
+  return [
+    { url: `${SITE_URL}/`, changeFrequency: "daily", priority: 1.0 },
+    ...CATEGORIES.map((c) => ({
+      url: `${SITE_URL}/c/${c.slug}`,
+      changeFrequency: "daily" as const,
+      priority: 0.7,
+    })),
+    ...issues.map((i) => ({
+      url: `${SITE_URL}/issue/${i.slug}`,
+      lastModified: i.updatedAt,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    })),
+    { url: `${SITE_URL}/about`, changeFrequency: "monthly", priority: 0.3 },
     { url: `${SITE_URL}/terms`, changeFrequency: "yearly", priority: 0.2 },
     { url: `${SITE_URL}/privacy`, changeFrequency: "yearly", priority: 0.2 },
-    { url: `${SITE_URL}/policy`, changeFrequency: "yearly", priority: 0.2 },
   ];
-
-  const boardEntries: MetadataRoute.Sitemap = boards.map((b) => ({
-    url: `${SITE_URL}/boards/${encodeURIComponent(b.id)}`,
-    lastModified: b.updatedAt,
-    changeFrequency: "daily" as const,
-    priority: 0.7,
-  }));
-
-  return [...base, ...boardEntries];
 }
