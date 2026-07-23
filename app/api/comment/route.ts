@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { normalizeSlug } from "@/lib/issues";
 import { ensureVoterHash } from "@/lib/anon";
 import { moderateComment } from "@/lib/moderation";
 
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
   if (!mod.ok) return NextResponse.json({ error: mod.reason }, { status: 422 });
 
   const issue = await prisma.issue.findUnique({
-    where: { slug: parsed.slug },
+    where: { slug: normalizeSlug(parsed.slug) },
     select: { id: true, status: true },
   });
   if (!issue || issue.status !== "PUBLISHED") {

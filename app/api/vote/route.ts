@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { normalizeSlug } from "@/lib/issues";
 import { ensureVoterHash } from "@/lib/anon";
 
 const Body = z.object({
@@ -15,7 +16,8 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "잘못된 요청입니다" }, { status: 400 });
   }
-  const { slug, side } = parsed;
+  const slug = normalizeSlug(parsed.slug);
+  const { side } = parsed;
 
   const issue = await prisma.issue.findUnique({
     where: { slug },

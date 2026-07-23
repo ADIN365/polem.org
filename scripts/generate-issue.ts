@@ -22,6 +22,7 @@ const BANNED = ["멍청", "빨갱이", "수구", "틀딱", "좌빨", "극우", "
 function baseSlug(topic: string): string {
   // 한글을 유지한다 — 한국어 검색 URL에 유리하고, "vs" 밸런스 주제도 고유해짐.
   const s = topic
+    .normalize("NFC") // 슬러그는 NFC로 통일 (URL 왕복·조회 일관성)
     .toLowerCase()
     .replace(/[^a-z0-9가-힣]+/g, "-")
     .replace(/^-+|-+$/g, "")

@@ -53,8 +53,20 @@ export async function getIssuesByCategory(category: Category, limit = 40): Promi
   });
 }
 
+// 라우트 파라미터는 퍼센트 인코딩 상태로 올 수 있고(한글), URL 왕복에서 NFD가
+// 될 수 있다. 디코딩 후 NFC로 정규화해 DB(NFC 저장)와 일치시킨다.
+export function normalizeSlug(raw: string): string {
+  let s = raw;
+  try {
+    s = decodeURIComponent(raw);
+  } catch {
+    // 이미 디코딩됐거나 %가 없으면 그대로
+  }
+  return s.normalize("NFC");
+}
+
 export async function getIssueBySlug(slug: string): Promise<Issue | null> {
-  return prisma.issue.findUnique({ where: { slug } });
+  return prisma.issue.findUnique({ where: { slug: normalizeSlug(slug) } });
 }
 
 export async function getAllPublishedSlugs(): Promise<{ slug: string; updatedAt: Date }[]> {
