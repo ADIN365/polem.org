@@ -42,3 +42,4 @@ blind.log
 summary.log
 
 launchd/*.log
+backups/

@@ -39,6 +39,9 @@ const config: Config = {
           "warm-light": "var(--accent-warm-light)",
           warn: "var(--accent-warn)",
         },
+        // 찬반 양측 — 종이 톤에 맞춘 절제된 남색/웜레드
+        pro: "var(--pro)",
+        con: "var(--con)",
       },
       fontFamily: {
         sans: ["var(--sans)"],

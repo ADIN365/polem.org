@@ -23,9 +23,6 @@ export default function Footer() {
           <Link href="/privacy" className="hover:text-ink transition-colors">
             개인정보처리방침
           </Link>
-          <Link href="/policy" className="hover:text-ink transition-colors">
-            운영정책
-          </Link>
         </nav>
       </div>
     </footer>
