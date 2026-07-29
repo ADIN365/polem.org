@@ -1,0 +1,39 @@
+{
+  "site": "https://polem.org",
+  "capturedAt": "2026-07-29T20:06:34.747Z",
+  "comparedTo": null,
+  "note": "복제 증거용 본문 스냅샷. 시점 증명은 파일 내 타임스탬프가 아니라 git 커밋 타임스탬프다.",
+  "pages": {
+    "/": {
+      "sha256": "443df493a1019a1026cde2b9c8dfa24dd06d334cdebea59b166d76018deac0d5",
+      "chars": 3495,
+      "changedSincePrev": null
+    },
+    "/about": {
+      "sha256": "b8c62a2db13fbe2be4456aa5b250a95a255272d80478aef5c646055c860b27b1",
+      "chars": 383,
+      "changedSincePrev": null
+    },
+    "/c/life": {
+      "sha256": "f695130126a9c42a48d8c8a13ffc9caecd3fd6184291003306cce0e5f04f8aa7",
+      "chars": 503,
+      "changedSincePrev": null
+    },
+    "/c/love": {
+      "sha256": "582e356ec41b51005311990e36ee2778cb7df64a4e385831b3829c5a09dc8ab3",
+      "chars": 610,
+      "changedSincePrev": null
+    },
+    "/c/money": {
+      "sha256": "347d29a405a91848b1a78477a5e24ebfb3bcb13d87c64c7ecc1cb280d553fc41",
+      "chars": 986,
+      "changedSincePrev": null
+    },
+    "/c/society": {
+      "sha256": "b43fbbe586e14c73eb084c13e16526b59a8889c9221905970e001960b308c621",
+      "chars": 924,
+      "changedSincePrev": null
+    }
+  },
+  "failures": []
+}
